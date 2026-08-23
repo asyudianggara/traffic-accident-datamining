@@ -1,0 +1,23 @@
+{
+  "scenario": "D (without collision_year and police_force)",
+  "num_features": 21,
+  "training_rows": 8000,
+  "cv": "StratifiedKFold(n_splits=5, shuffle=True, random_state=42)",
+  "scoring": "f1_macro",
+  "n_iter": 12,
+  "random_state": 42,
+  "refit": false,
+  "best_params": {
+    "n_estimators": 200,
+    "max_depth": 25,
+    "min_samples_split": 10,
+    "min_samples_leaf": 1,
+    "max_features": "sqrt",
+    "class_weight": "balanced",
+    "random_state": 42
+  },
+  "best_macro_f1_mean": 0.400949795497049,
+  "best_macro_f1_std": 0.009354445233430984,
+  "baseline_D_macro_f1_mean": 0.4014,
+  "improvement_percentage_points": -0.045020450295096825
+}

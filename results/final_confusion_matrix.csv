@@ -1,0 +1,4 @@
+true_label,Fatal,Serious,Slight
+Fatal,3,16,9
+Serious,17,195,241
+Slight,31,411,1077

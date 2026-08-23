@@ -1,0 +1,29 @@
+cluster,feature,dominant_category,dominant_count,dominant_percentage
+0,day_of_week,Friday,391,15.466772151898734
+0,first_road_class,A,1368,54.11392405063291
+0,road_type,Single carriageway,1591,62.93512658227848
+0,junction_detail,Not at or within 20 metres of junction,1954,77.29430379746836
+0,junction_control,Data missing / out of range,1797,71.08386075949366
+0,second_road_class,0,1399,55.34018987341772
+0,pedestrian_crossing,0,2440,96.51898734177216
+0,light_conditions,Daylight,1835,72.5870253164557
+0,weather_conditions,Fine no high winds,2040,80.69620253164557
+0,road_surface_conditions,Dry,1672,66.13924050632912
+0,special_conditions_at_site,0,1623,64.20094936708861
+0,carriageway_hazards,0,2317,91.65348101265823
+0,urban_or_rural_area,Rural,2335,92.36550632911393
+0,trunk_road_flag,2,1629,64.4382911392405
+1,day_of_week,Friday,1208,16.167023554603855
+1,first_road_class,Unclassified,3125,41.8228051391863
+1,road_type,Single carriageway,5638,75.45503211991435
+1,junction_detail,Not at or within 20 metres of junction,3020,40.41755888650964
+1,junction_control,Give way or uncontrolled,3619,48.434154175588866
+1,second_road_class,6,4014,53.720556745182016
+1,pedestrian_crossing,0,4990,66.78265524625267
+1,light_conditions,Daylight,5369,71.8549250535332
+1,weather_conditions,Fine no high winds,6098,81.61134903640257
+1,road_surface_conditions,Dry,5718,76.52569593147751
+1,special_conditions_at_site,0,4990,66.78265524625267
+1,carriageway_hazards,0,6916,92.55888650963597
+1,urban_or_rural_area,Urban,6536,87.47323340471092
+1,trunk_road_flag,2,7035,94.15149892933619

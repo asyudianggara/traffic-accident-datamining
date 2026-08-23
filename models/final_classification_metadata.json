@@ -1,0 +1,41 @@
+{
+  "model": "RandomForestClassifier",
+  "target": "collision_severity",
+  "feature_count_original": 18,
+  "feature_count_encoded": 105,
+  "numeric_features": [
+    "number_of_vehicles",
+    "speed_limit",
+    "hour",
+    "month"
+  ],
+  "categorical_features": [
+    "day_of_week",
+    "first_road_class",
+    "road_type",
+    "junction_detail",
+    "junction_control",
+    "second_road_class",
+    "pedestrian_crossing",
+    "light_conditions",
+    "weather_conditions",
+    "road_surface_conditions",
+    "special_conditions_at_site",
+    "carriageway_hazards",
+    "urban_or_rural_area",
+    "trunk_road_flag"
+  ],
+  "train_size": 8000,
+  "test_size": 2000,
+  "random_state": 42,
+  "n_estimators": 300,
+  "max_depth": 15,
+  "class_weight": "balanced",
+  "metrics": {
+    "accuracy": 0.6385,
+    "macro_precision": 0.3801927920873256,
+    "macro_recall": 0.40081363315104584,
+    "macro_f1": 0.3861627513391932,
+    "weighted_f1": 0.6495569477801452
+  }
+}

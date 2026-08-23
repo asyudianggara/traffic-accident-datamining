@@ -1,0 +1,19 @@
+Feature,Type,Cluster 0,Cluster 1,Perbedaan/Keterangan
+number_of_vehicles,numeric,mean=1.9276; median=2.0000,mean=1.7855; median=2.0000,mean Cluster 1 - Cluster 0 = -0.1421
+speed_limit,numeric,mean=57.6938; median=60.0000,mean=28.5091; median=30.0000,mean Cluster 1 - Cluster 0 = -29.1847
+hour,numeric,mean=13.0455; median=14.0000,mean=13.9421; median=15.0000,mean Cluster 1 - Cluster 0 = 0.8966
+month,numeric,mean=6.7698; median=7.0000,mean=6.6096; median=7.0000,mean Cluster 1 - Cluster 0 = -0.1602
+day_of_week,categorical,Friday (15.4668%),Friday (16.1670%),kategori dominan sama; selisih proporsi = 0.7003 percentage points
+first_road_class,categorical,A (54.1139%),Unclassified (41.8228%),kategori dominan berbeda
+road_type,categorical,Single carriageway (62.9351%),Single carriageway (75.4550%),kategori dominan sama; selisih proporsi = 12.5199 percentage points
+junction_detail,categorical,Not at or within 20 metres of junction (77.2943%),Not at or within 20 metres of junction (40.4176%),kategori dominan sama; selisih proporsi = -36.8767 percentage points
+junction_control,categorical,Data missing / out of range (71.0839%),Give way or uncontrolled (48.4342%),kategori dominan berbeda
+second_road_class,categorical,0 (55.3402%),6 (53.7206%),kategori dominan berbeda
+pedestrian_crossing,categorical,0 (96.5190%),0 (66.7827%),kategori dominan sama; selisih proporsi = -29.7363 percentage points
+light_conditions,categorical,Daylight (72.5870%),Daylight (71.8549%),kategori dominan sama; selisih proporsi = -0.7321 percentage points
+weather_conditions,categorical,Fine no high winds (80.6962%),Fine no high winds (81.6113%),kategori dominan sama; selisih proporsi = 0.9151 percentage points
+road_surface_conditions,categorical,Dry (66.1392%),Dry (76.5257%),kategori dominan sama; selisih proporsi = 10.3865 percentage points
+special_conditions_at_site,categorical,0 (64.2009%),0 (66.7827%),kategori dominan sama; selisih proporsi = 2.5817 percentage points
+carriageway_hazards,categorical,0 (91.6535%),0 (92.5589%),kategori dominan sama; selisih proporsi = 0.9054 percentage points
+urban_or_rural_area,categorical,Rural (92.3655%),Urban (87.4732%),kategori dominan berbeda
+trunk_road_flag,categorical,2 (64.4383%),2 (94.1515%),kategori dominan sama; selisih proporsi = 29.7132 percentage points

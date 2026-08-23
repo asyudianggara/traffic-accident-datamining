@@ -1,0 +1,841 @@
+from __future__ import annotations
+
+import json
+from numbers import Real
+from pathlib import Path
+
+import joblib
+import numpy as np
+import pandas as pd
+import streamlit as st
+
+
+ROOT = Path(__file__).resolve().parent
+MODELS_DIR = ROOT / "models"
+MAP_PATH = ROOT / "data" / "processed" / "stats19_maps.json"
+CLUSTERING_EVALUATION_PATH = ROOT / "results" / "clustering_k_evaluation.csv"
+DATASET_RESULTS_DIR = ROOT / "results"
+
+NUMERIC_FEATURES = [
+    "number_of_vehicles",
+    "speed_limit",
+    "hour",
+    "month",
+]
+CATEGORICAL_FEATURES = [
+    "day_of_week",
+    "first_road_class",
+    "road_type",
+    "junction_detail",
+    "junction_control",
+    "second_road_class",
+    "pedestrian_crossing",
+    "light_conditions",
+    "weather_conditions",
+    "road_surface_conditions",
+    "special_conditions_at_site",
+    "carriageway_hazards",
+    "urban_or_rural_area",
+    "trunk_road_flag",
+]
+FEATURES = NUMERIC_FEATURES + CATEGORICAL_FEATURES
+TARGET_LABELS = ["Fatal", "Serious", "Slight"]
+
+SCENARIO_DEFINITIONS = {
+    "Input bebas": {
+        "number_of_vehicles": 2,
+        "speed_limit": 30,
+        "hour": 12,
+        "month": 7,
+    },
+    "Rural — speed limit tinggi": {
+        "number_of_vehicles": 2,
+        "speed_limit": 70,
+        "hour": 14,
+        "month": 6,
+        "first_road_class": "A",
+        "urban_or_rural_area": "Rural",
+    },
+    "Urban — speed limit rendah": {
+        "number_of_vehicles": 2,
+        "speed_limit": 30,
+        "hour": 8,
+        "month": 10,
+        "urban_or_rural_area": "Urban",
+        "road_type": "Single carriageway",
+    },
+    "Mixed rural": {
+        "number_of_vehicles": 3,
+        "speed_limit": 50,
+        "hour": 18,
+        "month": 3,
+        "urban_or_rural_area": "Rural",
+        "road_type": "Single carriageway",
+    },
+}
+
+SCENARIO_WIDGET_SUFFIXES = {
+    "number_of_vehicles": "vehicles",
+    "speed_limit": "speed",
+    "hour": "hour",
+    "month": "month",
+}
+
+NAV_ITEMS = [
+    "🏠 Beranda",
+    "📊 Dashboard Dataset",
+    "🔮 Prediksi Severity",
+    "🧩 Analisis Cluster",
+    "📖 Panduan Penggunaan",
+    "📚 Kamus Fitur",
+    "📊 Tentang Model",
+]
+
+CLASSIFICATION_METRICS = {
+    "Accuracy": "63,85%",
+    "Macro Precision": "38,02%",
+    "Macro Recall": "40,08%",
+    "Macro F1": "38,62%",
+    "Weighted F1": "64,96%",
+}
+
+CLUSTER_INTERPRETATIONS = {
+    0: {
+        "title": "Pola dominan wilayah rural",
+        "summary": "Dominan pada pola kecelakaan wilayah rural dengan batas kecepatan lebih tinggi.",
+        "details": ["Rural: 92,37%", "Rata-rata speed limit: 57,69", "First road class A: 54,11%"],
+    },
+    1: {
+        "title": "Pola dominan wilayah urban",
+        "summary": "Dominan pada pola kecelakaan wilayah urban dengan batas kecepatan lebih rendah.",
+        "details": ["Urban: 87,47%", "Rata-rata speed limit: 28,51", "First road class Unclassified: 41,82%"],
+    },
+}
+
+FEATURE_LABELS = {
+    "number_of_vehicles": "Jumlah kendaraan",
+    "speed_limit": "Batas kecepatan",
+    "hour": "Jam kejadian",
+    "month": "Bulan kejadian",
+    "day_of_week": "Hari kejadian",
+    "first_road_class": "Kelas jalan utama",
+    "road_type": "Jenis jalan",
+    "junction_detail": "Detail persimpangan",
+    "junction_control": "Pengendalian persimpangan",
+    "second_road_class": "Kelas jalan kedua",
+    "pedestrian_crossing": "Penyeberangan pejalan kaki",
+    "light_conditions": "Kondisi pencahayaan",
+    "weather_conditions": "Kondisi cuaca",
+    "road_surface_conditions": "Kondisi permukaan jalan",
+    "special_conditions_at_site": "Kondisi khusus di lokasi",
+    "carriageway_hazards": "Bahaya pada badan jalan",
+    "urban_or_rural_area": "Wilayah perkotaan / pedesaan",
+    "trunk_road_flag": "Penanda trunk road",
+}
+
+FEATURE_HELP = {
+    "number_of_vehicles": "Jumlah kendaraan yang terlibat dalam kecelakaan.",
+    "speed_limit": "Batas kecepatan yang berlaku pada lokasi kecelakaan.",
+    "hour": "Jam terjadinya kecelakaan.",
+    "month": "Bulan terjadinya kecelakaan.",
+    "day_of_week": "Hari dalam minggu ketika kecelakaan terjadi.",
+    "first_road_class": "Kelas atau klasifikasi jalan utama yang tercatat pada lokasi kecelakaan.",
+    "road_type": "Jenis atau bentuk jalan tempat kecelakaan terjadi.",
+    "junction_detail": "Posisi atau karakteristik kecelakaan terhadap persimpangan.",
+    "junction_control": "Jenis pengendalian yang berlaku pada persimpangan, jika ada.",
+    "second_road_class": "Kelas jalan kedua yang terkait dengan lokasi kecelakaan.",
+    "pedestrian_crossing": "Fasilitas atau kondisi penyeberangan pejalan kaki di lokasi.",
+    "light_conditions": "Kondisi pencahayaan pada saat kecelakaan.",
+    "weather_conditions": "Kondisi cuaca pada saat kecelakaan.",
+    "road_surface_conditions": "Kondisi permukaan jalan pada saat kecelakaan.",
+    "special_conditions_at_site": "Kondisi khusus di lokasi yang tercatat dalam data.",
+    "carriageway_hazards": "Bahaya atau kondisi tertentu pada badan jalan yang tercatat.",
+    "urban_or_rural_area": "Menunjukkan apakah lokasi berada di wilayah perkotaan atau pedesaan.",
+    "trunk_road_flag": "Penanda apakah jalan termasuk trunk road sesuai klasifikasi dataset.",
+}
+
+FEATURE_GROUPS = {
+    "Informasi jalan": [
+        "first_road_class", "road_type", "second_road_class", "junction_detail",
+        "junction_control", "pedestrian_crossing", "carriageway_hazards", "trunk_road_flag",
+    ],
+    "Kondisi lingkungan": [
+        "light_conditions", "weather_conditions", "road_surface_conditions",
+        "special_conditions_at_site", "urban_or_rural_area",
+    ],
+}
+
+GLOSSARY = {
+    "Classification": "Metode untuk memprediksi kelas atau kategori yang telah ditentukan.",
+    "Clustering": "Metode untuk menemukan kelompok data berdasarkan kemiripan karakteristik.",
+    "Random Forest": "Algoritma classification yang menggabungkan banyak decision tree.",
+    "K-Means": "Algoritma clustering yang membagi data menjadi sejumlah kelompok.",
+    "Feature": "Variabel atau karakteristik yang digunakan model.",
+    "Target": "Nilai yang ingin diprediksi dalam classification.",
+    "Preprocessing": "Proses menyiapkan data sebelum diberikan ke model.",
+    "Imputation": "Proses mengisi nilai data yang kosong.",
+    "One-Hot Encoding": "Teknik mengubah kategori menjadi representasi numerik untuk model.",
+    "StandardScaler": "Proses menstandarkan fitur numerik agar berada pada skala sebanding.",
+    "Inference": "Proses menggunakan model yang sudah dilatih untuk menghasilkan prediksi baru.",
+    "Probability": "Nilai keluaran model untuk setiap kelas; bukan jaminan kebenaran.",
+    "Centroid": "Titik pusat suatu cluster pada K-Means.",
+    "PCA": "Teknik reduksi dimensi yang pada project ini hanya digunakan untuk visualisasi clustering, bukan prediction.",
+}
+
+
+def require_files() -> None:
+    required = [
+        MODELS_DIR / "final_random_forest.joblib",
+        MODELS_DIR / "final_preprocessor.joblib",
+        MODELS_DIR / "final_classification_metadata.json",
+        MODELS_DIR / "final_kmeans.joblib",
+        MODELS_DIR / "final_clustering_preprocessor.joblib",
+        MODELS_DIR / "final_clustering_metadata.json",
+        MAP_PATH,
+    ]
+    missing = [str(path.relative_to(ROOT)) for path in required if not path.exists()]
+    if missing:
+        raise FileNotFoundError("Artefak final yang dibutuhkan tidak ditemukan: " + ", ".join(missing))
+
+
+@st.cache_resource(show_spinner=False)
+def load_artifacts() -> dict:
+    require_files()
+    with (MODELS_DIR / "final_classification_metadata.json").open("r", encoding="utf-8") as file:
+        classification_metadata = json.load(file)
+    with (MODELS_DIR / "final_clustering_metadata.json").open("r", encoding="utf-8") as file:
+        clustering_metadata = json.load(file)
+    with MAP_PATH.open("r", encoding="utf-8") as file:
+        mappings = json.load(file)
+
+    classification_model = joblib.load(MODELS_DIR / "final_random_forest.joblib")
+    classification_preprocessor = joblib.load(MODELS_DIR / "final_preprocessor.joblib")
+    clustering_model = joblib.load(MODELS_DIR / "final_kmeans.joblib")
+    clustering_preprocessor = joblib.load(MODELS_DIR / "final_clustering_preprocessor.joblib")
+
+    if classification_metadata.get("feature_count_original") != 18:
+        raise RuntimeError("Artefak classification bukan konfigurasi final 18 fitur")
+    if classification_metadata.get("feature_count_encoded") != 105:
+        raise RuntimeError("Artefak classification bukan konfigurasi final 105 fitur")
+    if clustering_metadata.get("feature_count_original") != 18:
+        raise RuntimeError("Artefak clustering bukan konfigurasi final 18 fitur")
+    if clustering_metadata.get("feature_count_encoded") != 108:
+        raise RuntimeError("Artefak clustering bukan konfigurasi final 108 fitur")
+    if len(classification_preprocessor.get_feature_names_out()) != 105:
+        raise RuntimeError("Preprocessor classification tidak menghasilkan 105 fitur")
+    if len(clustering_preprocessor.get_feature_names_out()) != 108:
+        raise RuntimeError("Preprocessor clustering tidak menghasilkan 108 fitur")
+    if getattr(classification_model, "n_features_in_", None) != 105:
+        raise RuntimeError("Model classification tidak mengharapkan 105 fitur")
+    if getattr(clustering_model, "n_features_in_", None) != 108:
+        raise RuntimeError("Model clustering tidak mengharapkan 108 fitur")
+
+    classification_encoder = classification_preprocessor.named_transformers_["cat"].named_steps["encoder"]
+    clustering_encoder = clustering_preprocessor.named_transformers_["cat"].named_steps["encoder"]
+    classification_category_options = {
+        feature: list(values)
+        for feature, values in zip(CATEGORICAL_FEATURES, classification_encoder.categories_)
+    }
+    clustering_category_options = {
+        feature: list(values)
+        for feature, values in zip(CATEGORICAL_FEATURES, clustering_encoder.categories_)
+    }
+
+    if CLUSTERING_EVALUATION_PATH.exists():
+        clustering_evaluation = pd.read_csv(CLUSTERING_EVALUATION_PATH)
+    else:
+        clustering_evaluation = pd.DataFrame({
+            "k": [2, 3, 4, 5, 6],
+            "inertia": [95756.560557, 89650.949954, 85735.264751, 82928.578533, 80289.582594],
+            "silhouette": [0.143490, 0.089714, 0.083531, 0.085248, 0.080003],
+            "davies_bouldin": [2.387075, 2.763991, 2.821309, 2.624441, 2.506223],
+            "calinski_harabasz": [1287.425737, 1027.902184, 868.672373, 758.056056, 692.012594],
+        })
+
+    return {
+        "classification_model": classification_model,
+        "classification_preprocessor": classification_preprocessor,
+        "classification_metadata": classification_metadata,
+        "clustering_model": clustering_model,
+        "clustering_preprocessor": clustering_preprocessor,
+        "clustering_metadata": clustering_metadata,
+        "mappings": mappings,
+        "classification_category_options": classification_category_options,
+        "clustering_category_options": clustering_category_options,
+        "clustering_evaluation": clustering_evaluation,
+    }
+
+
+@st.cache_data(show_spinner=False)
+def load_dataset_results() -> dict:
+    files = {
+        "cluster_size": "clustering_cluster_size.csv",
+        "numeric_profile": "clustering_numeric_profile.csv",
+        "categorical_profile": "clustering_categorical_profile.csv",
+        "feature_comparison": "clustering_feature_comparison.csv",
+        "k_evaluation": "clustering_k_evaluation.csv",
+        "pca_variance": "clustering_pca_variance.csv",
+    }
+    data = {}
+    missing = []
+    for key, filename in files.items():
+        path = DATASET_RESULTS_DIR / filename
+        if path.exists():
+            data[key] = pd.read_csv(path)
+        else:
+            missing.append(filename)
+    data["missing"] = missing
+    data["pca_image"] = DATASET_RESULTS_DIR / "clustering_pca.png"
+    data["elbow_image"] = DATASET_RESULTS_DIR / "clustering_elbow.png"
+    data["silhouette_image"] = DATASET_RESULTS_DIR / "clustering_silhouette.png"
+    return data
+
+
+def inject_styles() -> None:
+    st.markdown(
+        """
+        <style>
+        :root { --ink: #17324d; --muted: #5b7180; --teal: #1f7a78; --pale: #eef7f6; --line: #dbe6ea; }
+        .block-container { max-width: 1180px; padding-top: 2.2rem; padding-bottom: 3.5rem; }
+        .hero { padding: 2rem 2.2rem; border: 1px solid #cfe3e4; border-radius: 22px; background: linear-gradient(120deg, #15344e 0%, #1e6f73 100%); color: white; margin-bottom: 1.5rem; box-shadow: 0 12px 30px rgba(23,50,77,.12); }
+        .hero h1 { margin: 0 0 .45rem 0; font-size: clamp(2rem, 4vw, 3.2rem); letter-spacing: -.03em; }
+        .hero p { max-width: 720px; margin: 0; color: #e0f3f0; font-size: 1.1rem; line-height: 1.6; }
+        .eyebrow { color: #8dd9d2; font-size: .78rem; font-weight: 700; letter-spacing: .11em; text-transform: uppercase; margin-bottom: .5rem; }
+        .result-card { padding: 1.35rem 1.5rem; border: 1px solid #b9e2dc; border-radius: 17px; background: var(--pale); margin-top: 1rem; }
+        .result-card h2 { color: var(--ink); margin: 0 0 .35rem 0; }
+        .result-card p { color: #385b65; margin-bottom: 0; }
+        .severity-card { padding: 1.7rem; border-radius: 18px; background: linear-gradient(135deg, #15344e, #1f7a78); color: white; text-align: center; }
+        .severity-card .label { font-size: .85rem; opacity: .8; text-transform: uppercase; letter-spacing: .12em; }
+        .severity-card .value { font-size: 2.3rem; font-weight: 750; margin-top: .4rem; }
+        .footer { margin-top: 3rem; padding-top: 1.2rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .82rem; text-align: center; }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def option_label(value: object, feature: str, mappings: dict) -> str:
+    if isinstance(value, Real) and not isinstance(value, bool):
+        numeric_value = float(value)
+        code = str(int(numeric_value)) if numeric_value.is_integer() else str(numeric_value)
+        mapped = mappings.get(feature, {}).get(code)
+        if mapped:
+            return f"{mapped} (kode {code})"
+        return f"Kode {code} (kode STATS19)"
+    return str(value)
+
+
+def scenario_option(artifacts: dict, feature: str, preferred: str) -> object | None:
+    options = artifacts["classification_category_options"].get(feature, [])
+    needle = preferred.lower()
+    for option in options:
+        if needle in option_label(option, feature, artifacts["mappings"]).lower():
+            return option
+    return None
+
+
+def apply_classification_scenario(artifacts: dict) -> None:
+    scenario_name = st.session_state.get("classification_scenario", "Input bebas")
+    defaults = SCENARIO_DEFINITIONS[scenario_name]
+    for feature, value in defaults.items():
+        if feature in SCENARIO_WIDGET_SUFFIXES:
+            widget_key = f"classification_{SCENARIO_WIDGET_SUFFIXES[feature]}"
+            st.session_state[widget_key] = value
+        else:
+            selected = scenario_option(artifacts, feature, str(value))
+            if selected is not None:
+                st.session_state[f"classification_{feature}"] = selected
+
+
+def render_select(values: dict, artifacts: dict, feature: str, category_options_key: str, prefix: str) -> None:
+    values[feature] = st.selectbox(
+        FEATURE_LABELS[feature],
+        options=artifacts[category_options_key][feature],
+        format_func=lambda value, current=feature: option_label(value, current, artifacts["mappings"]),
+        help=FEATURE_HELP[feature],
+        key=f"{prefix}_{feature}",
+    )
+
+
+def input_form(artifacts: dict, prefix: str, category_options_key: str, submit_label: str) -> tuple[dict, bool]:
+    values: dict = {}
+    with st.form(f"{prefix}_form", border=True):
+        with st.container(border=True):
+            st.subheader("🚗 Informasi kendaraan")
+            vehicle_left, vehicle_right = st.columns(2)
+            with vehicle_left:
+                vehicle_kwargs = {}
+                if f"{prefix}_vehicles" not in st.session_state:
+                    vehicle_kwargs["value"] = 2
+                values["number_of_vehicles"] = st.number_input(
+                    "Jumlah kendaraan", min_value=1, max_value=20, step=1,
+                    help=FEATURE_HELP["number_of_vehicles"], key=f"{prefix}_vehicles", **vehicle_kwargs
+                )
+            with vehicle_right:
+                speed_kwargs = {}
+                if f"{prefix}_speed" not in st.session_state:
+                    speed_kwargs["value"] = 30
+                values["speed_limit"] = st.number_input(
+                    "Batas kecepatan", min_value=10, max_value=100, step=10,
+                    help=FEATURE_HELP["speed_limit"], key=f"{prefix}_speed", **speed_kwargs
+                )
+
+        with st.container(border=True):
+            st.subheader("🛣️ Informasi jalan")
+            road_features = FEATURE_GROUPS["Informasi jalan"]
+            for start in range(0, len(road_features), 2):
+                road_left, road_right = st.columns(2)
+                with road_left:
+                    render_select(values, artifacts, road_features[start], category_options_key, prefix)
+                with road_right:
+                    render_select(values, artifacts, road_features[start + 1], category_options_key, prefix)
+
+        with st.container(border=True):
+            st.subheader("🌦️ Kondisi lingkungan")
+            environment_features = FEATURE_GROUPS["Kondisi lingkungan"]
+            for start in range(0, len(environment_features), 2):
+                env_left, env_right = st.columns(2)
+                with env_left:
+                    render_select(values, artifacts, environment_features[start], category_options_key, prefix)
+                if start + 1 < len(environment_features):
+                    with env_right:
+                        render_select(values, artifacts, environment_features[start + 1], category_options_key, prefix)
+
+        with st.container(border=True):
+            st.subheader("📅 Waktu kejadian")
+            time_left, time_middle, time_right = st.columns(3)
+            with time_left:
+                render_select(values, artifacts, "day_of_week", category_options_key, prefix)
+            with time_middle:
+                hour_kwargs = {}
+                if f"{prefix}_hour" not in st.session_state:
+                    hour_kwargs["value"] = 12
+                values["hour"] = st.slider(
+                    "Jam kejadian", min_value=0, max_value=23,
+                    help=FEATURE_HELP["hour"], key=f"{prefix}_hour", **hour_kwargs
+                )
+            with time_right:
+                month_kwargs = {}
+                if f"{prefix}_month" not in st.session_state:
+                    month_kwargs["value"] = 7
+                values["month"] = st.slider(
+                    "Bulan kejadian", min_value=1, max_value=12,
+                    help=FEATURE_HELP["month"], key=f"{prefix}_month", **month_kwargs
+                )
+
+        submitted = st.form_submit_button(submit_label, type="primary", width="stretch")
+    return values, submitted
+
+
+def values_to_frame(values: dict) -> pd.DataFrame:
+    return pd.DataFrame([{feature: values[feature] for feature in FEATURES}], columns=FEATURES)
+
+
+def navigate_to(page: str) -> None:
+    st.session_state["page_nav"] = page
+
+
+def render_home() -> None:
+    st.markdown(
+        "<div class='hero'><div class='eyebrow'>Data mining · STATS19</div><h1>Traffic Accident Analysis</h1><p>Analisis Kecelakaan Lalu Lintas Menggunakan Machine Learning</p></div>",
+        unsafe_allow_html=True,
+    )
+    st.write("Aplikasi ini membantu menganalisis karakteristik kecelakaan lalu lintas menggunakan dua pendekatan machine learning.")
+
+    cards = st.columns(2)
+    with cards[0].container(border=True, height="stretch"):
+        st.subheader("📊 Analisis dataset")
+        st.write("Jelajahi hasil analisis terhadap 10.000 data penelitian, termasuk distribusi dan profil cluster.")
+        st.button("Buka Dashboard Dataset", key="home_dataset", on_click=navigate_to, args=("📊 Dashboard Dataset",), width="stretch")
+    with cards[1].container(border=True, height="stretch"):
+        st.subheader("🔮 Analisis data baru")
+        st.write("Masukkan karakteristik kecelakaan untuk memperoleh prediksi severity atau mengetahui kelompok karakteristiknya.")
+        st.button("Prediksi Severity", key="home_classification", on_click=navigate_to, args=("🔮 Prediksi Severity",), width="stretch")
+        st.button("Analisis Cluster", key="home_clustering", on_click=navigate_to, args=("🧩 Analisis Cluster",), width="stretch")
+
+    st.subheader("Bagaimana cara kerjanya?")
+    flow = st.columns(4)
+    for column, title, detail in zip(
+        flow,
+        ["Input data", "Preprocessing", "Model machine learning", "Hasil analisis"],
+        ["18 karakteristik", "Imputation, scaling, encoding", "Random Forest atau K-Means", "Severity atau cluster"],
+    ):
+        with column.container(border=True):
+            st.markdown(f"**{title}**")
+            st.caption(detail)
+    st.caption("Data penelitian → preprocessing → model → hasil analisis")
+    st.caption("Data baru → preprocessing yang sama → model final → prediksi / cluster")
+
+    st.subheader("Mulai dalam 3 langkah")
+    steps = st.columns(3)
+    for column, number, text in zip(steps, ["1", "2", "3"], ["Pilih metode analisis", "Isi karakteristik kecelakaan", "Klik tombol analisis dan baca hasilnya"]):
+        with column.container(border=True):
+            st.metric("Langkah", number)
+            st.write(text)
+
+    st.subheader("Untuk siapa aplikasi ini?")
+    st.write("Mahasiswa · Dosen · Peneliti · Pengguna yang ingin memahami hasil analisis data kecelakaan")
+    with st.container(border=True):
+        st.caption("Proyek akademik")
+        st.write("Rekayasa Perangkat Lunak · Asyudi Anggara · F552630019 · Universitas Tadulako (UNTAD) — Palu")
+    st.info("Prediksi classification hanya berdasarkan karakteristik input yang dimasukkan, bukan prediksi risiko kecelakaan secara umum.", icon=":material/info:")
+
+
+def profile_value(profile: pd.DataFrame, cluster: int, feature: str, column: str) -> object:
+    rows = profile[(profile["cluster"] == cluster) & (profile["feature"] == feature)]
+    if rows.empty:
+        return "-"
+    return rows.iloc[0][column]
+
+
+def render_dataset_dashboard(artifacts: dict) -> None:
+    st.title("Dashboard dataset")
+    st.write("Halaman ini menampilkan hasil analisis historis dari 10.000 data penelitian. Halaman ini bukan inference dan tidak menjalankan training ulang.")
+    results = load_dataset_results()
+    if results["missing"]:
+        st.warning("Sebagian output dataset belum tersedia: " + ", ".join(results["missing"]))
+        return
+
+    cluster_size = results["cluster_size"]
+    numeric_profile = results["numeric_profile"]
+    categorical_profile = results["categorical_profile"]
+    evaluation = results["k_evaluation"]
+    pca_variance = results["pca_variance"]
+
+    st.subheader("Ringkasan dataset")
+    with st.container(horizontal=True):
+        st.metric("Sample", "10.000", border=True)
+        st.metric("Periode", "2021–2025", border=True)
+        st.metric("Fitur input", "18", border=True)
+        st.metric("Jumlah cluster", "2", border=True)
+
+    st.subheader("Distribusi cluster")
+    distribution_left, distribution_right = st.columns(2)
+    with distribution_left.container(border=True):
+        st.bar_chart(cluster_size.set_index("cluster")["count"], x_label="Cluster", y_label="Jumlah record")
+    with distribution_right.container(border=True):
+        distribution_table = cluster_size.copy()
+        distribution_table["cluster"] = distribution_table["cluster"].map(lambda value: f"Cluster {value}")
+        distribution_table["percentage"] = distribution_table["percentage"].map(lambda value: f"{value:.2f}%")
+        st.dataframe(distribution_table, hide_index=True, width="stretch")
+
+    st.subheader("Profil cluster")
+    profile_columns = st.columns(2)
+    for column, cluster in zip(profile_columns, [0, 1]):
+        cluster_rows = cluster_size[cluster_size["cluster"] == cluster]
+        count = int(cluster_rows.iloc[0]["count"])
+        percentage = float(cluster_rows.iloc[0]["percentage"])
+        with column.container(border=True):
+            st.subheader(f"Cluster {cluster}")
+            st.metric("Record", f"{count:,}".replace(",", "."), f"{percentage:.2f}%")
+            if cluster == 0:
+                st.write("Cluster 0 menunjukkan pola karakteristik yang dominan pada wilayah rural dan batas kecepatan yang relatif lebih tinggi.")
+                rural = profile_value(categorical_profile, cluster, "urban_or_rural_area", "dominant_percentage")
+                road_class = profile_value(categorical_profile, cluster, "first_road_class", "dominant_percentage")
+                speed_mean = profile_value(numeric_profile, cluster, "speed_limit", "mean")
+                speed_median = profile_value(numeric_profile, cluster, "speed_limit", "median")
+                st.markdown(f"- Rural: **{float(rural):.2f}%**\n- Mean speed limit: **{float(speed_mean):.2f}**\n- Median speed limit: **{float(speed_median):.0f}**\n- First road class A: **{float(road_class):.2f}%**")
+            else:
+                st.write("Cluster 1 menunjukkan pola karakteristik yang dominan pada wilayah urban dan batas kecepatan yang relatif lebih rendah.")
+                urban = profile_value(categorical_profile, cluster, "urban_or_rural_area", "dominant_percentage")
+                road_class = profile_value(categorical_profile, cluster, "first_road_class", "dominant_percentage")
+                road_type = profile_value(categorical_profile, cluster, "road_type", "dominant_percentage")
+                junction = profile_value(categorical_profile, cluster, "junction_control", "dominant_percentage")
+                speed_mean = profile_value(numeric_profile, cluster, "speed_limit", "mean")
+                speed_median = profile_value(numeric_profile, cluster, "speed_limit", "median")
+                st.markdown(f"- Urban: **{float(urban):.2f}%**\n- Mean speed limit: **{float(speed_mean):.2f}**\n- Median speed limit: **{float(speed_median):.0f}**\n- Unclassified first road class: **{float(road_class):.2f}%**\n- Single carriageway: **{float(road_type):.2f}%**\n- Give way or uncontrolled: **{float(junction):.2f}%**")
+    st.caption("Interpretasi cluster bersifat deskriptif berdasarkan profiling C4. Cluster bukan severity, tingkat keamanan, atau tingkat bahaya.")
+
+    st.subheader("Evaluasi K-Means")
+    display_evaluation = evaluation.copy()
+    for column_name in ["inertia", "silhouette", "davies_bouldin", "calinski_harabasz"]:
+        display_evaluation[column_name] = display_evaluation[column_name].map(lambda value: f"{value:.6f}")
+    st.dataframe(display_evaluation, hide_index=True, width="stretch")
+    chart_data = evaluation.set_index("k")
+    first_charts = st.columns(2)
+    with first_charts[0].container(border=True):
+        st.markdown("**Elbow / inertia**")
+        st.line_chart(chart_data["inertia"], x_label="k", y_label="Inertia")
+    with first_charts[1].container(border=True):
+        st.markdown("**Silhouette**")
+        st.line_chart(chart_data["silhouette"], x_label="k", y_label="Silhouette")
+    second_charts = st.columns(2)
+    with second_charts[0].container(border=True):
+        st.markdown("**Davies-Bouldin**")
+        st.line_chart(chart_data["davies_bouldin"], x_label="k", y_label="Davies-Bouldin")
+    with second_charts[1].container(border=True):
+        st.markdown("**Calinski-Harabasz**")
+        st.line_chart(chart_data["calinski_harabasz"], x_label="k", y_label="Calinski-Harabasz")
+    st.success("k=2 dipilih karena memiliki Silhouette tertinggi, Davies-Bouldin terendah, dan Calinski-Harabasz tertinggi.", icon=":material/check_circle:")
+
+    st.subheader("Visualisasi PCA")
+    pca_left, pca_right = st.columns([1, 1.4])
+    with pca_left.container(border=True):
+        variance_table = pca_variance.copy()
+        variance_table["explained_variance_ratio"] = variance_table["explained_variance_ratio"].map(lambda value: f"{value:.4%}")
+        st.dataframe(variance_table, hide_index=True, width="stretch")
+        st.caption("PCA digunakan hanya untuk membantu visualisasi hasil clustering dalam dua dimensi. PCA tidak digunakan untuk membentuk cluster.")
+    with pca_right.container(border=True):
+        if results["pca_image"].exists():
+            st.image(str(results["pca_image"]), caption="PCA visualization dari hasil C4")
+
+    with st.expander("Detail profil fitur C4", icon=":material/table_chart:"):
+        st.dataframe(results["feature_comparison"], hide_index=True, width="stretch")
+
+    st.subheader("Classification evaluation")
+    metric_columns = st.columns(5)
+    for column, (label, value) in zip(metric_columns, CLASSIFICATION_METRICS.items()):
+        with column.container(border=True):
+            st.metric(label, value)
+    st.caption("Accuracy tidak sebaiknya dibaca sendirian karena performa model antar kelas berbeda. Classification dan clustering memiliki tujuan berbeda.")
+    st.info("Report dan confusion matrix CSV yang tersimpan tidak ditampilkan di dashboard karena nilainya tidak cocok dengan metadata artefak classification final 18 fitur. Dashboard mempertahankan metrik final yang tercatat pada metadata artefak.", icon=":material/info:")
+
+
+def render_classification(artifacts: dict) -> None:
+    st.title("Prediksi tingkat keparahan kecelakaan")
+    st.write("Pada halaman ini Anda dapat memasukkan karakteristik suatu kecelakaan. Model Random Forest kemudian memberikan prediksi tingkat keparahan berdasarkan pola yang dipelajari dari data pelatihan.")
+    with st.expander("Apa itu Classification?", icon=":material/help:"):
+        st.write("Classification adalah metode machine learning untuk menempatkan suatu data ke dalam kelas yang telah ditentukan. Pada aplikasi ini kelas yang diprediksi adalah Fatal, Serious, dan Slight.")
+
+    st.selectbox(
+        "Gunakan contoh skenario",
+        options=list(SCENARIO_DEFINITIONS),
+        key="classification_scenario",
+        help="Memilih skenario hanya mengisi contoh nilai awal. Semua input tetap dapat diedit sebelum prediksi.",
+        on_change=apply_classification_scenario,
+        args=(artifacts,),
+    )
+
+    values, submitted = input_form(artifacts, "classification", "classification_category_options", "Prediksi Tingkat Keparahan")
+    if not submitted:
+        st.caption("Tip: arahkan kursor ke ikon bantuan (?) pada setiap input untuk membaca arti fitur.")
+        return
+
+    frame = values_to_frame(values)
+    encoded = artifacts["classification_preprocessor"].transform(frame)
+    model = artifacts["classification_model"]
+    prediction = model.predict(encoded)[0]
+    probabilities = model.predict_proba(encoded)[0] if hasattr(model, "predict_proba") else None
+
+    st.markdown(f"<div class='severity-card'><div class='label'>Prediksi model</div><div class='value'>{prediction}</div></div>", unsafe_allow_html=True)
+    st.write("Prediksi ini dihasilkan oleh Random Forest berdasarkan kombinasi karakteristik yang Anda masukkan.")
+    if probabilities is not None:
+        st.subheader("Probabilitas model")
+        probability_columns = st.columns(len(model.classes_))
+        for column, label, probability in zip(probability_columns, model.classes_, probabilities):
+            with column:
+                st.metric(str(label), f"{probability:.2%}")
+                st.progress(float(probability), text=f"{label}: {probability:.2%}")
+        st.caption("Probabilitas adalah keluaran model untuk setiap kelas, bukan jaminan kebenaran.")
+        if float(np.max(probabilities)) == 1.0:
+            st.info(f"Model memberikan probabilitas 1,00 untuk kelas {prediction} pada input ini.", icon=":material/info:")
+
+    with st.expander("Bagaimana hasil ini diperoleh?", icon=":material/account_tree:"):
+        st.write("18 karakteristik input → preprocessing → 105 fitur hasil encoding → Random Forest → prediksi kelas")
+    st.warning("Hasil ini merupakan prediksi model dan bukan keputusan resmi mengenai tingkat keparahan kecelakaan.", icon=":material/warning:")
+
+
+def render_clustering(artifacts: dict) -> None:
+    st.title("Identifikasi pola kecelakaan")
+    st.write("Clustering digunakan untuk mengelompokkan data yang memiliki karakteristik serupa tanpa menggunakan label severity sebagai dasar pembentukan cluster.")
+    with st.expander("Apa itu Clustering?", icon=":material/help:"):
+        st.write("Bayangkan kita memiliki ribuan data kecelakaan. Clustering mencoba mengelompokkan data yang memiliki pola karakteristik yang mirip. Pada aplikasi ini digunakan K-Means dengan 2 cluster.")
+
+    values, submitted = input_form(artifacts, "clustering", "clustering_category_options", "Temukan Cluster")
+    if not submitted:
+        st.caption("Tip: cluster menunjukkan kemiripan karakteristik, bukan tingkat keparahan.")
+        return
+
+    frame = values_to_frame(values)
+    preprocessor = artifacts["clustering_preprocessor"]
+    model = artifacts["clustering_model"]
+    encoded = preprocessor.transform(frame)
+    cluster = int(model.predict(encoded)[0])
+    distances = model.transform(encoded)[0]
+    distance = float(distances[cluster])
+    interpretation = CLUSTER_INTERPRETATIONS[cluster]
+
+    st.markdown(f"<div class='result-card'><h2>Cluster yang diprediksi: {cluster}</h2><p>{interpretation['summary']}</p></div>", unsafe_allow_html=True)
+    metric_left, metric_right = st.columns(2)
+    with metric_left:
+        st.metric("Nomor cluster", f"Cluster {cluster}")
+    with metric_right:
+        st.metric("Jarak ke centroid", f"{distance:.4f}", help="Jarak ke centroid menunjukkan seberapa dekat karakteristik input terhadap pusat cluster. Nilai yang lebih kecil berarti input lebih dekat dengan pusat cluster tersebut.")
+
+    st.subheader("Interpretasi berdasarkan profiling C4")
+    for detail in interpretation["details"]:
+        st.write(f"• {detail}")
+    st.info("Cluster bukan tingkat keparahan. Cluster menunjukkan kelompok karakteristik yang memiliki kemiripan.", icon=":material/info:")
+
+
+def render_guide() -> None:
+    st.title("Panduan penggunaan")
+    st.write("Gunakan panduan ini untuk memahami alur aplikasi dan membaca hasilnya tanpa perlu pengetahuan teknis mendalam.")
+    with st.container(border=True):
+        st.subheader("Memulai aplikasi")
+        st.markdown("1. Buka halaman Beranda.\n2. Pilih Prediksi Severity atau Analisis Cluster.\n3. Isi 18 karakteristik.\n4. Pastikan semua input sudah benar.\n5. Klik tombol analisis.\n6. Baca hasil dan penjelasannya.")
+    with st.expander("Cara menggunakan Dashboard Dataset", icon=":material/dashboard:"):
+        st.markdown("1. Buka halaman **Dashboard Dataset**.\n2. Baca ringkasan sample dan distribusi cluster.\n3. Bandingkan profil Cluster 0 dan Cluster 1.\n4. Gunakan tabel dan grafik evaluasi K-Means untuk memahami alasan pemilihan k=2.\n5. Baca visualisasi PCA sebagai bantuan visual saja; PCA tidak digunakan untuk membentuk cluster.")
+    with st.expander("Cara menggunakan Prediksi Severity", icon=":material/analytics:"):
+        st.markdown("1. Buka halaman **Prediksi Severity**.\n2. Isi informasi kendaraan, jalan, kondisi lingkungan, dan waktu kejadian.\n3. Baca hasil kelas Fatal, Serious, atau Slight.\n4. Gunakan probabilitas sebagai keluaran model, bukan kepastian.\n5. Perhatikan disclaimer sebelum menarik kesimpulan.")
+    with st.expander("Cara menggunakan Clustering", icon=":material/hub:"):
+        st.markdown("1. Buka halaman **Analisis Cluster**.\n2. Isi karakteristik kecelakaan yang ingin dianalisis.\n3. Klik **Temukan Cluster**.\n4. Baca cluster dan jarak ke centroid.\n5. Gunakan profil C4 untuk memahami pola, bukan untuk menyimpulkan severity atau keamanan.")
+    with st.container(border=True):
+        st.subheader("Bagaimana membaca hasil")
+        st.markdown("- **Prediction**: kelas yang dipilih Random Forest.\n- **Probability**: keluaran model untuk masing-masing kelas; bukan jaminan kebenaran.\n- **Cluster**: kelompok karakteristik yang paling dekat dengan input.\n- **Jarak centroid**: kedekatan input dengan pusat cluster; bukan probabilitas.")
+    with st.container(border=True):
+        st.subheader("Hal yang perlu diperhatikan")
+        st.markdown("- Model bukan pengganti penilaian resmi.\n- Hasil bergantung pada karakteristik input.\n- Model dipelajari dari sample data.\n- Classification dan clustering memiliki tujuan berbeda.\n- Clustering tidak menggunakan collision_severity sebagai input.")
+    st.subheader("Glosarium machine learning")
+    for term, definition in GLOSSARY.items():
+        with st.expander(term):
+            st.write(definition)
+
+
+def render_feature_dictionary(artifacts: dict) -> None:
+    st.title("Kamus fitur")
+    st.write("Cari nama fitur, istilah jalan, cuaca, junction, atau arti fitur untuk memahami input yang digunakan model.")
+    query = st.text_input("Cari fitur", placeholder="Contoh: weather, junction, road, speed", key="feature_search")
+    rows = []
+    for feature in FEATURES:
+        options = artifacts["classification_category_options"].get(feature, [])
+        examples = ", ".join(option_label(value, feature, artifacts["mappings"]) for value in options[:3])
+        rows.append({
+            "Nama fitur": feature,
+            "Nama tampilan": FEATURE_LABELS[feature],
+            "Arti": FEATURE_HELP[feature],
+            "Contoh nilai": examples or "-",
+            "Kategori": "Numerik" if feature in NUMERIC_FEATURES else "Kategorikal",
+        })
+    dictionary = pd.DataFrame(rows)
+    if query.strip():
+        search = query.strip().lower()
+        mask = dictionary.astype(str).apply(lambda column: column.str.lower().str.contains(search, na=False)).any(axis=1)
+        dictionary = dictionary[mask]
+
+    numeric, categorical = st.tabs(["Fitur numerik", "Fitur kategorikal"])
+    with numeric:
+        st.dataframe(
+            dictionary[dictionary["Kategori"] == "Numerik"],
+            hide_index=True,
+            width="stretch",
+            height=360,
+            column_config={
+                "Nama fitur": st.column_config.TextColumn(width="medium"),
+                "Nama tampilan": st.column_config.TextColumn(width="medium"),
+                "Arti": st.column_config.TextColumn(width="large"),
+                "Contoh nilai": st.column_config.TextColumn(width="medium"),
+                "Kategori": st.column_config.TextColumn(width="small"),
+            },
+        )
+    with categorical:
+        st.dataframe(
+            dictionary[dictionary["Kategori"] == "Kategorikal"],
+            hide_index=True,
+            width="stretch",
+            height=520,
+            column_config={
+                "Nama fitur": st.column_config.TextColumn(width="medium"),
+                "Nama tampilan": st.column_config.TextColumn(width="medium"),
+                "Arti": st.column_config.TextColumn(width="large"),
+                "Contoh nilai": st.column_config.TextColumn(width="medium"),
+                "Kategori": st.column_config.TextColumn(width="small"),
+            },
+        )
+
+
+def render_about(artifacts: dict) -> None:
+    st.title("Tentang model")
+    st.write("Halaman ini merangkum data, konfigurasi model, hasil evaluasi, dan batasan analisis.")
+    with st.container(border=True):
+        st.caption("Identitas akademik")
+        st.write("Mata Kuliah: Rekayasa Perangkat Lunak · Mahasiswa: Asyudi Anggara · NIM: F552630019 · Institusi: Universitas Tadulako (UNTAD) — Palu")
+    st.subheader("Ringkasan data")
+    data_metrics = st.columns(3)
+    for column, label, value in zip(data_metrics, ["Sample", "Periode", "Fitur input"], ["10.000", "2021–2025", "18"]):
+        with column.container(border=True):
+            st.metric(label, value)
+
+    st.subheader("Konfigurasi model")
+    classification, clustering = st.columns(2)
+    with classification.container(border=True):
+        st.subheader("Classification")
+        st.write("Random Forest")
+        st.markdown("- 300 trees\n- `max_depth = 15`\n- `class_weight = balanced`\n- `random_state = 42`")
+        st.caption("18 fitur input → 105 fitur encoded")
+    with clustering.container(border=True):
+        st.subheader("Clustering")
+        st.write("K-Means")
+        st.markdown("- `k = 2`\n- `n_init = 10`\n- `random_state = 42`")
+        st.caption("18 fitur input → 108 fitur encoded")
+
+    st.subheader("Preprocessing")
+    st.info("Numerik: Median Imputation → StandardScaler\n\nKategorikal: Most Frequent Imputation → One-Hot Encoding", icon=":material/tune:")
+
+    st.subheader("Hasil evaluasi classification")
+    metric_columns = st.columns(5)
+    for column, (label, value) in zip(metric_columns, CLASSIFICATION_METRICS.items()):
+        with column.container(border=True):
+            st.metric(label, value)
+    st.caption("Accuracy tidak boleh dibaca sendirian karena performa antar kelas berbeda. Macro F1 lebih rendah daripada Weighted F1.")
+
+    st.subheader("Evaluasi jumlah cluster")
+    display_evaluation = artifacts["clustering_evaluation"].copy()
+    for column in ["inertia", "silhouette", "davies_bouldin", "calinski_harabasz"]:
+        if column in display_evaluation:
+            display_evaluation[column] = display_evaluation[column].map(lambda value: f"{value:.6f}")
+    st.dataframe(display_evaluation, hide_index=True, width="stretch")
+    st.success("k=2 dipilih karena memiliki Silhouette tertinggi, Davies-Bouldin terendah, dan Calinski-Harabasz tertinggi.", icon=":material/check_circle:")
+
+    st.subheader("Keterbatasan")
+    st.markdown("- Model dibuat berdasarkan sample 10.000 record.\n- Dataset berasal dari data kecelakaan yang digunakan dalam penelitian.\n- Hasil bergantung pada kualitas dan karakteristik data input.\n- Performa classification antar kelas tidak sama.\n- Macro F1 lebih rendah daripada Weighted F1.\n- Clustering menemukan pola berdasarkan fitur yang digunakan, bukan menentukan tingkat keparahan.")
+    st.caption("PCA pada project hanya digunakan untuk visualisasi hasil clustering, bukan untuk prediction.")
+
+
+def render_footer() -> None:
+    st.markdown("<div class='footer'>Traffic Accident Analysis<br>Machine Learning Classification &amp; Clustering<br>Rekayasa Perangkat Lunak · Asyudi Anggara · F552630019</div>", unsafe_allow_html=True)
+
+
+def main() -> None:
+    st.set_page_config(
+        page_title="Traffic Accident Analysis",
+        page_icon=":material/traffic:",
+        layout="wide",
+        initial_sidebar_state="expanded",
+    )
+    inject_styles()
+    try:
+        artifacts = load_artifacts()
+    except Exception as error:
+        st.error("Artefak final tidak dapat dimuat.", icon=":material/error:")
+        st.exception(error)
+        st.stop()
+
+    st.sidebar.title("Traffic Accident Analysis")
+    st.sidebar.caption("Classification & Clustering")
+    st.sidebar.caption("Model Data Mining")
+    st.sidebar.markdown("---")
+    st.session_state.setdefault("page_nav", NAV_ITEMS[0])
+    page = st.sidebar.radio("Navigasi", NAV_ITEMS, key="page_nav")
+    st.sidebar.markdown("---")
+    st.sidebar.caption("Inference-only app · tidak ada retraining")
+
+    if page == "🏠 Beranda":
+        render_home()
+    elif page == "📊 Dashboard Dataset":
+        render_dataset_dashboard(artifacts)
+    elif page == "🔮 Prediksi Severity":
+        render_classification(artifacts)
+    elif page == "🧩 Analisis Cluster":
+        render_clustering(artifacts)
+    elif page == "📖 Panduan Penggunaan":
+        render_guide()
+    elif page == "📚 Kamus Fitur":
+        render_feature_dictionary(artifacts)
+    else:
+        render_about(artifacts)
+    render_footer()
+
+
+if __name__ == "__main__":
+    main()

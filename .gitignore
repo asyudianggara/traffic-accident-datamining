@@ -1,0 +1,46 @@
+# Virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Local data
+data/raw/
+data/processed/*
+!data/processed/stats19_maps.json
+
+# Trained models
+models/*.pkl
+models/*.joblib
+!models/final_random_forest.joblib
+!models/final_preprocessor.joblib
+!models/final_kmeans.joblib
+!models/final_clustering_preprocessor.joblib
+models/*legacy*.joblib
+
+# Streamlit
+.streamlit/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+.claude/
+.agents/
+
+# Secrets, credentials, logs, and temporary files
+.env
+.env.*
+!.env.example
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
