@@ -4,6 +4,7 @@ Aplikasi analitik edukatif berbasis Streamlit untuk memahami analisis kecelakaan
 lalu lintas melalui dashboard historis dan dua pendekatan machine learning:
 
 - **Dashboard Dataset**: eksplorasi output penelitian C3/C4 yang sudah tersedia.
+- **Tentang Data**: sumber STATS19, sampling, target, 18 fitur, dan pemisahan analisis.
 - **Prediksi Severity**: Random Forest memprediksi kelas `Fatal`, `Serious`, atau `Slight`.
 - **Analisis Cluster**: K-Means mengelompokkan karakteristik kecelakaan yang mirip.
 
@@ -19,6 +20,7 @@ Navigasi utama tersedia di sidebar:
 
 - **Beranda**: penjelasan tujuan, alur, dan quick start.
 - **Dashboard Dataset**: distribusi, profiling, evaluasi K-Means, dan PCA visualization.
+- **Tentang Data**: sumber data, periode, sampling, target, fitur, dan preprocessing.
 - **Prediksi Severity**: form 18 fitur dengan bantuan istilah dan probabilitas model.
 - **Analisis Cluster**: form 18 fitur, nomor cluster, jarak centroid, dan interpretasi C4.
 - **Panduan Penggunaan**: langkah penggunaan dan glosarium machine learning.
@@ -129,6 +131,6 @@ penilaian resmi tingkat keparahan kecelakaan.
 
 ## Validasi
 
-Regression test Streamlit memeriksa startup, pemuatan artifact final, tujuh
+Regression test Streamlit memeriksa startup, pemuatan artifact final, delapan
 halaman navigasi, classification inference, clustering inference, serta
 jumlah fitur encoded 105 dan 108.

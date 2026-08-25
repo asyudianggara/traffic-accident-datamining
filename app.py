@@ -84,6 +84,7 @@ SCENARIO_WIDGET_SUFFIXES = {
 NAV_ITEMS = [
     "🏠 Beranda",
     "📊 Dashboard Dataset",
+    "📊 Tentang Data",
     "🔮 Prediksi Severity",
     "🧩 Analisis Cluster",
     "📖 Panduan Penggunaan",
@@ -103,13 +104,33 @@ CLUSTER_INTERPRETATIONS = {
     0: {
         "title": "Pola dominan wilayah rural",
         "summary": "Dominan pada pola kecelakaan wilayah rural dengan batas kecepatan lebih tinggi.",
-        "details": ["Rural: 92,37%", "Rata-rata speed limit: 57,69", "First road class A: 54,11%"],
+        "details": [
+            "Rural: 92,37%",
+            "Rata-rata speed limit: 57,69",
+            "Median speed limit: 60",
+            "First road class A: 54,11%",
+            "Single carriageway: 62,94%",
+        ],
     },
     1: {
         "title": "Pola dominan wilayah urban",
         "summary": "Dominan pada pola kecelakaan wilayah urban dengan batas kecepatan lebih rendah.",
-        "details": ["Urban: 87,47%", "Rata-rata speed limit: 28,51", "First road class Unclassified: 41,82%"],
+        "details": [
+            "Urban: 87,47%",
+            "Rata-rata speed limit: 28,51",
+            "Median speed limit: 30",
+            "First road class Unclassified: 41,82%",
+            "Single carriageway: 75,46%",
+            "Give way or uncontrolled: 48,43%",
+        ],
     },
+}
+
+ACADEMIC_IDENTITY = {
+    "Mata kuliah": "Rekayasa Perangkat Lunak",
+    "Mahasiswa": "Asyudi Anggara",
+    "NIM": "F552630019",
+    "Institusi": "Universitas Tadulako (UNTAD) – Palu",
 }
 
 FEATURE_LABELS = {
@@ -307,6 +328,16 @@ def inject_styles() -> None:
         .severity-card { padding: 1.7rem; border-radius: 18px; background: linear-gradient(135deg, #15344e, #1f7a78); color: white; text-align: center; }
         .severity-card .label { font-size: .85rem; opacity: .8; text-transform: uppercase; letter-spacing: .12em; }
         .severity-card .value { font-size: 2.3rem; font-weight: 750; margin-top: .4rem; }
+        .section-banner { padding: 1.25rem 1.4rem; border-radius: 18px; margin: .4rem 0 1.35rem; }
+        .section-banner .section-kicker { font-size: .76rem; font-weight: 750; letter-spacing: .12em; text-transform: uppercase; margin-bottom: .35rem; }
+        .section-banner h2 { margin: 0 0 .35rem; color: var(--ink); }
+        .section-banner p { margin: 0; color: #385b65; line-height: 1.55; }
+        .section-banner.classification { background: #edf5fc; border: 1px solid #c5dcef; }
+        .section-banner.classification .section-kicker { color: #23649b; }
+        .section-banner.clustering { background: #fff5e9; border: 1px solid #f0d4a9; }
+        .section-banner.clustering .section-kicker { color: #a15b13; }
+        .section-banner.data { background: #f5f6f7; border: 1px solid #d9e0e5; }
+        .section-banner.data .section-kicker { color: #52616b; }
         .footer { margin-top: 3rem; padding-top: 1.2rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .82rem; text-align: center; }
         </style>
         """,
@@ -435,21 +466,98 @@ def navigate_to(page: str) -> None:
     st.session_state["page_nav"] = page
 
 
+def render_identity() -> None:
+    with st.container(border=True):
+        st.caption("Identitas akademik")
+        st.write(
+            f"**{ACADEMIC_IDENTITY['Mata kuliah']}** · {ACADEMIC_IDENTITY['Mahasiswa']} · "
+            f"{ACADEMIC_IDENTITY['NIM']} · {ACADEMIC_IDENTITY['Institusi']}"
+        )
+
+
+def render_section_banner(kind: str, kicker: str, title: str, description: str) -> None:
+    st.markdown(
+        f"<div class='section-banner {kind}'><div class='section-kicker'>{kicker}</div>"
+        f"<h2>{title}</h2><p>{description}</p></div>",
+        unsafe_allow_html=True,
+    )
+
+
+def render_pipeline(steps: list[str]) -> None:
+    with st.container(border=True):
+        st.caption("Alur analisis")
+        st.markdown(" → ".join(f"**{step}**" for step in steps))
+
+
+def render_model_cards() -> None:
+    st.subheader("🤖 Model machine learning")
+    model_columns = st.columns(3)
+    cards = [
+        (
+            "🌳 Random Forest",
+            "Classification · supervised learning",
+            "Output: Fatal / Serious / Slight",
+            "Menggabungkan banyak decision tree untuk menghasilkan prediksi severity.",
+        ),
+        (
+            "📍 K-Means",
+            "Clustering · unsupervised learning",
+            "Output: Cluster 0 / Cluster 1",
+            "Membagi data berdasarkan kedekatan karakteristik terhadap centroid.",
+        ),
+        (
+            "◌ PCA",
+            "Visualisasi hasil clustering",
+            "Bukan model prediction",
+            "Dipakai setelah K-Means hanya untuk membantu melihat pola dalam dua dimensi.",
+        ),
+    ]
+    for column, (title, subtitle, output, detail) in zip(model_columns, cards):
+        with column.container(border=True, height="stretch"):
+            st.subheader(title)
+            st.caption(subtitle)
+            st.write(output)
+            st.write(detail)
+
+
+def render_evaluation_explanations() -> None:
+    with st.expander("Bagaimana membaca evaluasi?", icon=":material/help:"):
+        st.markdown(
+            "**Accuracy** — persentase prediksi yang benar dari seluruh data.\n\n"
+            "**Precision** — dari prediksi suatu kelas, seberapa banyak yang benar.\n\n"
+            "**Recall** — dari data yang sebenarnya termasuk suatu kelas, seberapa banyak yang ditemukan model.\n\n"
+            "**F1** — gabungan precision dan recall.\n\n"
+            "**Silhouette** — seberapa baik data berada dalam cluster; nilai lebih tinggi umumnya lebih baik.\n\n"
+            "**Davies-Bouldin** — kemiripan antar-cluster; nilai lebih rendah umumnya lebih baik.\n\n"
+            "**Calinski-Harabasz** — kualitas pemisahan cluster; nilai lebih tinggi umumnya lebih baik.\n\n"
+            "**Inertia** — jumlah kuadrat jarak data ke centroid. Nilainya biasanya turun saat k bertambah, "
+            "sehingga tidak digunakan sendirian untuk memilih k."
+        )
+
+
 def render_home() -> None:
     st.markdown(
         "<div class='hero'><div class='eyebrow'>Data mining · STATS19</div><h1>Traffic Accident Analysis</h1><p>Analisis Kecelakaan Lalu Lintas Menggunakan Machine Learning</p></div>",
         unsafe_allow_html=True,
     )
-    st.write("Aplikasi ini membantu menganalisis karakteristik kecelakaan lalu lintas menggunakan dua pendekatan machine learning.")
+    st.write("Aplikasi ini membantu memahami data kecelakaan lalu lintas melalui dua pendekatan machine learning: classification dan clustering.")
+    render_section_banner(
+        "data",
+        "Data vs inference",
+        "Pahami dulu sumber dan tujuan analisis",
+        "Dashboard membaca hasil penelitian historis. Halaman prediksi dan cluster menerima data baru "
+        "lalu menjalankan inference menggunakan model yang sudah dilatih.",
+    )
 
     cards = st.columns(2)
     with cards[0].container(border=True, height="stretch"):
-        st.subheader("📊 Analisis dataset")
-        st.write("Jelajahi hasil analisis terhadap 10.000 data penelitian, termasuk distribusi dan profil cluster.")
-        st.button("Buka Dashboard Dataset", key="home_dataset", on_click=navigate_to, args=("📊 Dashboard Dataset",), width="stretch")
+        st.subheader("📊 Data penelitian")
+        st.write("10.000 record sampel STATS19 periode 2021–2025 untuk analisis dan evaluasi model.")
+        st.caption("2.000 record per tahun · 18 fitur input")
+        st.button("Dashboard Dataset", key="home_dataset", on_click=navigate_to, args=("📊 Dashboard Dataset",), width="stretch")
     with cards[1].container(border=True, height="stretch"):
-        st.subheader("🔮 Analisis data baru")
-        st.write("Masukkan karakteristik kecelakaan untuk memperoleh prediksi severity atau mengetahui kelompok karakteristiknya.")
+        st.subheader("🔮 Data baru / inference")
+        st.write("Masukkan karakteristik kecelakaan baru untuk memperoleh prediksi severity atau kelompok karakteristik.")
         st.button("Prediksi Severity", key="home_classification", on_click=navigate_to, args=("🔮 Prediksi Severity",), width="stretch")
         st.button("Analisis Cluster", key="home_clustering", on_click=navigate_to, args=("🧩 Analisis Cluster",), width="stretch")
 
@@ -466,6 +574,8 @@ def render_home() -> None:
     st.caption("Data penelitian → preprocessing → model → hasil analisis")
     st.caption("Data baru → preprocessing yang sama → model final → prediksi / cluster")
 
+    render_model_cards()
+
     st.subheader("Mulai dalam 3 langkah")
     steps = st.columns(3)
     for column, number, text in zip(steps, ["1", "2", "3"], ["Pilih metode analisis", "Isi karakteristik kecelakaan", "Klik tombol analisis dan baca hasilnya"]):
@@ -475,9 +585,7 @@ def render_home() -> None:
 
     st.subheader("Untuk siapa aplikasi ini?")
     st.write("Mahasiswa · Dosen · Peneliti · Pengguna yang ingin memahami hasil analisis data kecelakaan")
-    with st.container(border=True):
-        st.caption("Proyek akademik")
-        st.write("Rekayasa Perangkat Lunak · Asyudi Anggara · F552630019 · Universitas Tadulako (UNTAD) — Palu")
+    render_identity()
     st.info("Prediksi classification hanya berdasarkan karakteristik input yang dimasukkan, bukan prediksi risiko kecelakaan secara umum.", icon=":material/info:")
 
 
@@ -488,9 +596,88 @@ def profile_value(profile: pd.DataFrame, cluster: int, feature: str, column: str
     return rows.iloc[0][column]
 
 
+def render_about_data(artifacts: dict) -> None:
+    st.title("Tentang data")
+    render_section_banner(
+        "data",
+        "Sumber dan cakupan penelitian",
+        "Data apa yang digunakan project ini?",
+        "Project ini menggunakan data kecelakaan lalu lintas dari STATS19 untuk periode 2021–2025. "
+        "Penelitian memakai sampel 10.000 record, dengan 2.000 record dari masing-masing tahun.",
+    )
+
+    metric_columns = st.columns(4)
+    for column, label, value in zip(
+        metric_columns,
+        ["Record penelitian", "Periode", "Fitur input", "Pendekatan ML"],
+        ["10.000", "2021–2025", "18", "2"],
+    ):
+        with column.container(border=True):
+            st.metric(label, value)
+
+    with st.container(border=True):
+        st.subheader("Sumber data")
+        st.write("Sumber data: **STATS19** — dataset data kecelakaan lalu lintas jalan.")
+        st.write("Sampling: **2.000 record per tahun × 5 tahun = 10.000 record penelitian**.")
+        st.caption("10.000 record merupakan sampel penelitian dalam project ini, bukan keseluruhan populasi data STATS19.")
+        st.caption("URL resmi STATS19 belum disimpan sebagai referensi project. Tambahkan URL resmi jika diperlukan untuk laporan akademik.")
+
+    st.subheader("18 fitur yang digunakan")
+    numeric, categorical = st.columns(2)
+    with numeric.container(border=True):
+        st.markdown("**Fitur numerik (4)**")
+        st.markdown("\n".join(f"- {feature}" for feature in NUMERIC_FEATURES))
+    with categorical.container(border=True):
+        st.markdown("**Fitur kategorikal (14)**")
+        st.markdown("\n".join(f"- {feature}" for feature in CATEGORICAL_FEATURES))
+    st.caption("4 fitur numerik + 14 fitur kategorikal = 18 fitur input.")
+
+    st.subheader("Pemisahan classification dan clustering")
+    classification, clustering = st.columns(2)
+    with classification.container(border=True):
+        st.subheader("🔵 Classification")
+        st.write("Target: collision_severity dengan kelas Fatal, Serious, dan Slight.")
+        st.markdown("- Training: **8.000 record**\n- Test: **2.000 record**\n- Tujuan: memprediksi kelas pada data baru")
+    with clustering.container(border=True):
+        st.subheader("🟠 Clustering")
+        st.write("Menggunakan seluruh **10.000 record** untuk menemukan kelompok karakteristik.")
+        st.markdown("- Tidak memakai collision_severity\n- Tidak memakai number_of_casualties\n- Tidak memakai identifier atau kode administratif")
+
+    st.subheader("Data yang sengaja tidak digunakan")
+    st.info(
+        "Clustering berfokus pada pola karakteristik kecelakaan. Karena itu target severity, jumlah korban, "
+        "identifier, kode administratif, dan variabel outcome tidak digunakan sebagai input clustering.",
+        icon=":material/block:",
+    )
+
+    st.subheader("Preprocessing")
+    render_pipeline(["Data mentah", "Imputation", "Scaling / encoding", "Model"])
+    prep_left, prep_right = st.columns(2)
+    with prep_left.container(border=True):
+        st.subheader("Classification")
+        st.markdown("- Numerik: Median Imputation → StandardScaler\n- Kategorikal: Most Frequent Imputation → One-Hot Encoding")
+        st.caption("18 fitur → 105 encoded features. Preprocessor dipelajari dari 8.000 data training.")
+    with prep_right.container(border=True):
+        st.subheader("Clustering")
+        st.markdown("- Numerik: imputation bila diperlukan → StandardScaler\n- Kategorikal: Most Frequent Imputation → One-Hot Encoding")
+        st.caption("18 fitur → 108 encoded features. Preprocessor dipelajari dari 10.000 record clustering.")
+    st.write("Imputation menangani nilai kosong. StandardScaler menyetarakan skala numerik. One-Hot Encoding mengubah kategori menjadi representasi numerik.")
+
+    st.subheader("Mengapa data ini digunakan?")
+    st.write("Fitur yang dipilih menggambarkan kendaraan, jalan, persimpangan, kondisi lingkungan, dan waktu kejadian. "
+             "Karakteristik tersebut relevan untuk memahami pola kecelakaan tanpa memasukkan target classification ke clustering.")
+    render_identity()
+
+
 def render_dataset_dashboard(artifacts: dict) -> None:
     st.title("Dashboard dataset")
-    st.write("Halaman ini menampilkan hasil analisis historis dari 10.000 data penelitian. Halaman ini bukan inference dan tidak menjalankan training ulang.")
+    render_section_banner(
+        "data",
+        "Hasil analisis data penelitian",
+        "Dashboard historis C3–C4",
+        "Bagian ini menampilkan hasil analisis terhadap 10.000 record penelitian yang telah diproses sebelumnya. "
+        "Dashboard ini tidak melakukan training ulang dan bukan halaman inference.",
+    )
     results = load_dataset_results()
     if results["missing"]:
         st.warning("Sebagian output dataset belum tersedia: " + ", ".join(results["missing"]))
@@ -509,6 +696,8 @@ def render_dataset_dashboard(artifacts: dict) -> None:
         st.metric("Fitur input", "18", border=True)
         st.metric("Jumlah cluster", "2", border=True)
 
+    st.subheader("🟠 Hasil clustering")
+    st.write("Bagian ini merangkum ukuran, profil, evaluasi k, dan visualisasi cluster. Semua hasil berasal dari output C3–C4 yang sudah tersedia.")
     st.subheader("Distribusi cluster")
     distribution_left, distribution_right = st.columns(2)
     with distribution_left.container(border=True):
@@ -582,20 +771,32 @@ def render_dataset_dashboard(artifacts: dict) -> None:
     with st.expander("Detail profil fitur C4", icon=":material/table_chart:"):
         st.dataframe(results["feature_comparison"], hide_index=True, width="stretch")
 
-    st.subheader("Classification evaluation")
+    st.subheader("🔵 Hasil classification — evaluasi model")
+    st.caption("Metrik berikut adalah evaluasi model final Random Forest pada test set 2.000 record.")
     metric_columns = st.columns(5)
     for column, (label, value) in zip(metric_columns, CLASSIFICATION_METRICS.items()):
         with column.container(border=True):
             st.metric(label, value)
     st.caption("Accuracy tidak sebaiknya dibaca sendirian karena performa model antar kelas berbeda. Classification dan clustering memiliki tujuan berbeda.")
-    st.info("Report dan confusion matrix CSV yang tersimpan tidak ditampilkan di dashboard karena nilainya tidak cocok dengan metadata artefak classification final 18 fitur. Dashboard mempertahankan metrik final yang tercatat pada metadata artefak.", icon=":material/info:")
+    st.info("Report dan confusion matrix CSV yang tersimpan tidak ditampilkan karena nilainya tidak cocok dengan metadata artefak classification final 18 fitur. Dashboard hanya menampilkan metrik final yang tercatat pada metadata artefak.", icon=":material/info:")
+    render_evaluation_explanations()
 
 
 def render_classification(artifacts: dict) -> None:
     st.title("Prediksi tingkat keparahan kecelakaan")
-    st.write("Pada halaman ini Anda dapat memasukkan karakteristik suatu kecelakaan. Model Random Forest kemudian memberikan prediksi tingkat keparahan berdasarkan pola yang dipelajari dari data pelatihan.")
-    with st.expander("Apa itu Classification?", icon=":material/help:"):
-        st.write("Classification adalah metode machine learning untuk menempatkan suatu data ke dalam kelas yang telah ditentukan. Pada aplikasi ini kelas yang diprediksi adalah Fatal, Serious, dan Slight.")
+    render_section_banner(
+        "classification",
+        "🔵 Classification — prediksi tingkat keparahan",
+        "Gunakan model berlabel untuk memprediksi collision_severity",
+        "Classification memprediksi suatu kelas berdasarkan pola yang dipelajari dari data berlabel. "
+        "Pada project ini kelasnya adalah Fatal, Serious, dan Slight.",
+    )
+    st.write("Halaman ini digunakan untuk memprediksi data baru. Hasilnya bukan hasil pengelompokan cluster.")
+    render_pipeline(["Data kecelakaan", "18 fitur", "Preprocessing", "Random Forest", "Prediksi severity"])
+    with st.expander("🌳 Apa itu Random Forest?", icon=":material/forest:"):
+        st.write("Random Forest menggabungkan banyak decision tree. Setiap tree memberikan keputusan, kemudian hasil dari banyak tree digabungkan menjadi prediksi akhir.")
+        st.markdown("- Model: **Random Forest**\n- Trees: **300**\n- max_depth: **15**\n- class_weight: **balanced**\n- random_state: **42**\n- Fitur awal: **18**\n- Setelah preprocessing dan One-Hot Encoding: **105**")
+        st.caption("Model sudah dilatih menggunakan data penelitian. Saat data baru dimasukkan, aplikasi hanya menjalankan inference dan tidak melakukan training ulang.")
 
     st.selectbox(
         "Gunakan contoh skenario",
@@ -617,29 +818,44 @@ def render_classification(artifacts: dict) -> None:
     prediction = model.predict(encoded)[0]
     probabilities = model.predict_proba(encoded)[0] if hasattr(model, "predict_proba") else None
 
-    st.markdown(f"<div class='severity-card'><div class='label'>Prediksi model</div><div class='value'>{prediction}</div></div>", unsafe_allow_html=True)
-    st.write("Prediksi ini dihasilkan oleh Random Forest berdasarkan kombinasi karakteristik yang Anda masukkan.")
+    st.subheader("🔵 Hasil classification")
+    st.markdown(f"<div class='severity-card'><div class='label'>Prediksi tingkat keparahan</div><div class='value'>{prediction}</div></div>", unsafe_allow_html=True)
+    st.write("Input baru telah diproses dengan preprocessor final, lalu diprediksi oleh Random Forest.")
     if probabilities is not None:
-        st.subheader("Probabilitas model")
+        st.subheader("Probability")
         probability_columns = st.columns(len(model.classes_))
         for column, label, probability in zip(probability_columns, model.classes_, probabilities):
             with column:
                 st.metric(str(label), f"{probability:.2%}")
                 st.progress(float(probability), text=f"{label}: {probability:.2%}")
-        st.caption("Probabilitas adalah keluaran model untuk setiap kelas, bukan jaminan kebenaran.")
+        probability_table = pd.DataFrame(
+            {"Kelas": [str(label) for label in model.classes_], "Probability": probabilities}
+        ).set_index("Kelas")
+        st.bar_chart(probability_table, y="Probability", x_label="Kelas", y_label="Probability", height=250)
+        st.caption("Probability menunjukkan tingkat keyakinan relatif model terhadap tiap kelas berdasarkan pola yang dipelajari. Probability bukan jaminan hasil pasti.")
         if float(np.max(probabilities)) == 1.0:
             st.info(f"Model memberikan probabilitas 1,00 untuk kelas {prediction} pada input ini.", icon=":material/info:")
 
     with st.expander("Bagaimana hasil ini diperoleh?", icon=":material/account_tree:"):
-        st.write("18 karakteristik input → preprocessing → 105 fitur hasil encoding → Random Forest → prediksi kelas")
-    st.warning("Hasil ini merupakan prediksi model dan bukan keputusan resmi mengenai tingkat keparahan kecelakaan.", icon=":material/warning:")
+        st.write("18 fitur input → preprocessing → 105 fitur hasil encoding → Random Forest → prediksi collision_severity")
+    st.warning("Hasil ini merupakan prediksi model machine learning berdasarkan karakteristik input dan bukan diagnosis atau penilaian resmi tingkat keparahan kecelakaan.", icon=":material/warning:")
+
 
 
 def render_clustering(artifacts: dict) -> None:
     st.title("Identifikasi pola kecelakaan")
-    st.write("Clustering digunakan untuk mengelompokkan data yang memiliki karakteristik serupa tanpa menggunakan label severity sebagai dasar pembentukan cluster.")
-    with st.expander("Apa itu Clustering?", icon=":material/help:"):
-        st.write("Bayangkan kita memiliki ribuan data kecelakaan. Clustering mencoba mengelompokkan data yang memiliki pola karakteristik yang mirip. Pada aplikasi ini digunakan K-Means dengan 2 cluster.")
+    render_section_banner(
+        "clustering",
+        "🟠 Clustering — identifikasi pola kecelakaan",
+        "Gunakan unsupervised learning untuk menemukan kelompok karakteristik",
+        "Clustering mengelompokkan data berdasarkan kemiripan karakteristik tanpa menggunakan label severity sebagai dasar pembentukan kelompok.",
+    )
+    render_pipeline(["Data kecelakaan", "18 fitur", "Preprocessing", "K-Means", "Cluster 0 / Cluster 1"])
+    st.warning("CLUSTER BUKAN TINGKAT KEPARAHAN. Cluster hanya menunjukkan kelompok karakteristik yang mirip, bukan Fatal, Serious, atau Slight.", icon=":material/warning:")
+    with st.expander("📍 Apa itu K-Means?", icon=":material/hub:"):
+        st.write("K-Means membagi data menjadi sejumlah kelompok berdasarkan kedekatan karakteristik terhadap pusat kelompok yang disebut centroid.")
+        st.markdown("- k = **2** berarti model membentuk dua kelompok\n- Setiap input ditempatkan pada cluster yang paling dekat\n- Distance to centroid mengukur kedekatan input dengan pusat cluster\n- Jarak yang lebih kecil berarti karakteristik input lebih dekat dengan centroid")
+        st.caption("Konfigurasi aktual: K-Means, k=2, n_init=10, random_state=42, 10.000 record, 18 fitur awal, 108 fitur encoded.")
 
     values, submitted = input_form(artifacts, "clustering", "clustering_category_options", "Temukan Cluster")
     if not submitted:
@@ -655,17 +871,19 @@ def render_clustering(artifacts: dict) -> None:
     distance = float(distances[cluster])
     interpretation = CLUSTER_INTERPRETATIONS[cluster]
 
-    st.markdown(f"<div class='result-card'><h2>Cluster yang diprediksi: {cluster}</h2><p>{interpretation['summary']}</p></div>", unsafe_allow_html=True)
+    st.subheader("🟠 Hasil clustering")
+    st.markdown(f"<div class='result-card'><h2>Cluster terdekat: Cluster {cluster}</h2><p>{interpretation['summary']}</p></div>", unsafe_allow_html=True)
+    st.write(f"Input Anda memiliki karakteristik yang lebih dekat dengan Cluster {cluster}.")
     metric_left, metric_right = st.columns(2)
     with metric_left:
         st.metric("Nomor cluster", f"Cluster {cluster}")
     with metric_right:
         st.metric("Jarak ke centroid", f"{distance:.4f}", help="Jarak ke centroid menunjukkan seberapa dekat karakteristik input terhadap pusat cluster. Nilai yang lebih kecil berarti input lebih dekat dengan pusat cluster tersebut.")
 
-    st.subheader("Interpretasi berdasarkan profiling C4")
+    st.subheader(f"Karakteristik dominan Cluster {cluster}")
     for detail in interpretation["details"]:
         st.write(f"• {detail}")
-    st.info("Cluster bukan tingkat keparahan. Cluster menunjukkan kelompok karakteristik yang memiliki kemiripan.", icon=":material/info:")
+    st.info("Interpretasi cluster bersifat deskriptif. Cluster tidak menunjukkan bahwa suatu kondisi lebih berbahaya atau memiliki severity tertentu.", icon=":material/info:")
 
 
 def render_guide() -> None:
@@ -674,6 +892,8 @@ def render_guide() -> None:
     with st.container(border=True):
         st.subheader("Memulai aplikasi")
         st.markdown("1. Buka halaman Beranda.\n2. Pilih Prediksi Severity atau Analisis Cluster.\n3. Isi 18 karakteristik.\n4. Pastikan semua input sudah benar.\n5. Klik tombol analisis.\n6. Baca hasil dan penjelasannya.")
+    with st.expander("Cara menggunakan Tentang Data", icon=":material/database:"):
+        st.markdown("1. Buka halaman **Tentang Data**.\n2. Baca sumber STATS19, periode, sampling, target, dan 18 fitur.\n3. Gunakan bagian pemisahan analisis untuk membedakan classification dan clustering.")
     with st.expander("Cara menggunakan Dashboard Dataset", icon=":material/dashboard:"):
         st.markdown("1. Buka halaman **Dashboard Dataset**.\n2. Baca ringkasan sample dan distribusi cluster.\n3. Bandingkan profil Cluster 0 dan Cluster 1.\n4. Gunakan tabel dan grafik evaluasi K-Means untuk memahami alasan pemilihan k=2.\n5. Baca visualisasi PCA sebagai bantuan visual saja; PCA tidak digunakan untuk membentuk cluster.")
     with st.expander("Cara menggunakan Prediksi Severity", icon=":material/analytics:"):
@@ -746,51 +966,106 @@ def render_feature_dictionary(artifacts: dict) -> None:
 
 def render_about(artifacts: dict) -> None:
     st.title("Tentang model")
-    st.write("Halaman ini merangkum data, konfigurasi model, hasil evaluasi, dan batasan analisis.")
+    st.write("Ringkasan akademik project, model final, preprocessing, evaluasi, dan batasan analisis.")
+    render_identity()
+
+    st.subheader("1. Ringkasan project")
+    st.write("Traffic Accident Analysis adalah project analisis kecelakaan lalu lintas menggunakan machine learning. "
+             "Classification memprediksi collision_severity, sedangkan clustering menemukan kelompok karakteristik kecelakaan.")
+    render_pipeline(["DATA STATS19", "DATA UNDERSTANDING", "FEATURE SELECTION", "PREPROCESSING", "CLASSIFICATION / CLUSTERING"])
+    st.caption("PCA hanya digunakan setelah final K-Means untuk membantu visualisasi cluster.")
+
+    st.subheader("2. Sumber data dan sampling")
     with st.container(border=True):
-        st.caption("Identitas akademik")
-        st.write("Mata Kuliah: Rekayasa Perangkat Lunak · Mahasiswa: Asyudi Anggara · NIM: F552630019 · Institusi: Universitas Tadulako (UNTAD) — Palu")
-    st.subheader("Ringkasan data")
-    data_metrics = st.columns(3)
-    for column, label, value in zip(data_metrics, ["Sample", "Periode", "Fitur input"], ["10.000", "2021–2025", "18"]):
+        st.write("Sumber: **STATS19** · Dataset: data kecelakaan lalu lintas jalan · Periode: **2021–2025**")
+        st.write("Sampel penelitian: **10.000 record**, yaitu 2.000 record per tahun selama 5 tahun.")
+        st.caption("Sampel ini bukan klaim mengenai keseluruhan populasi STATS19. URL resmi STATS19 belum tersedia di project dan tidak digantikan dengan URL buatan.")
+
+    st.subheader("3. Dataset dan 18 fitur")
+    data_metrics = st.columns(4)
+    for column, label, value in zip(
+        data_metrics,
+        ["Record", "Train / test", "Fitur awal", "Metode ML"],
+        ["10.000", "8.000 / 2.000", "18", "2"],
+    ):
         with column.container(border=True):
             st.metric(label, value)
+    feature_left, feature_right = st.columns(2)
+    with feature_left.container(border=True):
+        st.markdown("**Numerik (4)**")
+        st.markdown("\n".join(f"- {feature}" for feature in NUMERIC_FEATURES))
+    with feature_right.container(border=True):
+        st.markdown("**Kategorikal (14)**")
+        st.markdown("\n".join(f"- {feature}" for feature in CATEGORICAL_FEATURES))
+    st.caption("Target classification: collision_severity. Target tidak digunakan sebagai input clustering.")
 
-    st.subheader("Konfigurasi model")
-    classification, clustering = st.columns(2)
-    with classification.container(border=True):
+    st.subheader("4. Preprocessing dan data leakage check")
+    render_pipeline(["Data mentah", "Imputation", "Scaling / encoding", "Model"])
+    prep_columns = st.columns(2)
+    with prep_columns[0].container(border=True):
         st.subheader("Classification")
-        st.write("Random Forest")
-        st.markdown("- 300 trees\n- `max_depth = 15`\n- `class_weight = balanced`\n- `random_state = 42`")
-        st.caption("18 fitur input → 105 fitur encoded")
-    with clustering.container(border=True):
+        st.write("Numerik: Median Imputation → StandardScaler")
+        st.write("Kategorikal: Most Frequent Imputation → One-Hot Encoding")
+        st.caption("18 → 105 encoded features. Preprocessor fit hanya pada 8.000 data training; test hanya ditransform.")
+    with prep_columns[1].container(border=True):
         st.subheader("Clustering")
-        st.write("K-Means")
-        st.markdown("- `k = 2`\n- `n_init = 10`\n- `random_state = 42`")
-        st.caption("18 fitur input → 108 fitur encoded")
+        st.write("Numerik: imputation bila diperlukan → StandardScaler")
+        st.write("Kategorikal: Most Frequent Imputation → One-Hot Encoding")
+        st.caption("18 → 108 encoded features. Preprocessor fit pada 10.000 record clustering.")
+    st.success("Data leakage check: test set tidak dipakai untuk fitting preprocessor classification.", icon=":material/check_circle:")
 
-    st.subheader("Preprocessing")
-    st.info("Numerik: Median Imputation → StandardScaler\n\nKategorikal: Most Frequent Imputation → One-Hot Encoding", icon=":material/tune:")
-
-    st.subheader("Hasil evaluasi classification")
+    st.subheader("5. Classification — Random Forest")
+    with st.container(border=True):
+        st.write("Random Forest adalah supervised learning yang menggabungkan banyak decision tree. "
+                 "Setiap tree memberi keputusan dan hasilnya digabungkan menjadi prediksi akhir.")
+        st.markdown("- Model: **Random Forest**\n- 300 trees\n- max_depth = 15\n- class_weight = balanced\n- random_state = 42\n- Output: Fatal / Serious / Slight")
+        st.caption("Model final sudah dilatih sebelumnya. Aplikasi hanya menjalankan inference, tanpa retraining atau tuning.")
+    st.subheader("Evaluasi classification")
     metric_columns = st.columns(5)
     for column, (label, value) in zip(metric_columns, CLASSIFICATION_METRICS.items()):
         with column.container(border=True):
             st.metric(label, value)
-    st.caption("Accuracy tidak boleh dibaca sendirian karena performa antar kelas berbeda. Macro F1 lebih rendah daripada Weighted F1.")
+    render_evaluation_explanations()
 
-    st.subheader("Evaluasi jumlah cluster")
+    st.subheader("6. Clustering — K-Means")
+    with st.container(border=True):
+        st.write("K-Means adalah unsupervised learning yang membagi data menjadi kelompok berdasarkan kedekatan karakteristik terhadap centroid.")
+        st.markdown("- k = 2\n- n_init = 10\n- random_state = 42\n- Record: 10.000\n- Output: Cluster 0 / Cluster 1")
+        st.warning("Cluster bukan severity. Cluster tidak memakai collision_severity, number_of_casualties, identifier, atau kode administratif.", icon=":material/warning:")
+
+    st.subheader("7. Evaluasi jumlah cluster")
     display_evaluation = artifacts["clustering_evaluation"].copy()
     for column in ["inertia", "silhouette", "davies_bouldin", "calinski_harabasz"]:
         if column in display_evaluation:
             display_evaluation[column] = display_evaluation[column].map(lambda value: f"{value:.6f}")
     st.dataframe(display_evaluation, hide_index=True, width="stretch")
-    st.success("k=2 dipilih karena memiliki Silhouette tertinggi, Davies-Bouldin terendah, dan Calinski-Harabasz tertinggi.", icon=":material/check_circle:")
+    st.success("k=2 dipertahankan berdasarkan evaluasi C3 yang sudah tersedia; angka tidak dihitung ulang oleh aplikasi.", icon=":material/check_circle:")
 
-    st.subheader("Keterbatasan")
-    st.markdown("- Model dibuat berdasarkan sample 10.000 record.\n- Dataset berasal dari data kecelakaan yang digunakan dalam penelitian.\n- Hasil bergantung pada kualitas dan karakteristik data input.\n- Performa classification antar kelas tidak sama.\n- Macro F1 lebih rendah daripada Weighted F1.\n- Clustering menemukan pola berdasarkan fitur yang digunakan, bukan menentukan tingkat keparahan.")
-    st.caption("PCA pada project hanya digunakan untuk visualisasi hasil clustering, bukan untuk prediction.")
+    st.subheader("8. Profil cluster")
+    profile_columns = st.columns(2)
+    for column, cluster in zip(profile_columns, [0, 1]):
+        with column.container(border=True):
+            st.subheader(f"Cluster {cluster}")
+            for detail in CLUSTER_INTERPRETATIONS[cluster]["details"]:
+                st.write(f"• {detail}")
+    st.caption("Profil bersifat deskriptif dan tidak boleh dibaca sebagai tingkat bahaya atau severity.")
 
+    st.subheader("9. PCA untuk visualisasi")
+    pca_results = load_dataset_results()
+    if not pca_results["missing"]:
+        variance_table = pca_results["pca_variance"].copy()
+        variance_table["explained_variance_ratio"] = variance_table["explained_variance_ratio"].map(lambda value: f"{value:.4%}")
+        st.dataframe(variance_table, hide_index=True, width="stretch")
+        st.caption("PC1 = 14,9170% · PC2 = 9,5219% · Total = 24,4388%. PCA hanya visualisasi setelah final K-Means, bukan input K-Means dan bukan model prediction.")
+    else:
+        st.info("Output PCA belum tersedia.", icon=":material/info:")
+
+    st.subheader("10. Inference dan batasan")
+    st.markdown("- Data penelitian digunakan untuk membangun dan mengevaluasi model.\n- Data baru digunakan saat aplikasi menjalankan inference.\n- Probability adalah keyakinan relatif model, bukan jaminan kebenaran.\n- Distance to centroid adalah kedekatan input ke pusat cluster, bukan probabilitas.\n- Model bukan pengganti penilaian resmi atau diagnosis kecelakaan.\n- Hasil bergantung pada kualitas dan karakteristik data input.")
+    st.caption("Konfigurasi model, feature selection, preprocessing, hasil C1–C4, dan artifact final tidak diubah oleh aplikasi.")
+
+    st.subheader("11. Model yang digunakan")
+    render_model_cards()
 
 def render_footer() -> None:
     st.markdown("<div class='footer'>Traffic Accident Analysis<br>Machine Learning Classification &amp; Clustering<br>Rekayasa Perangkat Lunak · Asyudi Anggara · F552630019</div>", unsafe_allow_html=True)
@@ -824,6 +1099,8 @@ def main() -> None:
         render_home()
     elif page == "📊 Dashboard Dataset":
         render_dataset_dashboard(artifacts)
+    elif page == "📊 Tentang Data":
+        render_about_data(artifacts)
     elif page == "🔮 Prediksi Severity":
         render_classification(artifacts)
     elif page == "🧩 Analisis Cluster":

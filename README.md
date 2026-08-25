@@ -129,7 +129,19 @@ Hasil evaluasi final yang dicatat pada metadata artefak:
 - Macro F1: **38,62%**
 - Weighted F1: **64,96%**
 
-Accuracy tidak sebaiknya dibaca sendirian karena performa antar kelas berbeda.
+Accuracy tidak sebaiknya dibaca sendirian karena performa antar kelas berbeda. Laporan per kelas
+(sumber: `notebooks/03_classification.ipynb`, konsisten dengan metadata aggregate):
+
+| Kelas | Precision | Recall | F1 | Support |
+|---|---:|---:|---:|---:|
+| Fatal | 0,07 | 0,14 | 0,10 | 28 |
+| Serious | 0,28 | 0,32 | 0,30 | 453 |
+| Slight | 0,79 | 0,74 | 0,76 | 1.519 |
+
+> Catatan: `results/final_test_results.csv`, `results/final_classification_report.csv`, dan
+> `results/final_confusion_matrix.*` berasal dari evaluator lama 21 fitur (`final_model_evaluation.py`)
+> dan bukan sumber angka final aplikasi. Gunakan `models/final_classification_metadata.json` sebagai
+> sumber kebenaran evaluasi classification.
 
 ## Clustering
 
@@ -213,6 +225,7 @@ Sidebar aplikasi menyediakan:
 
 - Beranda
 - Dashboard Dataset
+- Tentang Data
 - Prediksi Severity
 - Analisis Cluster
 - Panduan Penggunaan
@@ -222,6 +235,35 @@ Sidebar aplikasi menyediakan:
 Dashboard Dataset membaca output historis C3/C4. Prediksi Severity dan Analisis
 Cluster melakukan inference satu baris menggunakan artefak final. Kamus Fitur
 memiliki pencarian dan mapping kategori yang tersedia.
+
+## Academic explanation
+
+### Apa itu classification?
+
+Classification adalah supervised learning: model mempelajari data berlabel, lalu memprediksi kelas untuk data baru. Pada project ini targetnya adalah collision_severity dengan tiga kelas: Fatal, Serious, dan Slight. Random Forest memakai 300 decision tree; hasil banyak tree digabungkan menjadi prediksi akhir.
+
+### Apa itu clustering?
+
+Clustering adalah unsupervised learning: model mencari kelompok berdasarkan kemiripan karakteristik tanpa memakai label severity sebagai dasar. K-Means final membentuk dua kelompok, yaitu Cluster 0 dan Cluster 1. Cluster bukan severity dan tidak boleh dibaca sebagai tingkat bahaya.
+
+### Apa arti probability dan distance to centroid?
+
+Probability adalah keyakinan relatif model classification terhadap tiap kelas, bukan jaminan kebenaran. Distance to centroid menunjukkan kedekatan input terhadap pusat cluster; nilai lebih kecil berarti karakteristik input lebih dekat dengan centroid.
+
+### Preprocessing dalam bahasa awam
+
+Imputation menangani nilai kosong. StandardScaler menyetarakan skala fitur numerik. One-Hot Encoding mengubah kategori menjadi representasi numerik. Classification menghasilkan 105 fitur encoded karena preprocessor dipelajari dari 8.000 data training, sedangkan clustering menghasilkan 108 fitur encoded karena menggunakan 10.000 record.
+
+## Information architecture aplikasi
+
+- Beranda: membedakan data penelitian historis dan data baru/inference.
+- Dashboard Dataset: menampilkan hasil historis C3–C4 tanpa training ulang.
+- Tentang Data: menjelaskan STATS19, periode, sampling, target, fitur, dan pemisahan classification/clustering.
+- Prediksi Severity: menerima data baru dan menjalankan inference Random Forest.
+- Analisis Cluster: menerima data baru dan menjalankan inference K-Means.
+- Panduan Penggunaan: alur penggunaan dan glosarium.
+- Kamus Fitur: arti 18 fitur input.
+- Tentang Model: penjelasan akademik, pipeline, konfigurasi, evaluasi, profil cluster, PCA, leakage check, dan keterbatasan.
 
 ## System Architecture
 
@@ -270,7 +312,8 @@ untuk inference.
    dan membaca kelas serta probabilitas model.
 3. Gunakan **Analisis Cluster** untuk mengetahui kelompok karakteristik dan
    jarak ke centroid.
-4. Gunakan **Panduan Penggunaan**, **Kamus Fitur**, dan **Tentang Model** untuk
+4. Gunakan **Tentang Data** untuk memahami sumber, sampling, target, dan 18 fitur.
+5. Gunakan **Panduan Penggunaan**, **Kamus Fitur**, dan **Tentang Model** untuk
    memahami istilah, evaluasi, dan keterbatasan.
 
 ## Project Structure
@@ -314,8 +357,8 @@ Validasi yang telah dilakukan:
 
 - Python compile `app.py`
 - Streamlit startup dengan HTTP 200
-- Streamlit AppTest untuk Beranda, Dashboard Dataset, Prediksi Severity,
-  Analisis Cluster, Panduan, Kamus Fitur, dan Tentang Model
+- Streamlit AppTest untuk Beranda, Dashboard Dataset, Tentang Data,
+  Prediksi Severity, Analisis Cluster, Panduan, Kamus Fitur, dan Tentang Model
 - Classification: 18 input → 105 encoded features → prediction
 - Clustering: 18 input → 108 encoded features → cluster
 - Pengecekan bahwa aplikasi tidak merujuk artifact legacy atau
@@ -340,6 +383,14 @@ Tidak ada retraining atau hyperparameter tuning saat testing aplikasi.
 Hasil merupakan prediksi model berdasarkan karakteristik input dan bukan
 penilaian resmi tingkat keparahan kecelakaan. Cluster bukan label severity,
 tingkat keamanan, atau tingkat bahaya.
+
+## Documentation
+
+Dokumentasi lengkap project berada di `docs/`:
+
+- `docs/PROJECT_DOCUMENTATION_MASTER.md` — dokumentasi induk (struktur, metodologi, hasil, traceability).
+- `docs/PROJECT_FACT_SHEET.md` — fakta dan angka final (single source of truth).
+- `docs/DOCUMENTATION_GAPS.md` — daftar kekurangan dokumentasi yang belum terisi.
 
 ## Author
 
