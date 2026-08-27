@@ -2,13 +2,14 @@
 
 ## Current Phase
 
-PHASE 2 – DATA UNDERSTANDING (COMPLETED)
+PHASE 3 – DATA PREPARATION (COMPLETED)
 
 ## Last Completed
 
 - Audit strategi full dataset: schema/quality 513.801 × 44, target, inventory 44 fitur, leakage risks, baseline comparison, dan sampling legacy.
 - `docs/DATA_STRATEGY.md` dibuat tanpa membuat data/model/artifact baru.
 - `docs/DATA_UNDERSTANDING.md` dibuat dengan audit deskriptif full dataset dan lima visualisasi terarah; tidak ada model baru.
+- `docs/DATA_PREPARATION.md` dibuat dengan kontrak preparation seluruh 44 fitur, leakage/sentinel/anomaly rules, dan train-only pipeline design; tidak ada data turunan atau model baru.
 
 ## Current State
 
@@ -19,6 +20,7 @@ PHASE 2 – DATA UNDERSTANDING (COMPLETED)
 - Branch aktif: `main`. Remote `origin` terverifikasi menuju `https://github.com/asyudianggara/traffic-accident-datamining.git` untuk fetch dan push. Checkpoint Phase 0 `3a4f9b1` berhasil dipush ke `origin/main`.
 - Full dataset adalah kandidat master; 10K hanya legacy baseline. Target `collision_severity`: Fatal 7.553 (1,470024%), Serious 116.813 (22,735067%), Slight 389.435 (75,794909%).
 - Phase 2 memverifikasi pola temporal, statistik numerik, distribusi kategori, target-versus-fitur, missingness, feature roles, dan relevansi lima peran data mining.
+- Phase 3 memverifikasi range/logical checks, mempertahankan target tiga kelas tanpa balancing, dan mendokumentasikan derived `month`/`hour` serta provisional temporal holdout.
 
 ## Files Changed
 
@@ -28,6 +30,7 @@ PHASE 2 – DATA UNDERSTANDING (COMPLETED)
 - `docs/CHANGELOG.md`
 - `docs/DATA_STRATEGY.md`
 - `docs/DATA_UNDERSTANDING.md` dan `docs/figures/data-understanding/*.png`
+- `docs/DATA_PREPARATION.md`
 
 ## Files Not Changed
 
@@ -41,29 +44,32 @@ PHASE 2 – DATA UNDERSTANDING (COMPLETED)
 - Clustering legacy: `KMeans`, evaluasi `k=2..6`, final metadata `k=2`.
 - Full CSV: 0 duplicate row; 53 missing pada masing-masing empat kolom koordinat; seluruh date/time valid; tidak ada kode tak terpetakan pada kolom yang memiliki mapping lokal.
 - Target Serious meningkat secara deskriptif dari 21,06% pada 2021 menjadi 24,81% pada 2025; volume data tertinggi berada pada jam 16–17.
+- Official DfT data-guide source identified; unresolved coded values remain unchanged until the guide version is frozen.
 
 ## Unverified Items
 
 - Keberadaan file dataset sample 10K terpisah dan waktu persis sampling pertama kali dilakukan.
 - Definisi use case/timing prediksi, split yang diminta dosen, penggunaan fitur geografis/admin, dan data dictionary STATS19 lengkap.
 - Arti seluruh kode unresolved dan daftar fitur data-mining yang wajib dinilai masih belum terverifikasi.
+- Prediction timing, geographic/privacy policy, and final train/test rule remain unconfirmed.
 
 ## Known Issues
 
 - README dan identitas remote sebelumnya mengacu pada proyek lama/course lama; README utama sudah diselaraskan sebagai Phase 0, tetapi aplikasi dan `README_APP.md` masih legacy dan sengaja tidak diubah.
 - Leakage risk: outcome/adjusted severity fields, number of casualties, dan police-attendance harus dikeluarkan/ditinjau sebelum model.
 - Pola target-versus-fitur bersifat deskriptif; kategori langka memerlukan kehati-hatian dan tidak boleh dibaca sebagai hubungan kausal.
+- Range checks found no structural invalids in the audited full dataset; IQR flags are retained, not deleted.
 
 ## Do Not
 
 - Jangan mengubah project lama.
-- Jangan membuat dataset turunan/full baru, training, clustering, feature selection final, tuning, PCA, association mining, atau mengubah artefak legacy.
+- Jangan membuat dataset turunan/full baru, training, clustering, feature selection final, tuning, PCA, association mining, atau mengubah artefak legacy sebelum instruksi Phase 4.
 - Jangan force-push atau mengganti remote tanpa instruksi eksplisit.
 
 ## Next Required Action
 
-Setelah instruksi eksplisit Phase 3: tetapkan feature contract, code decoding, leakage exclusions, temporal derivations, missing-value handling, dan reproducible preparation pipeline.
+Setelah instruksi eksplisit Phase 4: lakukan approved feature selection dan susun strategi algoritma; jangan langsung melatih model tanpa scope yang jelas.
 
 ## STOP CONDITION
 
-Jangan masuk Phase 3 sebelum mendapat instruksi eksplisit.
+Jangan masuk Phase 4 sebelum mendapat instruksi eksplisit.

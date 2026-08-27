@@ -293,4 +293,4 @@ There are descriptive differences between severity composition and several road,
 
 ## 17. Next Phase
 
-**PHASE 3 – DATA PREPARATION:** use these verified findings to define the approved feature contract, leakage exclusions, code decoding, temporal derivations, missing-value treatment, and reproducible train/test data preparation. Do not begin modeling, balancing, tuning, PCA, association mining, or deployment in this phase transition.
+**PHASE 3 – DATA PREPARATION:** the verified findings were used in `docs/DATA_PREPARATION.md` to define feature roles, leakage exclusions, code handling, temporal derivations, missing-value treatment, and reproducible train/test preparation rules. No modeling was performed.

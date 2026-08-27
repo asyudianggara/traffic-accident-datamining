@@ -2,8 +2,8 @@
 
 Project: Tugas 2 – Penambangan Data
 Case: Analisis Kecelakaan Lalu Lintas STATS19
-Current Phase: PHASE 2 – DATA UNDERSTANDING
-Overall Progress: PHASE 2 / 10
+Current Phase: PHASE 3 – DATA PREPARATION
+Overall Progress: PHASE 3 / 10
 Status: COMPLETED
 
 ## Completed
@@ -15,35 +15,36 @@ Status: COMPLETED
 - Repository GitHub baru terhubung dan checkpoint Phase 0 `3a4f9b1` berhasil dipush ke `origin/main` pada 2026-08-27.
 - Strategi full dataset, quality audit ringan, inventory 44 fitur, dan audit sampling legacy selesai; lihat `docs/DATA_STRATEGY.md`.
 - Analisis deskriptif full dataset, visualisasi terarah, feature roles, data-mining relevance, dan rekomendasi preparation selesai; lihat `docs/DATA_UNDERSTANDING.md`.
+- Kontrak preparation full dataset, role/status seluruh 44 fitur, leakage exclusions, sentinel/anomaly rules, temporal derivations, dan train-only pipeline strategy selesai; lihat `docs/DATA_PREPARATION.md`.
 
 ## Current
 
-- Phase 2 completed; menunggu instruksi eksplisit untuk PHASE 3 – DATA PREPARATION.
+- Phase 3 completed; menunggu instruksi eksplisit untuk PHASE 4 – FEATURE SELECTION & ALGORITHM STRATEGY.
 
 ## Current Task
 
-- Menunggu instruksi eksplisit untuk memulai PHASE 3 – DATA PREPARATION.
+- Menunggu instruksi eksplisit untuk memulai PHASE 4 – FEATURE SELECTION & ALGORITHM STRATEGY.
 
 ## In Progress
 
-- Tidak ada pekerjaan implementasi; dokumentasi dan visualisasi Phase 2 selesai pada 2026-08-27.
+- Tidak ada pekerjaan implementasi/model; kontrak dan aturan preparation terdokumentasi pada 2026-08-27.
 
 ## Not Started
 
-- Finalisasi feature contract, codebook, leakage exclusions, dan pipeline preparation.
+- Approved feature selection, algorithm candidates, and modeling experiment design.
 - Data preparation, modeling, comparison algoritma, feature selection, evaluation, dan deployment untuk Tugas 2 berbasis full dataset.
 
 ## Blocked
 
-- Data dictionary resmi lengkap, timing prediksi, dan aturan split masih menunggu konfirmasi.
+- Data dictionary version, prediction timing, geographic policy, and final split rule still await confirmation.
 
 ## Next Action
 
-- Menunggu instruksi eksplisit untuk memulai PHASE 3 – DATA PREPARATION.
+- Menunggu instruksi eksplisit untuk memulai PHASE 4 – FEATURE SELECTION & ALGORITHM STRATEGY.
 
 ## Do Not Do
 
-- Jangan melakukan feature selection final, modeling, balancing, tuning, PCA, association mining, deployment, atau mengubah artefak legacy sebelum scope phase berikutnya.
+- Jangan melakukan modeling, balancing, tuning, PCA, association mining, deployment, atau mengubah artefak legacy sebelum scope phase berikutnya.
 
 ## Dataset
 
@@ -68,28 +69,28 @@ Status: COMPLETED
 
 - Business Understanding: PARTIAL — case tersedia; use case/waktu prediksi masih open question.
 - Data Understanding: COMPLETED — schema, kualitas dasar, target, periode, dan baseline/full comparison terverifikasi.
-- Data Preparation: PARTIAL — strategi dirancang, belum diimplementasikan.
+- Data Preparation: COMPLETED (strategy/contract only) — belum membuat dataset turunan atau learned transformer.
 - Modeling: NOT STARTED — untuk full dataset Tugas 2.
 - Evaluation: NOT STARTED — untuk full dataset Tugas 2.
 - Deployment: PARTIAL — aplikasi legacy tersedia, tetapi belum merepresentasikan pipeline full dataset Tugas 2.
 
 ## Tugas 2 Status
 
-| Requirement                | Status      | Evidence                                                               | Gap                                        |
-| -------------------------- | ----------- | ---------------------------------------------------------------------- | ------------------------------------------ |
-| Analisis masalah/kebutuhan | PARTIAL     | Case dan audit Phase 0                                                 | Rumusan kebutuhan Tugas 2 belum dibuat     |
-| Review dataset             | COMPLETED   | `docs/DATA_STRATEGY.md`: schema, quality, target, 44-feature inventory | EDA/domain audit lanjutan Phase 2          |
-| Lima peran data mining     | NOT STARTED | TIDAK DAPAT DIVERIFIKASI                                               | Belum didokumentasikan untuk Tugas 2       |
-| CRISP-DM                   | PARTIAL     | Pemetaan di dokumen ini                                                | Tahap full dataset belum dikerjakan        |
-| Data preparation           | PARTIAL     | Strategi preprocessing dan leakage prevention didokumentasikan         | Implementasi menunggu instruksi            |
-| Comparison algoritma       | NOT STARTED | Hasil legacy baseline ada                                              | Perbandingan full dataset belum dilakukan  |
-| Feature selection          | NOT STARTED | 18 fitur legacy tersedia                                               | Seleksi untuk full dataset belum dilakukan |
-| Evaluation                 | NOT STARTED | Metrik legacy ada                                                      | Evaluasi full dataset belum dilakukan      |
-| Deployment/decision making | PARTIAL     | Streamlit legacy tersedia                                              | Adaptasi ke hasil Tugas 2 belum dilakukan  |
+| Requirement                | Status      | Evidence                                                                     | Gap                                        |
+| -------------------------- | ----------- | ---------------------------------------------------------------------------- | ------------------------------------------ |
+| Analisis masalah/kebutuhan | PARTIAL     | Case dan audit Phase 0                                                       | Rumusan kebutuhan Tugas 2 belum dibuat     |
+| Review dataset             | COMPLETED   | `docs/DATA_STRATEGY.md`: schema, quality, target, 44-feature inventory       | EDA/domain audit lanjutan Phase 2          |
+| Lima peran data mining     | NOT STARTED | TIDAK DAPAT DIVERIFIKASI                                                     | Belum didokumentasikan untuk Tugas 2       |
+| CRISP-DM                   | PARTIAL     | Pemetaan di dokumen ini                                                      | Tahap full dataset belum dikerjakan        |
+| Data preparation           | COMPLETED   | `docs/DATA_PREPARATION.md`: feature roles, rules, leakage, train-only design | Implementation remains for later scope     |
+| Comparison algoritma       | NOT STARTED | Hasil legacy baseline ada                                                    | Perbandingan full dataset belum dilakukan  |
+| Feature selection          | NOT STARTED | 18 fitur legacy tersedia                                                     | Seleksi untuk full dataset belum dilakukan |
+| Evaluation                 | NOT STARTED | Metrik legacy ada                                                            | Evaluasi full dataset belum dilakukan      |
+| Deployment/decision making | PARTIAL     | Streamlit legacy tersedia                                                    | Adaptasi ke hasil Tugas 2 belum dilakukan  |
 
 ## Next Phase
 
-PHASE 3 – DATA PREPARATION
+PHASE 4 – FEATURE SELECTION & ALGORITHM STRATEGY
 
 ## Important Rules
 
@@ -106,6 +107,8 @@ PHASE 3 – DATA PREPARATION
 - Missing eksplisit hanya pada empat kolom koordinat (53 masing-masing); kode sentinel `-1` perlu penanganan kategorikal.
 - Proporsi Serious per tahun meningkat secara deskriptif dari 21,06% (2021) menjadi 24,81% (2025); Fatal tetap sekitar 1,4–1,5%.
 - Volume tertinggi tercatat pada jam 16–17 dan hari kode 6; arti kode hari memerlukan data dictionary resmi.
+- Official DfT open-data page identifies the 2025 data guide as the codebook source; unresolved codes remain coded and are not relabeled by assumption.
+- Full-dataset range checks found 0 invalid years, non-positive vehicle/casualty counts, unsupported speed-limit codes, out-of-screening-range coordinates, date/time parse failures, or values below `-1` in audited coded fields.
 
 ## Decisions
 
@@ -113,10 +116,12 @@ PHASE 3 – DATA PREPARATION
 - Tidak ada model, artifact, processed dataset besar, atau perubahan aplikasi pada Phase 1.
 - Split temporal direkomendasikan secara kondisional; keputusan final menunggu use case.
 - Phase 2 tidak melakukan balancing, preprocessing permanen, sampling 10K, atau pemodelan.
+- Phase 3 preserves raw data, defines train-only fitting for learned transforms, and creates no processed CSV or model artifact.
 
 ## Open Questions
 
 - Definisi use case/timing prediksi, split yang diharapkan dosen, penggunaan fitur geografis/admin, dan lokasi data dictionary lengkap.
 - Codebook resmi STATS19 dan fitur data-mining yang wajib untuk penilaian masih perlu dikonfirmasi.
+- Final prediction timing, official data-guide version to freeze, geography/privacy policy, and final split rule remain open.
 
 Last Verified: 2026-08-27
