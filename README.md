@@ -94,7 +94,7 @@ Jangan menjalankan notebook/script tersebut untuk Tugas 2 tanpa instruksi Phase 
 
 ## Git dan Repository
 
-Branch aktif: `main`. Remote terkonfigurasi saat audit ke `https://github.com/asyudianggara/traffic-accident-ml.git`. Kesesuaiannya dengan repository GitHub baru untuk Tugas 2 adalah **TIDAK DAPAT DIVERIFIKASI**, sehingga checkpoint commit/push Phase 0 ditahan sampai remote yang benar dikonfirmasi. Jangan force push.
+Branch aktif: `main`. Repository GitHub Tugas 2 terverifikasi pada `https://github.com/asyudianggara/traffic-accident-datamining.git` untuk fetch dan push. Checkpoint Phase 0 `3a4f9b1` (`docs: establish project status and phase 0 audit`) berhasil dipush ke `origin/main` pada 2026-08-27. Jangan force push.
 
 ## Dokumentasi
 

@@ -15,7 +15,7 @@ PHASE 0 – AUDIT & PROJECT GOVERNANCE (COMPLETED)
 - Baseline legacy adalah 10.000 baris (2.000/tahun, `random_state=42`). Tidak ada file sample terpisah yang dapat diverifikasi.
 - Pipeline legacy memakai `collision_severity`, Random Forest 18→105 fitur, serta K-Means 18→108 fitur. Hasilnya bukan hasil full dataset Tugas 2.
 - Aplikasi `app.py` Streamlit memuat artefak legacy; tidak diubah. Uji startup Phase 0 pada port lokal 8502 mengembalikan HTTP 200, lalu proses dihentikan.
-- Branch aktif: `main`. Remote `origin` mengarah ke repository bernama `traffic-accident-ml`, bukan identitas proyek baru yang dapat diverifikasi.
+- Branch aktif: `main`. Remote `origin` terverifikasi menuju `https://github.com/asyudianggara/traffic-accident-datamining.git` untuk fetch dan push. Checkpoint Phase 0 `3a4f9b1` berhasil dipush ke `origin/main`.
 
 ## Files Changed
 
@@ -37,7 +37,6 @@ PHASE 0 – AUDIT & PROJECT GOVERNANCE (COMPLETED)
 
 ## Unverified Items
 
-- URL remote GitHub proyek baru Tugas 2.
 - Keberadaan file dataset sample 10K terpisah.
 - Waktu persis sampling pertama kali dilakukan.
 - Tidak ada item startup aplikasi yang belum diverifikasi pada Phase 0; interaksi semua halaman tidak diuji.
@@ -45,7 +44,6 @@ PHASE 0 – AUDIT & PROJECT GOVERNANCE (COMPLETED)
 ## Known Issues
 
 - README dan identitas remote sebelumnya mengacu pada proyek lama/course lama; README utama sudah diselaraskan sebagai Phase 0, tetapi aplikasi dan `README_APP.md` masih legacy dan sengaja tidak diubah.
-- Jangan commit atau push dokumentasi Phase 0 ke `origin` sebelum user mengonfirmasi remote yang benar.
 
 ## Do Not
 
@@ -55,7 +53,7 @@ PHASE 0 – AUDIT & PROJECT GOVERNANCE (COMPLETED)
 
 ## Next Required Action
 
-Setelah instruksi eksplisit Phase 1 dan konfirmasi remote GitHub proyek baru: tetapkan strategi penggunaan seluruh baris dataset, validasi record/target/fitur, split, serta strategi preprocessing. Jangan mulai eksekusi modeling pada tahap tersebut tanpa scope berikutnya.
+Setelah instruksi eksplisit Phase 1: tetapkan strategi penggunaan seluruh baris dataset, validasi record/target/fitur, split, serta strategi preprocessing. Jangan mulai eksekusi modeling pada tahap tersebut tanpa scope berikutnya.
 
 ## STOP CONDITION
 

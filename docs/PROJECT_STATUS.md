@@ -12,6 +12,7 @@ Status: COMPLETED
 - Dataset raw lokal terverifikasi: `data/raw/dft-road-casualty-statistics-collision-last-5-years.csv` (513.801 baris, 44 kolom, 2021–2025, 97.669.586 byte).
 - Baseline lama 10K teridentifikasi sebagai sampling 2.000 baris per tahun (2021–2025), `random_state=42`.
 - README, handoff, dan changelog Phase 0 dibuat/diperbarui.
+- Repository GitHub baru terhubung dan checkpoint Phase 0 `3a4f9b1` berhasil dipush ke `origin/main` pada 2026-08-27.
 
 ## Current
 
@@ -24,7 +25,7 @@ Status: COMPLETED
 
 ## Blocked
 
-- Remote `origin` terverifikasi menuju `https://github.com/asyudianggara/traffic-accident-ml.git`, yaitu identitas repository proyek lama; kesesuaian dengan repository GitHub baru untuk Tugas 2 TIDAK DAPAT DIVERIFIKASI. Checkpoint push tidak boleh dilakukan sebelum remote dikonfirmasi/diperbaiki.
+- Tidak ada blocker Phase 0 yang terverifikasi.
 
 ## Dataset
 
@@ -77,6 +78,7 @@ PHASE 1 – DATA STRATEGY
 - Full dataset menjadi dataset utama Tugas 2; 10K hanya baseline/referensi.
 - Project lama tidak boleh diubah.
 - Jangan training, clustering, feature selection, preprocessing baru, atau membuat dataset full tanpa instruksi phase eksplisit.
-- Jangan push sebelum remote GitHub proyek baru dikonfirmasi.
+- Remote GitHub terverifikasi: `https://github.com/asyudianggara/traffic-accident-datamining.git`.
+- Checkpoint Phase 0 terverifikasi pada commit `3a4f9b1` dan telah dipush ke `origin/main`; jangan force push.
 
 Last Verified: 2026-08-27
