@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-PHASE 3 – DATA PREPARATION (COMPLETED)
+PHASE 4 – FEATURE SELECTION & ALGORITHM STRATEGY (COMPLETED)
 
 ## Last Completed
 
@@ -10,6 +10,7 @@ PHASE 3 – DATA PREPARATION (COMPLETED)
 - `docs/DATA_STRATEGY.md` dibuat tanpa membuat data/model/artifact baru.
 - `docs/DATA_UNDERSTANDING.md` dibuat dengan audit deskriptif full dataset dan lima visualisasi terarah; tidak ada model baru.
 - `docs/DATA_PREPARATION.md` dibuat dengan kontrak preparation seluruh 44 fitur, leakage/sentinel/anomaly rules, dan train-only pipeline design; tidak ada data turunan atau model baru.
+- `docs/FEATURE_SELECTION.md` dibuat dengan review seluruh 44 fitur, provisional sets, exploratory MI pada development data, redundancy review, algorithm strategy, dan Phase 5 experiment design; tidak ada final model.
 
 ## Current State
 
@@ -21,6 +22,7 @@ PHASE 3 – DATA PREPARATION (COMPLETED)
 - Full dataset adalah kandidat master; 10K hanya legacy baseline. Target `collision_severity`: Fatal 7.553 (1,470024%), Serious 116.813 (22,735067%), Slight 389.435 (75,794909%).
 - Phase 2 memverifikasi pola temporal, statistik numerik, distribusi kategori, target-versus-fitur, missingness, feature roles, dan relevansi lima peran data mining.
 - Phase 3 memverifikasi range/logical checks, mempertahankan target tiga kelas tanpa balancing, dan mendokumentasikan derived `month`/`hour` serta provisional temporal holdout.
+- Phase 4 menetapkan provisional classification/clustering sets (18 masing-masing), association basket (15), temporal set (4), dan leakage-safe selection rules.
 
 ## Files Changed
 
@@ -31,6 +33,7 @@ PHASE 3 – DATA PREPARATION (COMPLETED)
 - `docs/DATA_STRATEGY.md`
 - `docs/DATA_UNDERSTANDING.md` dan `docs/figures/data-understanding/*.png`
 - `docs/DATA_PREPARATION.md`
+- `docs/FEATURE_SELECTION.md`
 
 ## Files Not Changed
 
@@ -45,6 +48,7 @@ PHASE 3 – DATA PREPARATION (COMPLETED)
 - Full CSV: 0 duplicate row; 53 missing pada masing-masing empat kolom koordinat; seluruh date/time valid; tidak ada kode tak terpetakan pada kolom yang memiliki mapping lokal.
 - Target Serious meningkat secara deskriptif dari 21,06% pada 2021 menjadi 24,81% pada 2025; volume data tertinggi berada pada jam 16–17.
 - Official DfT data-guide source identified; unresolved coded values remain unchanged until the guide version is frozen.
+- Exploratory MI used only 2021–2024 development rows; 2025 was not used for feature selection.
 
 ## Unverified Items
 
@@ -59,6 +63,7 @@ PHASE 3 – DATA PREPARATION (COMPLETED)
 - Leakage risk: outcome/adjusted severity fields, number of casualties, dan police-attendance harus dikeluarkan/ditinjau sebelum model.
 - Pola target-versus-fitur bersifat deskriptif; kategori langka memerlukan kehati-hatian dan tidak boleh dibaca sebagai hubungan kausal.
 - Range checks found no structural invalids in the audited full dataset; IQR flags are retained, not deleted.
+- Candidate sets are provisional and must be tested in Phase 5 without using the final holdout for selection.
 
 ## Do Not
 
@@ -68,8 +73,8 @@ PHASE 3 – DATA PREPARATION (COMPLETED)
 
 ## Next Required Action
 
-Setelah instruksi eksplisit Phase 4: lakukan approved feature selection dan susun strategi algoritma; jangan langsung melatih model tanpa scope yang jelas.
+Setelah instruksi eksplisit Phase 5: implementasikan preparation contract dan evaluasi candidate algorithms/features; jangan menggunakan 2025 holdout untuk selection.
 
 ## STOP CONDITION
 
-Jangan masuk Phase 4 sebelum mendapat instruksi eksplisit.
+Jangan masuk Phase 5 sebelum mendapat instruksi eksplisit.

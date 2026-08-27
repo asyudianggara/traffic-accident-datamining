@@ -2,7 +2,7 @@
 
 ## Analisis Kecelakaan Lalu Lintas STATS19
 
-Status: **PHASE 3 COMPLETED — menunggu instruksi PHASE 4**
+Status: **PHASE 4 COMPLETED — menunggu instruksi PHASE 5**
 
 Repository ini adalah salinan kerja baru untuk Tugas 2. Tujuannya adalah menyiapkan analisis data kecelakaan lalu lintas STATS19 dengan **seluruh baris data yang tersedia**. Artefak, hasil, dan aplikasi yang terbawa dari proyek sebelumnya hanya menjadi baseline/referensi; mereka bukan hasil final Tugas 2.
 
@@ -26,6 +26,7 @@ Quality audit Phase 1 memverifikasi 0 duplicate row, 53 missing pada masing-masi
 | Phase 1 – Data strategy       | COMPLETED                          |
 | Phase 2 – Data understanding  | COMPLETED                          |
 | Phase 3 – Data preparation    | COMPLETED (strategy/contract only) |
+| Phase 4 – Feature selection   | COMPLETED (strategy only)          |
 | Business Understanding        | PARTIAL                            |
 | Data Understanding            | COMPLETED                          |
 | Data Preparation full dataset | COMPLETED (strategy/contract only) |
@@ -33,7 +34,7 @@ Quality audit Phase 1 memverifikasi 0 duplicate row, 53 missing pada masing-masi
 | Evaluation full dataset       | NOT STARTED                        |
 | Deployment untuk Tugas 2      | PARTIAL                            |
 
-Rincian strategi tersedia di [docs/DATA_STRATEGY.md](docs/DATA_STRATEGY.md), audit deskriptif di [docs/DATA_UNDERSTANDING.md](docs/DATA_UNDERSTANDING.md), dan kontrak preparation di [docs/DATA_PREPARATION.md](docs/DATA_PREPARATION.md). Status dan handoff tersedia di [docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md) dan [docs/HANDOFF.md](docs/HANDOFF.md).
+Rincian strategi tersedia di [docs/DATA_STRATEGY.md](docs/DATA_STRATEGY.md), audit deskriptif di [docs/DATA_UNDERSTANDING.md](docs/DATA_UNDERSTANDING.md), kontrak preparation di [docs/DATA_PREPARATION.md](docs/DATA_PREPARATION.md), dan strategi feature selection di [docs/FEATURE_SELECTION.md](docs/FEATURE_SELECTION.md). Status dan handoff tersedia di [docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md) dan [docs/HANDOFF.md](docs/HANDOFF.md).
 
 ## Pipeline dan Model Legacy yang Tersedia
 
@@ -107,8 +108,9 @@ Branch aktif: `main`. Repository GitHub Tugas 2 terverifikasi pada `https://gith
 - [Data strategy](docs/DATA_STRATEGY.md)
 - [Data understanding](docs/DATA_UNDERSTANDING.md)
 - [Data preparation](docs/DATA_PREPARATION.md)
+- [Feature selection](docs/FEATURE_SELECTION.md)
 - Dokumen audit legacy yang dibawa dari proyek sebelumnya: `docs/PROJECT_DOCUMENTATION_MASTER.md`, `docs/PROJECT_FACT_SHEET.md`, dan `docs/DOCUMENTATION_GAPS.md`.
 
 ## Next Phase
 
-**PHASE 4 – FEATURE SELECTION & ALGORITHM STRATEGY:** menetapkan feature selection yang disetujui dan strategi algoritma. Belum ada modeling, tuning, PCA, association mining, atau perubahan aplikasi pada Phase 3.
+**PHASE 5 – MODELING:** implementasikan candidate feature sets dan algorithm strategy dengan evaluasi leakage-safe. Belum ada final modeling, tuning, PCA, association mining, atau perubahan aplikasi pada Phase 4.

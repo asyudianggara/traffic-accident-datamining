@@ -260,4 +260,4 @@ No learned preprocessing object or processed CSV is created by this documentatio
 
 ## 19. Next Phase
 
-**PHASE 4 – FEATURE SELECTION & ALGORITHM STRATEGY:** use this preparation contract to perform approved feature selection and define algorithm candidates. Do not train models, tune hyperparameters, run PCA, perform association mining, or deploy during this Phase 3 checkpoint.
+**PHASE 5 – MODELING:** use this preparation contract and `docs/FEATURE_SELECTION.md` to evaluate approved algorithms and provisional feature sets. Do not use the final holdout for feature selection.
