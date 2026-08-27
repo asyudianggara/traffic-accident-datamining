@@ -236,7 +236,7 @@ Validation dijalankan pada 2026-08-27 melalui `.venv\\Scripts\\python.exe prepar
 |---|---|
 | Raw schema and shape | PASS — 513,801 × 44 |
 | Target classes | PASS — 1, 2, 3; no missing target |
-| Temporal split | PASS — 412,276 train rows and 101,525 test rows |
+| Temporal split | PASS — 311,349 train (2021–2023), 100,927 validation (2024), final refit development 412,276 (2021–2024), and 101,525 untouched holdout (2025) |
 | Predictor leakage guard | PASS — identifiers, target, outcome-derived, post-event, date/time excluded |
 | Encoded output | PASS — 149 features for train and test |
 | Missing encoded values | PASS — none |

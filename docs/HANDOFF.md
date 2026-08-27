@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-PHASE 8 – APPLICATION INTEGRATION & OPERATIONAL PREDICTION (COMPLETED)
+PHASE 9.1 – DOCUMENTATION CONFLICT CORRECTION (COMPLETED)
 
 ## Last Completed
 
@@ -25,8 +25,8 @@ PHASE 8 – APPLICATION INTEGRATION & OPERATIONAL PREDICTION (COMPLETED)
 
 - Raw STATS19 tersedia lokal di `data/raw/dft-road-casualty-statistics-collision-last-5-years.csv`: 513.801 baris, 44 kolom, periode 2021–2025. File di-ignore Git.
 - Baseline legacy adalah 10.000 baris (2.000/tahun, `random_state=42`). Tidak ada file sample terpisah yang dapat diverifikasi.
-- Pipeline legacy memakai `collision_severity`, Random Forest 18→105 fitur, serta K-Means 18→108 fitur. Hasilnya bukan hasil full dataset Tugas 2.
-- Aplikasi `app.py` Streamlit memuat artefak legacy; tidak diubah. Uji startup Phase 0 pada port lokal 8502 mengembalikan HTTP 200, lalu proses dihentikan.
+- Pipeline legacy memakai `collision_severity`, Random Forest 18→105 fitur, serta K-Means 18→108 fitur. Hasilnya historis dan bukan hasil final research.
+- Aplikasi `app.py` Streamlit memuat `models/final_research_model.joblib` untuk classification dan artefak clustering legacy; inference-only.
 - Branch aktif: `main`. Remote `origin` terverifikasi menuju `https://github.com/asyudianggara/traffic-accident-datamining.git` untuk fetch dan push. Checkpoint Phase 0 `3a4f9b1` berhasil dipush ke `origin/main`.
 - Full dataset adalah kandidat master; 10K hanya legacy baseline. Target `collision_severity`: Fatal 7.553 (1,470024%), Serious 116.813 (22,735067%), Slight 389.435 (75,794909%).
 - Phase 2 memverifikasi pola temporal, statistik numerik, distribusi kategori, target-versus-fitur, missingness, feature roles, dan relevansi lima peran data mining.
@@ -59,9 +59,9 @@ PHASE 8 – APPLICATION INTEGRATION & OPERATIONAL PREDICTION (COMPLETED)
 - `app.py`, `docs/APPLICATION_INTEGRATION.md`, `phase8_application_consistency.py`, `phase8_streamlit_smoke_test.py`, dan hasil JSON Phase 8.
 - `docs/MODELING_PHASE5A.md`, `models/classification_baseline_logistic_regression.joblib`, `models/classification_baseline_decision_tree.joblib`, `models/classification_baseline_metadata.json`, dan `results/classification_baseline.csv`
 
-## Files Not Changed
+## Files Not Changed in Documentation Audit
 
-- Dataset raw/processed, notebook, script pipeline, model/artifact, hasil legacy, dependensi, `.gitignore`, dan `app.py`.
+- Dataset raw/processed, notebook, script pipeline, model/artifact, hasil legacy, dependensi, `.gitignore`, dan source aplikasi/model.
 
 ## Verified Results
 
@@ -96,12 +96,12 @@ PHASE 8 – APPLICATION INTEGRATION & OPERATIONAL PREDICTION (COMPLETED)
 ## Do Not
 
 - Jangan mengubah project lama.
-- Jangan melakukan deployment, app integration, clustering, association mining, forecasting, atau mengubah artefak legacy sebelum scope berikutnya dikonfirmasi.
+- Jangan melakukan deployment operasional, association mining, atau forecasting sebelum scope berikutnya dikonfirmasi. Integrasi app dan clustering legacy sudah ada dan tidak boleh diubah tanpa scope eksplisit.
 - Jangan force-push atau mengganti remote tanpa instruksi eksplisit.
 
 ## Next Required Action
 
-Review `docs/APPLICATION_INTEGRATION.md`; jangan klaim deployment readiness sebelum dependency version, input policy, dan open methodological decisions selesai.
+Selesaikan Phase 9 final research documentation dan konsolidasi hasil; jangan klaim deployment readiness sebelum dependency version, input policy, dan open methodological decisions selesai.
 
 ## STOP CONDITION
 

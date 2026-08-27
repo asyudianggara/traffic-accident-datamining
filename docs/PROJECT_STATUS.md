@@ -2,8 +2,8 @@
 
 Project: Tugas 2 – Penambangan Data
 Case: Analisis Kecelakaan Lalu Lintas STATS19
-Current Phase: PHASE 8 – APPLICATION INTEGRATION & OPERATIONAL PREDICTION
-Overall Progress: PHASE 8 / 10
+Current Phase: PHASE 9.1 – DOCUMENTATION CONFLICT CORRECTION
+Overall Progress: PHASE 9.1 / 10
 Status: COMPLETED
 
 ## Completed
@@ -27,6 +27,7 @@ Status: COMPLETED
 - Phase 6 selesai: final candidate model dipilih dan artifact/metadata dibuat tanpa memakai ulang 2025 untuk seleksi.
 - Phase 7 operational validation selesai: artifact reload, input contract, prediction rule, reproducibility, dan edge cases didokumentasikan.
 - Phase 8 selesai: halaman classification diintegrasikan dengan final research artifact 18→149, threshold 0,50, output probabilitas, dan smoke test Streamlit.
+- Phase 9.1 selesai: konflik dokumentasi legacy/final, split temporal, status evaluasi, dan handoff diperbaiki tanpa mengubah artefak.
 
 ## Current
 
@@ -34,11 +35,11 @@ Status: COMPLETED
 
 ## Current Subphase
 
-- PHASE 8 – APPLICATION INTEGRATION & OPERATIONAL PREDICTION (COMPLETED).
+- PHASE 9.1 – DOCUMENTATION CONFLICT CORRECTION (COMPLETED).
 
 ## Current Task
 
-- Meninjau hasil integrasi aplikasi dan operational prediction sebelum deployment lanjutan.
+- Menyelesaikan audit dan konsolidasi dokumentasi riset Phase 9 sebelum pekerjaan lanjutan.
 
 ## In Progress
 
@@ -50,11 +51,11 @@ Status: COMPLETED
 
 ## Blocked
 
-- Data dictionary version, prediction timing, geographic policy, and final split rule still await confirmation.
+- Deployment operasional masih menunggu validasi domain, policy geografis, versi codebook, dan acceptance criteria.
 
 ## Next Action
 
-- Review `docs/APPLICATION_INTEGRATION.md`; konfirmasi dependency version, input policy, use case, timing prediksi, dan deployment scope.
+- Selesaikan review dokumentasi Phase 9; jangan memulai deployment sebelum keputusan operasional dikonfirmasi.
 
 ## Do Not Do
 
@@ -65,17 +66,18 @@ Status: COMPLETED
 - Raw: `data/raw/dft-road-casualty-statistics-collision-last-5-years.csv`, lokal dan di-ignore Git.
 - Full available records: 513.801 baris × 44 kolom; `collision_year` 2021: 101.087, 2022: 106.004, 2023: 104.258, 2024: 100.927, 2025: 101.525. Kolom target lama: `collision_severity`.
 - Baseline 10K: artifact/dokumentasi lama menunjukkan 10.000 baris × 44 kolom, 2.000 per tahun; file dataset sample terpisah TIDAK DAPAT DIVERIFIKASI tersedia pada checkout ini.
-- Target: untuk pipeline classification lama, `collision_severity`; target final Tugas 2 belum ditetapkan.
+- Target final classification: `collision_severity`, dengan mapping 1 = Fatal, 2 = Serious, 3 = Slight.
 
 ## Existing Models and Results
 
-- Classification legacy baseline: Random Forest, 18 fitur input, 105 fitur encoded, train/test 8.000/2.000, `random_state=42`. Metadata melaporkan accuracy 0,6385 dan macro F1 0,3862.
+- Classification legacy baseline: Random Forest, 18 fitur input, 105 fitur encoded, train/test 8.000/2.000, `random_state=42`. Metadata melaporkan accuracy 0,6385 dan macro F1 0,3862; baseline ini historis.
+- Classification final research: Random Forest balanced, 18 fitur input, 149 fitur encoded, threshold Fatal 0,50; 2025 final holdout.
 - Clustering legacy baseline: K-Means `k=2`, 18 fitur input, 108 fitur encoded, 10.000 sampel; C2/C3 mengevaluasi `k=2..6`.
 - Hasil di `results/` dan artefak di `models/` adalah hasil legacy baseline; tidak boleh diperlakukan sebagai hasil full dataset Tugas 2.
 
 ## Existing Application
 
-- `app.py` adalah aplikasi Streamlit yang memuat artefak final legacy dan hasil historis dari `results/`; aplikasi tidak melakukan retraining saat dijalankan.
+- `app.py` adalah aplikasi Streamlit inference-only yang memuat `models/final_research_model.joblib` untuk classification dan artefak clustering legacy; aplikasi tidak melakukan retraining saat dijalankan.
 - Perintah terverifikasi: `.venv\Scripts\python.exe -m streamlit run app.py`.
 - Status startup Phase 0: PASS — Streamlit diuji pada 2026-08-27 di port lokal 8502 dan mengembalikan HTTP 200; proses dihentikan setelah verifikasi.
 
@@ -84,9 +86,9 @@ Status: COMPLETED
 - Business Understanding: PARTIAL — case tersedia; use case/waktu prediksi masih open question.
 - Data Understanding: COMPLETED — schema, kualitas dasar, target, periode, dan baseline/full comparison terverifikasi.
 - Data Preparation: COMPLETED (implemented + validated) — no processed dataset or learned artifact persisted.
-- Modeling: PARTIAL — Phase 5A baselines plus two completed Phase 5B-1 comparison runs; Random Forest incomplete.
-- Evaluation: PARTIAL — two comparison holdout metrics recorded; complete comparison/final evaluation not started.
-- Deployment: PARTIAL — aplikasi legacy tersedia, tetapi belum merepresentasikan pipeline full dataset Tugas 2.
+- Modeling: COMPLETED — Phase 5, 5.1, 5.2, dan Phase 6 final candidate telah diselesaikan.
+- Evaluation: COMPLETED WITH LIMITATIONS — final holdout 2025 telah dievaluasi; keterbatasan dan metrik minoritas didokumentasikan.
+- Deployment: PARTIAL — integrasi aplikasi selesai, tetapi deployment operasional belum diklaim siap.
 
 ## Tugas 2 Status
 
@@ -95,16 +97,16 @@ Status: COMPLETED
 | Analisis masalah/kebutuhan | PARTIAL     | Case dan audit Phase 0                                                       | Rumusan kebutuhan Tugas 2 belum dibuat    |
 | Review dataset             | COMPLETED   | `docs/DATA_STRATEGY.md`: schema, quality, target, 44-feature inventory       | EDA/domain audit lanjutan Phase 2         |
 | Lima peran data mining     | NOT STARTED | TIDAK DAPAT DIVERIFIKASI                                                     | Belum didokumentasikan untuk Tugas 2      |
-| CRISP-DM                   | PARTIAL     | Pemetaan di dokumen ini                                                      | Tahap full dataset belum dikerjakan       |
+| CRISP-DM                   | COMPLETED WITH LIMITATIONS | Pemetaan tahap data hingga evaluasi terdokumentasi | Deployment operasional dan use case formal masih terbuka |
 | Data preparation           | COMPLETED   | `docs/DATA_PREPARATION.md`: feature roles, rules, leakage, train-only design | Implementation remains for later scope    |
-| Comparison algoritma       | PARTIAL     | `docs/MODELING_PHASE5B1.md`: two completed comparison models                 | RF incomplete; HGB incompatible           |
+| Comparison algoritma       | COMPLETED   | `docs/MODELING_PHASE5.md`, `docs/MODELING_PHASE5B1.md`, dan Phase 5.2        | HGB sparse incompatibility tetap dicatat  |
 | Feature selection          | COMPLETED   | `docs/FEATURE_SELECTION.md`: provisional sets and selection strategy         | Final selection after Phase 5 evidence    |
-| Evaluation                 | PARTIAL     | `docs/MODELING_PHASE5A.md`: temporal holdout metrics                         | Final evaluation belum dilakukan          |
-| Deployment/decision making | PARTIAL     | Streamlit legacy tersedia                                                    | Adaptasi ke hasil Tugas 2 belum dilakukan |
+| Evaluation                 | COMPLETED   | `docs/FINAL_MODEL.md`: final holdout metrics dan keterbatasan               | Validasi operasional lanjutan             |
+| Deployment/decision making | PARTIAL     | `docs/APPLICATION_INTEGRATION.md` dan `docs/OPERATIONAL_VALIDATION.md`       | Deployment operasional belum diklaim       |
 
 ## Next Phase
 
-PHASE 9 – DEPLOYMENT / OPERATIONAL HANDOFF (SCOPE TO BE CONFIRMED)
+PHASE 9 – FINAL RESEARCH DOCUMENTATION & RESULTS CONSOLIDATION
 
 ## Important Rules
 
@@ -132,7 +134,7 @@ PHASE 9 – DEPLOYMENT / OPERATIONAL HANDOFF (SCOPE TO BE CONFIRMED)
 
 - Full dataset adalah kandidat master Tugas 2; 10K hanya baseline legacy.
 - Tidak ada model, artifact, processed dataset besar, atau perubahan aplikasi pada Phase 1.
-- Split temporal direkomendasikan secara kondisional; keputusan final menunggu use case.
+- Split temporal final: train 2021–2023, validation 2024, refit development 2021–2024, dan holdout 2025.
 - Phase 2 tidak melakukan balancing, preprocessing permanen, sampling 10K, atau pemodelan.
 - Phase 3 preserves raw data, defines train-only fitting for learned transforms, and creates only a small validation manifest; no processed CSV or model artifact is created.
 - Phase 4 does not train final models, tune hyperparameters, run PCA, mine association rules, or change legacy artifacts.
@@ -145,7 +147,7 @@ PHASE 9 – DEPLOYMENT / OPERATIONAL HANDOFF (SCOPE TO BE CONFIRMED)
 - Codebook resmi STATS19 dan fitur data-mining yang wajib untuk penilaian masih perlu dikonfirmasi.
 - Final prediction timing, official data-guide version to freeze, geography/privacy policy, and final split rule remain open.
 - Provisional sets: classification 18, clustering 18, association 15, temporal 4; final inclusion remains subject to Phase 5 evidence.
-- Phase 5B-1 is PARTIAL; no numeric rank is assigned to incomplete Random Forest or unrun HistGradientBoosting.
+- Phase 5B-1 mencatat RF resource bottleneck dan HGB sparse incompatibility; keputusan final tetap didokumentasikan pada Phase 6.
 - Baseline holdout macro F1: Logistic Regression 0.2907; Decision Tree 0.3006; these are not final model-selection results.
 
 Last Verified: 2026-08-27

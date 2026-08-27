@@ -8,7 +8,7 @@ Phase 6 memilih **FINAL CANDIDATE MODEL**, bukan model production-ready. Use cas
 
 Sumber adalah `data/raw/dft-road-casualty-statistics-collision-last-5-years.csv` (513.801 baris, 44 kolom, 2021–2025). Target adalah `collision_severity` dengan kelas Fatal, Serious, dan Slight.
 
-Model dilatih pada development 2021–2024 (412.276 baris). Tahun 2025 (101.525 baris) adalah final temporal holdout. Holdout tidak digunakan untuk fit atau seleksi baru pada Phase 6; metriknya diambil dari evaluasi Phase 5.2 yang telah dibekukan.
+Strategi dan threshold dipilih menggunakan training 2021–2023 (311.349 baris) serta validation 2024 (100.927 baris). Setelah strategi final ditetapkan, model di-refit pada seluruh development 2021–2024 (412.276 baris). Tahun 2025 (101.525 baris) adalah final temporal holdout; tidak digunakan untuk fitting, feature selection, threshold/hyperparameter tuning, atau model selection.
 
 ## Kontrak fitur dan leakage
 

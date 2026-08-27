@@ -1,6 +1,7 @@
 # Traffic Accident Analysis — Dokumentasi Master Project
 
-> **Dokumen induk (single source of narrative)** untuk laporan tugas Rekayasa Perangkat Lunak.
+> **Dokumen induk historis** untuk narasi baseline dan audit repository. Untuk kontrak
+> model serta metrik final Phase 6–8, rujuk `docs/FINAL_MODEL.md`.
 > Status: hasil audit berbasis artefak repository (read-only terhadap model, notebook, dan hasil C1–C4).
 > Tanggal audit final: 25 Agustus 2026.
 
@@ -9,8 +10,9 @@
 - **Tidak ada** retraining, tuning, atau eksperimen baru yang dijalankan dalam pembuatan dokumen ini.
 - Semua angka final diambil dari *artifact* final dan *metadata* yang direferensikan `app.py`, atau dari *notebook*/CSV hasil C1–C4.
 - Angka evaluasi classification disajikan dari dua level:
-  - **Aggregate (5 metrik)**: `models/final_classification_metadata.json` — sumber kebenaran utama untuk model final (18 fitur → 105 encoded).
-  - **Per-class**: `notebooks/03_classification.ipynb` (classification notebook) — laporan per kelas yang konsisten dengan aggregate metadata final (lihat *traceability*).
+- **Final research aggregate**: `results/final_model_metadata.json` dan `docs/FINAL_MODEL.md` — sumber kebenaran untuk model final (18 fitur → 149 encoded).
+- **Legacy aggregate**: `models/final_classification_metadata.json` — hanya baseline historis (18 fitur → 105 encoded).
+  - **Per-class legacy**: `notebooks/03_classification.ipynb` (classification notebook) — laporan per kelas baseline historis.
 - `results/final_test_results.csv`, `results/final_classification_report.csv`, `results/final_confusion_matrix.*` berasal dari evaluator lama 21 fitur (`final_model_evaluation.py`) dan **tidak** dipakai sebagai sumber angka final aplikasi.
 
 ---
@@ -25,7 +27,7 @@
 | Nama | Asyudi Anggara |
 | NIM | F552630019 |
 | Institusi | Universitas Tadulako (UNTAD) – Palu |
-| Repository | https://github.com/asyudianggara/traffic-accident-ml |
+| Repository | https://github.com/asyudianggara/traffic-accident-datamining |
 | Branch | main |
 | Bahasa/Stack | Python, Streamlit, scikit-learn, pandas, numpy, joblib, matplotlib, seaborn, altair |
 
@@ -149,9 +151,9 @@ Pipeline final menggunakan dua *preprocessor* terpisah (classification & cluster
 - **Target:** `collision_severity` → `Fatal`, `Serious`, `Slight`.
 - **Tipe:** *Supervised learning* (data berlabel).
 - **Model:** `RandomForestClassifier`.
-- **Data:** 10.000 sample dibagi **8.000 train / 2.000 test** (`test_size=0.20`, `stratify=y`, `random_state=42`).
-- **Encoded:** 18 → **105** fitur (preprocessor *fit* hanya pada `X_train`).
-- **Alur:** `18 fitur → final_preprocessor.joblib → 105 encoded → final_random_forest.joblib → kelas + probabilitas`.
+- **Final research data:** training/selection memakai 2021–2023 (311.349) dan validation 2024 (100.927); setelah strategi dipilih, pipeline final di-refit pada 2021–2024 (412.276). Tahun 2025 (101.525) adalah final holdout.
+- **Encoded final:** 18 → **149** fitur. Kontrak 18 → 105 adalah baseline legacy 10K.
+- **Alur final research:** `18 fitur → final_research_model.joblib → 149 encoded → kelas + probabilitas`.
 
 Classification preprocessor **hanya di-fit pada X_train**, lalu X_test hanya di-*transform*. Ini mencegah leakage dari data test.
 
@@ -184,19 +186,19 @@ RandomForestClassifier(
 
 ## 10. Evaluasi Classification
 
-### 10.1 Metrik aggregate (sumber: `models/final_classification_metadata.json`)
+### 10.1 Metrik final research (sumber: `results/final_model_metadata.json`)
 
 | Metrik | Nilai | Arti sederhana |
 |---|---:|---|
-| Accuracy | **63,85%** | Persentase prediksi benar dari seluruh data test. |
-| Macro Precision | **38,02%** | Rata-rata precision antar kelas (setiap kelas dianggap sama penting). |
-| Macro Recall | **40,08%** | Rata-rata recall antar kelas. |
-| Macro F1 | **38,62%** | Rata-rata F1 antar kelas. |
-| Weighted F1 | **64,96%** | F1 rata-rata berbobot terhadap jumlah data tiap kelas. |
+| Accuracy | **54,2930%** | Persentase prediksi benar pada holdout 2025. |
+| Macro Precision | **38,8070%** | Rata-rata precision antar kelas. |
+| Macro Recall | **46,0542%** | Rata-rata recall antar kelas. |
+| Macro F1 | **37,8410%** | Rata-rata F1 antar kelas. |
+| Weighted F1 | **58,4129%** | F1 rata-rata berbobot terhadap jumlah data tiap kelas. |
 
-> Jangan menyimpulkan model "sangat akurat" hanya dari accuracy 63,85%. Karena kelas tidak seimbang (Fatal sangat sedikit), **Macro F1 (38,62%) jauh lebih rendah dari Weighted F1 (64,96%)** — ini menunjukkan performa pada kelas minoritas (Fatal) lemah.
+> Jangan menyimpulkan model "sangat akurat" hanya dari accuracy 54,2930%. Karena kelas tidak seimbang, Macro F1 tetap lebih rendah dari Weighted F1 dan performa kelas Fatal masih terbatas.
 
-### 10.2 Laporan per kelas (sumber: `notebooks/03_classification.ipynb`)
+### 10.2 Laporan per kelas baseline legacy (sumber: `notebooks/03_classification.ipynb`)
 
 | Kelas | Precision | Recall | F1 | Support |
 |---|---:|---:|---:|---:|
@@ -205,7 +207,7 @@ RandomForestClassifier(
 | Slight | 0,79 | 0,74 | 0,76 | 1.519 |
 | **Total** | — | — | — | 2.000 |
 
-Angka per kelas di atas konsisten dengan aggregate metadata final (macro dari baris di atas ≈ 0,38 / 0,40 / 0,3867, sesuai metadata 0,3802 / 0,4008 / 0,3862). Precision Fatal 0,0708 tercatat eksplisit di notebook 03.
+Angka per kelas di atas hanya baseline legacy 10K dan konsisten dengan metadata legacy. Angka final research Phase 6 dirujuk dari `results/final_model_metadata.json` dan `docs/FINAL_MODEL.md`.
 
 **Cara membaca:**
 - *Precision* tinggi berarti jika model bilang "Fatal", kemungkinan benar besar. Di sini Fatal precision hanya 0,07 → banyak prediksi Fatal yang salah.
@@ -370,9 +372,9 @@ Audit mendukung bahwa pipeline bebas leakage pada desain utama:
 
 | Fungsi | File |
 |---|---|
-| Classification model | `models/final_random_forest.joblib` |
-| Classification preprocessor | `models/final_preprocessor.joblib` |
-| Classification metadata | `models/final_classification_metadata.json` |
+| Classification model final research | `models/final_research_model.joblib` |
+| Classification metadata final research | `results/final_model_metadata.json` |
+| Classification legacy artifacts | `models/final_random_forest.joblib`, `models/final_preprocessor.joblib`, `models/final_classification_metadata.json` |
 | Clustering model | `models/final_kmeans.joblib` |
 | Clustering preprocessor | `models/final_clustering_preprocessor.joblib` |
 | Clustering metadata | `models/final_clustering_metadata.json` |
@@ -408,7 +410,7 @@ Legacy artifact adalah hasil pipeline 21 fitur lama dan **tidak** menggantikan a
 
 - Sample hanya 10.000 record (bukan seluruh populasi STATS19 ≈ 513.801 baris).
 - Dataset berasal dari STATS19 Inggris; generalisasi ke wilayah lain belum teruji.
-- Performa antar kelas classification tidak seimbang (Macro F1 38,62% « Weighted F1 64,96%).
+- Performa final antar kelas classification tidak seimbang (Macro F1 37,8410% « Weighted F1 58,4129%).
 - Kelas `Fatal` sangat sulit diprediksi (hanya 28/2.000 pada test).
 - Clustering bersifat **deskriptif**, bukan prediksi severity.
 - Cluster **bukan** tingkat keparahan/keamanan/bahaya.
@@ -420,7 +422,7 @@ Legacy artifact adalah hasil pipeline 21 fitur lama dan **tidak** menggantikan a
 
 ## 22. Kesimpulan
 
-Project berhasil membangun dua pipeline ML (classification & clustering) di atas kontrak 18 fitur yang konsisten, dengan artifact final terpisah dan aplikasi Streamlit inference-only. Integritas utama terjaga: target tidak bocor ke clustering, preprocessing terpisah, dan PCA hanya untuk visualisasi. Risiko dokumentasi terbesar adalah output evaluasi classification lama (21 fitur) yang namanya tampak final; dokumen ini menjadikan metadata final + notebook 03 sebagai sumber angka classification yang sah.
+Project berhasil membangun dua pipeline ML (classification & clustering) di atas kontrak 18 fitur yang konsisten, dengan artifact final terpisah dan aplikasi Streamlit inference-only. Integritas utama terjaga: target tidak bocor ke clustering, preprocessing terpisah, dan PCA hanya untuk visualisasi. Output evaluasi classification lama (21 fitur) tetap diperlakukan sebagai stale dan tidak menjadi sumber angka final; sumber final adalah metadata research dan `docs/FINAL_MODEL.md`.
 
 ---
 
@@ -448,7 +450,7 @@ Lihat `docs/DOCUMENTATION_GAPS.md` untuk daftar lengkap. Ringkasan:
 5. Analisis kebutuhan & rancangan (tambahkan diagram RPL bila memungkinkan).
 6. Dataset & data understanding (STATS19, 10.000 sample, 18 fitur).
 7. Data preparation & audit leakage.
-8. Metodologi classification (Random Forest, 8.000/2.000, 105 encoded).
+8. Metodologi classification final research (Random Forest, split temporal 2021–2023/2024/2025, 149 encoded).
 9. Metodologi clustering C2–C4 (108 encoded, k=2, profil, PCA).
 10. Implementasi Streamlit (8 halaman, inference-only).
 11. Hasil & pembahasan (metrik aggregate + per-class + cluster profile).
@@ -495,8 +497,8 @@ Lihat `docs/DOCUMENTATION_GAPS.md` untuk daftar lengkap. Ringkasan:
 | Classification 105 encoded | `feature_count_encoded` | `final_classification_metadata.json` | Terverifikasi |
 | Clustering 108 encoded | `feature_count_encoded` | `final_clustering_metadata.json` | Terverifikasi |
 | RF config (300/15/balanced/42) | metadata + kode | `final_classification_metadata.json` | Terverifikasi |
-| Accuracy 63,85% | `metrics.accuracy` | `final_classification_metadata.json` | Terverifikasi |
-| Macro F1 38,62% | `metrics.macro_f1` | `final_classification_metadata.json` | Terverifikasi |
+| Accuracy 54,2930% | `metrics.accuracy` | `final_model_metadata.json` | Terverifikasi |
+| Macro F1 37,8410% | `metrics.macro_f1` | `final_model_metadata.json` | Terverifikasi |
 | Per-class (Fatal 0,07/0,14/0,10, dst) | classification report | `notebooks/03_classification.ipynb` (baris 1071–1073) | Terverifikasi, konsisten dgn metadata |
 | K-Means k=2 | `n_clusters` | `final_clustering_metadata.json` | Terverifikasi |
 | k=2 terbaik (silhouette/db/ch) | evaluasi | `results/clustering_k_evaluation.csv` | Terverifikasi |

@@ -1,7 +1,7 @@
-# Project Fact Sheet — Traffic Accident Analysis
+# Project Fact Sheet — Legacy Baseline Snapshot
 
-> **Single source of truth** untuk angka dan fakta final project.
-> Semua nilai di bawah terverifikasi dari artifact/metadata/notebook/CSV repository.
+> Dokumen historis untuk baseline legacy 10K. Dokumen ini **bukan** sumber fakta
+> final Phase 6–8. Kontrak dan metrik final dirujuk dari `docs/FINAL_MODEL.md`.
 > Tanggal audit: 25 Agustus 2026.
 
 ## Identitas
@@ -11,7 +11,7 @@
 - Mahasiswa: Asyudi Anggara — F552630019
 - Institusi: Universitas Tadulako (UNTAD) – Palu
 - Mata kuliah: Rekayasa Perangkat Lunak
-- Repository: https://github.com/asyudianggara/traffic-accident-ml
+- Repository aktif: https://github.com/asyudianggara/traffic-accident-datamining
 - Branch: main
 
 ## Dataset
@@ -30,14 +30,14 @@
 - Kategorikal (14): `day_of_week`, `first_road_class`, `road_type`, `junction_detail`, `junction_control`, `second_road_class`, `pedestrian_crossing`, `light_conditions`, `weather_conditions`, `road_surface_conditions`, `special_conditions_at_site`, `carriageway_hazards`, `urban_or_rural_area`, `trunk_road_flag`.
 - Tidak dipakai sebagai input: `collision_severity` (target), `number_of_casualties`, `collision_index`, `collision_ref_no`, kode administratif, `police_force`, `did_police_officer_attend_scene_of_accident`, outcome severity turunan.
 
-## Classification
+## Classification — Legacy Baseline 10K (historical)
 
 - Model: `RandomForestClassifier(n_estimators=300, max_depth=15, class_weight="balanced", random_state=42, n_jobs=-1)`.
-- Split: **8.000 train / 2.000 test**, stratified, `random_state=42`.
+- Split legacy: **8.000 train / 2.000 test**, stratified, `random_state=42`.
 - Preprocessing: numerik median → StandardScaler; kategorikal most_frequent → OneHotEncoder(`handle_unknown="ignore"`).
 - Preprocessor classification **hanya fit pada X_train**.
 - Dimensi: 18 → **105 encoded features**.
-- Artifact: `models/final_random_forest.joblib`, `models/final_preprocessor.joblib`, `models/final_classification_metadata.json`.
+- Artifact legacy: `models/final_random_forest.joblib`, `models/final_preprocessor.joblib`, `models/final_classification_metadata.json`.
 
 ### Metrik aggregate final (sumber: `final_classification_metadata.json`)
 
@@ -57,7 +57,7 @@
 | Serious | 0,28 | 0,32 | 0,30 | 453 |
 | Slight | 0,79 | 0,74 | 0,76 | 1.519 |
 
-Catatan: per-class konsisten dengan aggregate metadata (macro ≈ 0,38/0,40/0,3867). CSV `results/final_classification_report.csv` adalah output evaluator 21 fitur (stale) dan **bukan** sumber angka final.
+Catatan: angka ini hanya baseline legacy 10K. CSV `results/final_classification_report.csv` adalah output evaluator 21 fitur (stale) dan **bukan** sumber angka final Phase 6.
 
 ## Clustering
 
@@ -93,7 +93,8 @@ Catatan: per-class konsisten dengan aggregate metadata (macro ≈ 0,38/0,40/0,38
 
 ## Artifact final
 
-- Classification: `final_random_forest.joblib`, `final_preprocessor.joblib`, `final_classification_metadata.json`.
+- Classification legacy: `final_random_forest.joblib`, `final_preprocessor.joblib`, `final_classification_metadata.json`.
+- Classification final research: `final_research_model.joblib` (18 fitur → 149 encoded; lihat `docs/FINAL_MODEL.md`).
 - Clustering: `final_kmeans.joblib`, `final_clustering_preprocessor.joblib`, `final_clustering_metadata.json`.
 - Legacy 21 fitur (di-ignore, tidak dipakai app): `final_random_forest_legacy_21_features.joblib`, `final_preprocessor_legacy_21_features.joblib`.
 
@@ -105,12 +106,13 @@ Catatan: per-class konsisten dengan aggregate metadata (macro ≈ 0,38/0,40/0,38
 ## Testing
 
 - `py_compile` PASS; Streamlit startup HTTP 200 PASS; AppTest 8 halaman PASS.
-- Classification 18→105, Clustering 18→108 PASS.
+- Classification legacy 18→105, Clustering 18→108 PASS.
 - Artifact load (105/108) PASS; metadata check PASS; legacy tidak direferensikan PASS.
 
 ## Status kualitas
 
 - Artifact load/shape: PASS.
-- Angka classification final: bersumber dari metadata + notebook 03 (konsisten).
+- Angka classification legacy: bersumber dari metadata + notebook 03 (konsisten).
+- Angka classification final Phase 6: bersumber dari `docs/FINAL_MODEL.md` dan metadata final research.
 - CSV evaluation classification lama (21 fitur): stale — jangan kutip sebagai final.
 - Diagram RPL formal & test case matrix: belum ada (gap).
