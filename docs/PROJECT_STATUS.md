@@ -2,8 +2,8 @@
 
 Project: Tugas 2 – Penambangan Data
 Case: Analisis Kecelakaan Lalu Lintas STATS19
-Current Phase: PHASE 1 – DATA STRATEGY
-Overall Progress: PHASE 1 / 10
+Current Phase: PHASE 2 – DATA UNDERSTANDING
+Overall Progress: PHASE 2 / 10
 Status: COMPLETED
 
 ## Completed
@@ -14,35 +14,36 @@ Status: COMPLETED
 - README, handoff, dan changelog Phase 0 dibuat/diperbarui.
 - Repository GitHub baru terhubung dan checkpoint Phase 0 `3a4f9b1` berhasil dipush ke `origin/main` pada 2026-08-27.
 - Strategi full dataset, quality audit ringan, inventory 44 fitur, dan audit sampling legacy selesai; lihat `docs/DATA_STRATEGY.md`.
+- Analisis deskriptif full dataset, visualisasi terarah, feature roles, data-mining relevance, dan rekomendasi preparation selesai; lihat `docs/DATA_UNDERSTANDING.md`.
 
 ## Current
 
-- Phase 1 completed; menunggu instruksi eksplisit untuk PHASE 2 – DATA UNDERSTANDING.
+- Phase 2 completed; menunggu instruksi eksplisit untuk PHASE 3 – DATA PREPARATION.
 
 ## Current Task
 
-- Menyelesaikan validasi akhir dokumentasi dan fakta dataset Phase 1.
+- Menunggu instruksi eksplisit untuk memulai PHASE 3 – DATA PREPARATION.
 
 ## In Progress
 
-- Tidak ada pekerjaan implementasi; validasi akhir selesai pada 2026-08-27.
+- Tidak ada pekerjaan implementasi; dokumentasi dan visualisasi Phase 2 selesai pada 2026-08-27.
 
 ## Not Started
 
-- Data dictionary lengkap, audit domain, dan EDA terarah untuk full dataset.
+- Finalisasi feature contract, codebook, leakage exclusions, dan pipeline preparation.
 - Data preparation, modeling, comparison algoritma, feature selection, evaluation, dan deployment untuk Tugas 2 berbasis full dataset.
 
 ## Blocked
 
-- Tidak ada blocker Phase 0 yang terverifikasi.
+- Data dictionary resmi lengkap, timing prediksi, dan aturan split masih menunggu konfirmasi.
 
 ## Next Action
 
-- Menunggu instruksi eksplisit untuk memulai PHASE 2 – DATA UNDERSTANDING.
+- Menunggu instruksi eksplisit untuk memulai PHASE 3 – DATA PREPARATION.
 
 ## Do Not Do
 
-- Jangan training, membuat dataset turunan besar, melakukan feature selection final, mengubah aplikasi, atau mengubah artefak legacy selama belum ada scope phase berikutnya.
+- Jangan melakukan feature selection final, modeling, balancing, tuning, PCA, association mining, deployment, atau mengubah artefak legacy sebelum scope phase berikutnya.
 
 ## Dataset
 
@@ -88,13 +89,14 @@ Status: COMPLETED
 
 ## Next Phase
 
-PHASE 2 – DATA UNDERSTANDING
+PHASE 3 – DATA PREPARATION
 
 ## Important Rules
 
 - Full dataset menjadi dataset utama Tugas 2; 10K hanya baseline/referensi.
 - Project lama tidak boleh diubah.
 - Jangan training, clustering, feature selection, preprocessing baru, atau membuat dataset full tanpa instruksi phase eksplisit.
+- Jangan menganggap visualisasi dan pola Phase 2 sebagai hubungan kausal atau hasil model.
 - Remote GitHub terverifikasi: `https://github.com/asyudianggara/traffic-accident-datamining.git`.
 - Checkpoint Phase 0 terverifikasi pada commit `3a4f9b1` dan telah dipush ke `origin/main`; jangan force push.
 
@@ -102,15 +104,19 @@ PHASE 2 – DATA UNDERSTANDING
 
 - CSV aktual: 513.801 × 44, 2021-01-01 s.d. 2025-12-31; 0 duplicate row; `collision_severity` valid dengan tiga kelas.
 - Missing eksplisit hanya pada empat kolom koordinat (53 masing-masing); kode sentinel `-1` perlu penanganan kategorikal.
+- Proporsi Serious per tahun meningkat secara deskriptif dari 21,06% (2021) menjadi 24,81% (2025); Fatal tetap sekitar 1,4–1,5%.
+- Volume tertinggi tercatat pada jam 16–17 dan hari kode 6; arti kode hari memerlukan data dictionary resmi.
 
 ## Decisions
 
 - Full dataset adalah kandidat master Tugas 2; 10K hanya baseline legacy.
 - Tidak ada model, artifact, processed dataset besar, atau perubahan aplikasi pada Phase 1.
 - Split temporal direkomendasikan secara kondisional; keputusan final menunggu use case.
+- Phase 2 tidak melakukan balancing, preprocessing permanen, sampling 10K, atau pemodelan.
 
 ## Open Questions
 
 - Definisi use case/timing prediksi, split yang diharapkan dosen, penggunaan fitur geografis/admin, dan lokasi data dictionary lengkap.
+- Codebook resmi STATS19 dan fitur data-mining yang wajib untuk penilaian masih perlu dikonfirmasi.
 
 Last Verified: 2026-08-27
