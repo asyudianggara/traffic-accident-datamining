@@ -2,8 +2,8 @@
 
 Project: Tugas 2 – Penambangan Data
 Case: Analisis Kecelakaan Lalu Lintas STATS19
-Current Phase: PHASE 4 – FEATURE SELECTION & ALGORITHM STRATEGY
-Overall Progress: PHASE 4 / 10
+Current Phase: PHASE 5A – CLASSIFICATION MODELING BASELINE
+Overall Progress: PHASE 5A / 10
 Status: COMPLETED
 
 ## Completed
@@ -17,35 +17,40 @@ Status: COMPLETED
 - Analisis deskriptif full dataset, visualisasi terarah, feature roles, data-mining relevance, dan rekomendasi preparation selesai; lihat `docs/DATA_UNDERSTANDING.md`.
 - Kontrak preparation full dataset, role/status seluruh 44 fitur, leakage exclusions, sentinel/anomaly rules, temporal derivations, dan train-only pipeline strategy selesai; lihat `docs/DATA_PREPARATION.md`.
 - Strategi feature selection, redundancy, candidate sets, algorithm strategy, dan desain eksperimen Phase 5 selesai; lihat `docs/FEATURE_SELECTION.md`.
+- Baseline classification full dataset selesai: Logistic Regression dan Decision Tree pada development 2021–2024 dengan holdout temporal 2025; lihat `docs/MODELING_PHASE5A.md`.
 
 ## Current
 
-- Phase 4 completed; menunggu instruksi eksplisit untuk PHASE 5 – MODELING.
+- Phase 5A completed; menunggu instruksi eksplisit untuk PHASE 5B – CLASSIFICATION MODEL COMPARISON.
+
+## Current Subphase
+
+- PHASE 5A – CLASSIFICATION MODELING BASELINE (COMPLETED).
 
 ## Current Task
 
-- Menunggu instruksi eksplisit untuk memulai PHASE 5 – MODELING.
+- Menunggu instruksi eksplisit untuk memulai PHASE 5B – CLASSIFICATION MODEL COMPARISON.
 
 ## In Progress
 
-- Tidak ada final modeling; provisional feature sets dan algorithm strategy terdokumentasi pada 2026-08-27.
+- Baseline Logistic Regression dan Decision Tree selesai; tidak ada tuning, balancing, clustering, association mining, forecasting, atau deployment.
 
 ## Not Started
 
-- Final modeling, evaluation, and approved feature-set experiments.
+- Classification model comparison, controlled imbalance experiments, and final evaluation.
 - Data preparation, modeling, comparison algoritma, feature selection, evaluation, dan deployment untuk Tugas 2 berbasis full dataset.
 
 ## Blocked
 
-- Data dictionary version, prediction timing, geographic policy, final split rule, and association requirements still await confirmation.
+- Data dictionary version, prediction timing, geographic policy, final split rule, and future subphase scope still await confirmation.
 
 ## Next Action
 
-- Menunggu instruksi eksplisit untuk memulai PHASE 5 – MODELING.
+- Menunggu instruksi eksplisit untuk memulai PHASE 5B – CLASSIFICATION MODEL COMPARISON.
 
 ## Do Not Do
 
-- Jangan melakukan final evaluation, tuning, PCA, association mining, deployment, atau mengubah artefak legacy sebelum scope phase berikutnya.
+- Jangan melakukan final model selection, tuning, clustering, association mining, forecasting, deployment, atau mengubah artefak legacy sebelum scope Phase 5B berikutnya.
 
 ## Dataset
 
@@ -71,8 +76,8 @@ Status: COMPLETED
 - Business Understanding: PARTIAL — case tersedia; use case/waktu prediksi masih open question.
 - Data Understanding: COMPLETED — schema, kualitas dasar, target, periode, dan baseline/full comparison terverifikasi.
 - Data Preparation: COMPLETED (strategy/contract only) — belum membuat dataset turunan atau learned transformer.
-- Modeling: NOT STARTED — untuk full dataset Tugas 2.
-- Evaluation: NOT STARTED — untuk full dataset Tugas 2.
+- Modeling: PARTIAL — Phase 5A baselines completed; comparison/final model not started.
+- Evaluation: PARTIAL — baseline holdout metrics recorded; final evaluation not started.
 - Deployment: PARTIAL — aplikasi legacy tersedia, tetapi belum merepresentasikan pipeline full dataset Tugas 2.
 
 ## Tugas 2 Status
@@ -84,14 +89,14 @@ Status: COMPLETED
 | Lima peran data mining     | NOT STARTED | TIDAK DAPAT DIVERIFIKASI                                                     | Belum didokumentasikan untuk Tugas 2      |
 | CRISP-DM                   | PARTIAL     | Pemetaan di dokumen ini                                                      | Tahap full dataset belum dikerjakan       |
 | Data preparation           | COMPLETED   | `docs/DATA_PREPARATION.md`: feature roles, rules, leakage, train-only design | Implementation remains for later scope    |
-| Comparison algoritma       | NOT STARTED | Hasil legacy baseline ada                                                    | Perbandingan full dataset belum dilakukan |
+| Comparison algoritma       | NOT STARTED | Phase 5A baselines recorded                                                  | Phase 5B comparison belum dilakukan       |
 | Feature selection          | COMPLETED   | `docs/FEATURE_SELECTION.md`: provisional sets and selection strategy         | Final selection after Phase 5 evidence    |
-| Evaluation                 | NOT STARTED | Metrik legacy ada                                                            | Evaluasi full dataset belum dilakukan     |
+| Evaluation                 | PARTIAL     | `docs/MODELING_PHASE5A.md`: temporal holdout metrics                         | Final evaluation belum dilakukan          |
 | Deployment/decision making | PARTIAL     | Streamlit legacy tersedia                                                    | Adaptasi ke hasil Tugas 2 belum dilakukan |
 
 ## Next Phase
 
-PHASE 5 – MODELING
+PHASE 5B – CLASSIFICATION MODEL COMPARISON
 
 ## Important Rules
 
@@ -111,6 +116,7 @@ PHASE 5 – MODELING
 - Official DfT open-data page identifies the 2025 data guide as the codebook source; unresolved codes remain coded and are not relabeled by assumption.
 - Full-dataset range checks found 0 invalid years, non-positive vehicle/casualty counts, unsupported speed-limit codes, out-of-screening-range coordinates, date/time parse failures, or values below `-1` in audited coded fields.
 - Exploratory MI on development rows ranked `police_force`, `number_of_vehicles`, `speed_limit`, and `junction_control` highest; this is not model performance.
+- Phase 5A used 412,276 development rows and 101,525 untouched 2025 holdout rows; both baseline models had Fatal recall 0.0000.
 
 ## Decisions
 
@@ -120,6 +126,7 @@ PHASE 5 – MODELING
 - Phase 2 tidak melakukan balancing, preprocessing permanen, sampling 10K, atau pemodelan.
 - Phase 3 preserves raw data, defines train-only fitting for learned transforms, and creates no processed CSV or model artifact.
 - Phase 4 does not train final models, tune hyperparameters, run PCA, mine association rules, or change legacy artifacts.
+- Phase 5A applied no balancing and created only two baseline pipelines, metadata, and one concise metrics CSV.
 
 ## Open Questions
 
@@ -127,5 +134,6 @@ PHASE 5 – MODELING
 - Codebook resmi STATS19 dan fitur data-mining yang wajib untuk penilaian masih perlu dikonfirmasi.
 - Final prediction timing, official data-guide version to freeze, geography/privacy policy, and final split rule remain open.
 - Provisional sets: classification 18, clustering 18, association 15, temporal 4; final inclusion remains subject to Phase 5 evidence.
+- Baseline holdout macro F1: Logistic Regression 0.2907; Decision Tree 0.3006; these are not final model-selection results.
 
 Last Verified: 2026-08-27

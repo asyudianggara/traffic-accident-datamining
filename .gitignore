@@ -20,6 +20,7 @@ models/*.joblib
 !models/final_preprocessor.joblib
 !models/final_kmeans.joblib
 !models/final_clustering_preprocessor.joblib
+!models/classification_baseline_*.joblib
 models/*legacy*.joblib
 
 # Streamlit

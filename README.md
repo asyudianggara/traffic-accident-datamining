@@ -2,7 +2,7 @@
 
 ## Analisis Kecelakaan Lalu Lintas STATS19
 
-Status: **PHASE 4 COMPLETED — menunggu instruksi PHASE 5**
+Status: **PHASE 5A COMPLETED — menunggu instruksi PHASE 5B**
 
 Repository ini adalah salinan kerja baru untuk Tugas 2. Tujuannya adalah menyiapkan analisis data kecelakaan lalu lintas STATS19 dengan **seluruh baris data yang tersedia**. Artefak, hasil, dan aplikasi yang terbawa dari proyek sebelumnya hanya menjadi baseline/referensi; mereka bukan hasil final Tugas 2.
 
@@ -16,25 +16,26 @@ Repository ini adalah salinan kerja baru untuk Tugas 2. Tujuannya adalah menyiap
 
 Baseline lama menggunakan 10.000 record: 2.000 record dari masing-masing tahun 2021–2025 melalui `groupby("collision_year").sample(n=2000, random_state=42)`. Sampling ini tidak dinyatakan stratified; split classification sesudahnya memakai `stratify=y`, `test_size=0.20`, dan `random_state=42`.
 
-Quality audit Phase 1 memverifikasi 0 duplicate row, 53 missing pada masing-masing empat kolom koordinat, serta target valid tiga kelas: Fatal 7.553 (1,470024%), Serious 116.813 (22,735067%), dan Slight 389.435 (75,794909%). Full dataset belum dipreproses permanen, belum dibuatkan dataset turunan besar, dan belum digunakan untuk modeling.
+Quality audit Phase 1 memverifikasi 0 duplicate row, 53 missing pada masing-masing empat kolom koordinat, serta target valid tiga kelas: Fatal 7.553 (1,470024%), Serious 116.813 (22,735067%), dan Slight 389.435 (75,794909%). Phase 5A telah menjalankan baseline classification pada full dataset; belum ada final model selection, tuning, clustering, association mining, forecasting, atau deployment.
 
 ## Progress dan CRISP-DM
 
-| Area                          | Status                             |
-| ----------------------------- | ---------------------------------- |
-| Phase 0 – Audit & governance  | COMPLETED                          |
-| Phase 1 – Data strategy       | COMPLETED                          |
-| Phase 2 – Data understanding  | COMPLETED                          |
-| Phase 3 – Data preparation    | COMPLETED (strategy/contract only) |
-| Phase 4 – Feature selection   | COMPLETED (strategy only)          |
-| Business Understanding        | PARTIAL                            |
-| Data Understanding            | COMPLETED                          |
-| Data Preparation full dataset | COMPLETED (strategy/contract only) |
-| Modeling full dataset         | NOT STARTED                        |
-| Evaluation full dataset       | NOT STARTED                        |
-| Deployment untuk Tugas 2      | PARTIAL                            |
+| Area                               | Status                             |
+| ---------------------------------- | ---------------------------------- |
+| Phase 0 – Audit & governance       | COMPLETED                          |
+| Phase 1 – Data strategy            | COMPLETED                          |
+| Phase 2 – Data understanding       | COMPLETED                          |
+| Phase 3 – Data preparation         | COMPLETED (strategy/contract only) |
+| Phase 4 – Feature selection        | COMPLETED (strategy only)          |
+| Phase 5A – Classification baseline | COMPLETED                          |
+| Business Understanding             | PARTIAL                            |
+| Data Understanding                 | COMPLETED                          |
+| Data Preparation full dataset      | COMPLETED (strategy/contract only) |
+| Modeling full dataset              | PARTIAL (Phase 5A baselines)       |
+| Evaluation full dataset            | PARTIAL (baseline holdout metrics) |
+| Deployment untuk Tugas 2           | PARTIAL                            |
 
-Rincian strategi tersedia di [docs/DATA_STRATEGY.md](docs/DATA_STRATEGY.md), audit deskriptif di [docs/DATA_UNDERSTANDING.md](docs/DATA_UNDERSTANDING.md), kontrak preparation di [docs/DATA_PREPARATION.md](docs/DATA_PREPARATION.md), dan strategi feature selection di [docs/FEATURE_SELECTION.md](docs/FEATURE_SELECTION.md). Status dan handoff tersedia di [docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md) dan [docs/HANDOFF.md](docs/HANDOFF.md).
+Rincian strategi tersedia di [docs/DATA_STRATEGY.md](docs/DATA_STRATEGY.md), audit deskriptif di [docs/DATA_UNDERSTANDING.md](docs/DATA_UNDERSTANDING.md), kontrak preparation di [docs/DATA_PREPARATION.md](docs/DATA_PREPARATION.md), strategi feature selection di [docs/FEATURE_SELECTION.md](docs/FEATURE_SELECTION.md), dan hasil baseline di [docs/MODELING_PHASE5A.md](docs/MODELING_PHASE5A.md). Status dan handoff tersedia di [docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md) dan [docs/HANDOFF.md](docs/HANDOFF.md).
 
 ## Pipeline dan Model Legacy yang Tersedia
 
@@ -109,8 +110,9 @@ Branch aktif: `main`. Repository GitHub Tugas 2 terverifikasi pada `https://gith
 - [Data understanding](docs/DATA_UNDERSTANDING.md)
 - [Data preparation](docs/DATA_PREPARATION.md)
 - [Feature selection](docs/FEATURE_SELECTION.md)
+- [Modeling Phase 5A](docs/MODELING_PHASE5A.md)
 - Dokumen audit legacy yang dibawa dari proyek sebelumnya: `docs/PROJECT_DOCUMENTATION_MASTER.md`, `docs/PROJECT_FACT_SHEET.md`, dan `docs/DOCUMENTATION_GAPS.md`.
 
 ## Next Phase
 
-**PHASE 5 – MODELING:** implementasikan candidate feature sets dan algorithm strategy dengan evaluasi leakage-safe. Belum ada final modeling, tuning, PCA, association mining, atau perubahan aplikasi pada Phase 4.
+**PHASE 5B – CLASSIFICATION MODEL COMPARISON:** lanjutkan perbandingan model dan controlled imbalance experiments. Phase 5A hanya baseline; belum ada final model selection, tuning, clustering, association mining, forecasting, atau perubahan aplikasi.
