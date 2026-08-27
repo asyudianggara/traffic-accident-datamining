@@ -2,7 +2,7 @@
 
 ## Analisis Kecelakaan Lalu Lintas STATS19
 
-Status: **PHASE 0 COMPLETED — menunggu instruksi PHASE 1**
+Status: **PHASE 1 COMPLETED — menunggu instruksi PHASE 2**
 
 Repository ini adalah salinan kerja baru untuk Tugas 2. Tujuannya adalah menyiapkan analisis data kecelakaan lalu lintas STATS19 dengan **seluruh baris data yang tersedia**. Artefak, hasil, dan aplikasi yang terbawa dari proyek sebelumnya hanya menjadi baseline/referensi; mereka bukan hasil final Tugas 2.
 
@@ -16,21 +16,22 @@ Repository ini adalah salinan kerja baru untuk Tugas 2. Tujuannya adalah menyiap
 
 Baseline lama menggunakan 10.000 record: 2.000 record dari masing-masing tahun 2021–2025 melalui `groupby("collision_year").sample(n=2000, random_state=42)`. Sampling ini tidak dinyatakan stratified; split classification sesudahnya memakai `stratify=y`, `test_size=0.20`, dan `random_state=42`.
 
-**Penting:** full dataset belum dipreproses, belum dibuatkan dataset turunan, dan belum digunakan untuk modeling pada Phase 0.
+Quality audit Phase 1 memverifikasi 0 duplicate row, 53 missing pada masing-masing empat kolom koordinat, serta target valid tiga kelas: Fatal 7.553 (1,470024%), Serious 116.813 (22,735067%), dan Slight 389.435 (75,794909%). Full dataset belum dipreproses permanen, belum dibuatkan dataset turunan besar, dan belum digunakan untuk modeling.
 
 ## Progress dan CRISP-DM
 
 | Area | Status |
 |---|---|
 | Phase 0 – Audit & governance | COMPLETED |
+| Phase 1 – Data strategy | COMPLETED |
 | Business Understanding | PARTIAL |
-| Data Understanding | PARTIAL |
-| Data Preparation full dataset | NOT STARTED |
+| Data Understanding | COMPLETED |
+| Data Preparation full dataset | PARTIAL (strategy only) |
 | Modeling full dataset | NOT STARTED |
 | Evaluation full dataset | NOT STARTED |
 | Deployment untuk Tugas 2 | PARTIAL |
 
-Rincian status, gap tugas, dan evidence tersedia di [docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md). Handoff antarsesi/agent tersedia di [docs/HANDOFF.md](docs/HANDOFF.md).
+Rincian strategi, 44-feature inventory, quality audit, leakage risks, dan pilihan split tersedia di [docs/DATA_STRATEGY.md](docs/DATA_STRATEGY.md). Status dan handoff tersedia di [docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md) dan [docs/HANDOFF.md](docs/HANDOFF.md).
 
 ## Pipeline dan Model Legacy yang Tersedia
 
@@ -101,8 +102,9 @@ Branch aktif: `main`. Repository GitHub Tugas 2 terverifikasi pada `https://gith
 - [Project status](docs/PROJECT_STATUS.md)
 - [Handoff](docs/HANDOFF.md)
 - [Changelog](docs/CHANGELOG.md)
+- [Data strategy](docs/DATA_STRATEGY.md)
 - Dokumen audit legacy yang dibawa dari proyek sebelumnya: `docs/PROJECT_DOCUMENTATION_MASTER.md`, `docs/PROJECT_FACT_SHEET.md`, dan `docs/DOCUMENTATION_GAPS.md`.
 
 ## Next Phase
 
-**PHASE 1 – DATA STRATEGY:** menentukan strategi penggunaan seluruh baris dataset, memvalidasi jumlah record, target dan fitur, split, serta strategi preprocessing. Tahap tersebut tidak dimulai sebelum instruksi eksplisit.
+**PHASE 2 – DATA UNDERSTANDING:** melengkapi data dictionary, domain audit, dan EDA terarah sebelum spesifikasi pipeline final. Tidak ada modeling, preprocessing permanen, atau perubahan aplikasi tanpa instruksi eksplisit.

@@ -2,8 +2,8 @@
 
 Project: Tugas 2 – Penambangan Data
 Case: Analisis Kecelakaan Lalu Lintas STATS19
-Current Phase: PHASE 0 – AUDIT & PROJECT GOVERNANCE
-Overall Progress: PHASE 0 / 10
+Current Phase: PHASE 1 – DATA STRATEGY
+Overall Progress: PHASE 1 / 10
 Status: COMPLETED
 
 ## Completed
@@ -13,19 +13,36 @@ Status: COMPLETED
 - Baseline lama 10K teridentifikasi sebagai sampling 2.000 baris per tahun (2021–2025), `random_state=42`.
 - README, handoff, dan changelog Phase 0 dibuat/diperbarui.
 - Repository GitHub baru terhubung dan checkpoint Phase 0 `3a4f9b1` berhasil dipush ke `origin/main` pada 2026-08-27.
+- Strategi full dataset, quality audit ringan, inventory 44 fitur, dan audit sampling legacy selesai; lihat `docs/DATA_STRATEGY.md`.
 
 ## Current
 
-- Menunggu instruksi eksplisit untuk PHASE 1 – DATA STRATEGY.
+- Phase 1 completed; menunggu instruksi eksplisit untuk PHASE 2 – DATA UNDERSTANDING.
+
+## Current Task
+
+- Menyelesaikan validasi akhir dokumentasi dan fakta dataset Phase 1.
+
+## In Progress
+
+- Tidak ada pekerjaan implementasi; validasi akhir selesai pada 2026-08-27.
 
 ## Not Started
 
-- Menetapkan strategi penggunaan seluruh baris data, validasi target/fitur, split, dan preprocessing untuk full dataset.
+- Data dictionary lengkap, audit domain, dan EDA terarah untuk full dataset.
 - Data preparation, modeling, comparison algoritma, feature selection, evaluation, dan deployment untuk Tugas 2 berbasis full dataset.
 
 ## Blocked
 
 - Tidak ada blocker Phase 0 yang terverifikasi.
+
+## Next Action
+
+- Menunggu instruksi eksplisit untuk memulai PHASE 2 – DATA UNDERSTANDING.
+
+## Do Not Do
+
+- Jangan training, membuat dataset turunan besar, melakukan feature selection final, mengubah aplikasi, atau mengubah artefak legacy selama belum ada scope phase berikutnya.
 
 ## Dataset
 
@@ -48,30 +65,30 @@ Status: COMPLETED
 
 ## CRISP-DM Status
 
-- Business Understanding: PARTIAL — case dan tujuan legacy terdokumentasi; kebutuhan spesifik Tugas 2 masih perlu dirumuskan.
-- Data Understanding: PARTIAL — raw full dataset diaudit, tetapi analisis Tugas 2 belum dilakukan.
-- Data Preparation: NOT STARTED — untuk full dataset Tugas 2.
+- Business Understanding: PARTIAL — case tersedia; use case/waktu prediksi masih open question.
+- Data Understanding: COMPLETED — schema, kualitas dasar, target, periode, dan baseline/full comparison terverifikasi.
+- Data Preparation: PARTIAL — strategi dirancang, belum diimplementasikan.
 - Modeling: NOT STARTED — untuk full dataset Tugas 2.
 - Evaluation: NOT STARTED — untuk full dataset Tugas 2.
 - Deployment: PARTIAL — aplikasi legacy tersedia, tetapi belum merepresentasikan pipeline full dataset Tugas 2.
 
 ## Tugas 2 Status
 
-| Requirement | Status | Evidence | Gap |
-|---|---|---|---|
-| Analisis masalah/kebutuhan | PARTIAL | Case dan audit Phase 0 | Rumusan kebutuhan Tugas 2 belum dibuat |
-| Review dataset | PARTIAL | Audit CSV raw 513.801 × 44 | EDA full dataset belum dilakukan |
-| Lima peran data mining | NOT STARTED | TIDAK DAPAT DIVERIFIKASI | Belum didokumentasikan untuk Tugas 2 |
-| CRISP-DM | PARTIAL | Pemetaan di dokumen ini | Tahap full dataset belum dikerjakan |
-| Data preparation | NOT STARTED | Tidak ada pipeline full dataset | Menunggu Phase 1 |
-| Comparison algoritma | NOT STARTED | Hasil legacy baseline ada | Perbandingan full dataset belum dilakukan |
-| Feature selection | NOT STARTED | 18 fitur legacy tersedia | Seleksi untuk full dataset belum dilakukan |
-| Evaluation | NOT STARTED | Metrik legacy ada | Evaluasi full dataset belum dilakukan |
-| Deployment/decision making | PARTIAL | Streamlit legacy tersedia | Adaptasi ke hasil Tugas 2 belum dilakukan |
+| Requirement                | Status      | Evidence                                                               | Gap                                        |
+| -------------------------- | ----------- | ---------------------------------------------------------------------- | ------------------------------------------ |
+| Analisis masalah/kebutuhan | PARTIAL     | Case dan audit Phase 0                                                 | Rumusan kebutuhan Tugas 2 belum dibuat     |
+| Review dataset             | COMPLETED   | `docs/DATA_STRATEGY.md`: schema, quality, target, 44-feature inventory | EDA/domain audit lanjutan Phase 2          |
+| Lima peran data mining     | NOT STARTED | TIDAK DAPAT DIVERIFIKASI                                               | Belum didokumentasikan untuk Tugas 2       |
+| CRISP-DM                   | PARTIAL     | Pemetaan di dokumen ini                                                | Tahap full dataset belum dikerjakan        |
+| Data preparation           | PARTIAL     | Strategi preprocessing dan leakage prevention didokumentasikan         | Implementasi menunggu instruksi            |
+| Comparison algoritma       | NOT STARTED | Hasil legacy baseline ada                                              | Perbandingan full dataset belum dilakukan  |
+| Feature selection          | NOT STARTED | 18 fitur legacy tersedia                                               | Seleksi untuk full dataset belum dilakukan |
+| Evaluation                 | NOT STARTED | Metrik legacy ada                                                      | Evaluasi full dataset belum dilakukan      |
+| Deployment/decision making | PARTIAL     | Streamlit legacy tersedia                                              | Adaptasi ke hasil Tugas 2 belum dilakukan  |
 
 ## Next Phase
 
-PHASE 1 – DATA STRATEGY
+PHASE 2 – DATA UNDERSTANDING
 
 ## Important Rules
 
@@ -80,5 +97,20 @@ PHASE 1 – DATA STRATEGY
 - Jangan training, clustering, feature selection, preprocessing baru, atau membuat dataset full tanpa instruksi phase eksplisit.
 - Remote GitHub terverifikasi: `https://github.com/asyudianggara/traffic-accident-datamining.git`.
 - Checkpoint Phase 0 terverifikasi pada commit `3a4f9b1` dan telah dipush ke `origin/main`; jangan force push.
+
+## Verified Facts
+
+- CSV aktual: 513.801 × 44, 2021-01-01 s.d. 2025-12-31; 0 duplicate row; `collision_severity` valid dengan tiga kelas.
+- Missing eksplisit hanya pada empat kolom koordinat (53 masing-masing); kode sentinel `-1` perlu penanganan kategorikal.
+
+## Decisions
+
+- Full dataset adalah kandidat master Tugas 2; 10K hanya baseline legacy.
+- Tidak ada model, artifact, processed dataset besar, atau perubahan aplikasi pada Phase 1.
+- Split temporal direkomendasikan secara kondisional; keputusan final menunggu use case.
+
+## Open Questions
+
+- Definisi use case/timing prediksi, split yang diharapkan dosen, penggunaan fitur geografis/admin, dan lokasi data dictionary lengkap.
 
 Last Verified: 2026-08-27
