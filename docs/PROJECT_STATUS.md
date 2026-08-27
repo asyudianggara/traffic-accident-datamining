@@ -2,8 +2,8 @@
 
 Project: Tugas 2 – Penambangan Data
 Case: Analisis Kecelakaan Lalu Lintas STATS19
-Current Phase: PHASE 5 – MODELING BASELINES
-Overall Progress: PHASE 5 / 10
+Current Phase: PHASE 5.1 – CONTROLLED CLASS-IMBALANCE EXPERIMENT
+Overall Progress: PHASE 5.1 / 10
 Status: COMPLETED
 
 ## Completed
@@ -22,27 +22,28 @@ Status: COMPLETED
 - Implementasi Phase 3 selesai melalui `prepare_phase3.py`; validation manifest kecil dibuat tanpa processed dataset/model baru.
 - Implementasi Phase 4 selesai melalui `feature_selection_phase4.py`; ranking training-only, redundancy report, dan metadata reproducibility dibuat.
 - Phase 5 baseline modeling selesai melalui `modeling_phase5.py`; Logistic Regression, Decision Tree, dan bounded Random Forest dievaluasi pada holdout 2025.
+- Phase 5.1 selesai: empat strategi imbalance dibandingkan pada validation 2024; balanced Random Forest dipilih provisional dan dievaluasi sekali pada holdout 2025.
 
 ## Current
 
-- Phase 5 baseline completed; final evaluation/model selection belum dilakukan.
+- Phase 5.1 completed; final model selection dan deployment belum dilakukan.
 
 ## Current Subphase
 
-- PHASE 5 – MODELING BASELINES (COMPLETED).
+- PHASE 5.1 – CONTROLLED CLASS-IMBALANCE EXPERIMENT (COMPLETED).
 
 ## Current Task
 
-- Menunggu review/otorisasi eksplisit untuk controlled imbalance/final evaluation.
+- Menunggu review hasil dan keputusan final evaluation/model selection.
 
 ## In Progress
 
-- Baseline comparison complete; no final model selection, extensive tuning, or deployment is in progress.
+- Controlled imbalance comparison complete; no final model selection, extensive tuning, or deployment is in progress.
 
 ## Not Started
 
 - Controlled imbalance experiment and final model evaluation.
-- Controlled imbalance experiment, final evaluation, feature sensitivity, and deployment untuk Tugas 2 berbasis full dataset.
+- Final model selection, sensitivity analysis, and deployment untuk Tugas 2 berbasis full dataset.
 
 ## Blocked
 
@@ -50,7 +51,7 @@ Status: COMPLETED
 
 ## Next Action
 
-- Menunggu review/otorisasi eksplisit untuk controlled imbalance/final evaluation.
+- Menunggu review hasil Phase 5.1 dan keputusan final evaluation/model selection.
 
 ## Do Not Do
 
@@ -100,7 +101,7 @@ Status: COMPLETED
 
 ## Next Phase
 
-PHASE 6 – EVALUATION / CONTROLLED IMBALANCE (SCOPE TO BE CONFIRMED)
+PHASE 6 – FINAL EVALUATION / MODEL SELECTION (SCOPE TO BE CONFIRMED)
 
 ## Important Rules
 

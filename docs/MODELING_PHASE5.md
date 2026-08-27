@@ -68,3 +68,38 @@ The reproducible entry point is `modeling_phase5.py`. Compact machine-readable a
 ## 9. Next Phase
 
 Controlled imbalance and final evaluation can be scoped after review. Any later experiment must preserve the 2025 holdout and report Macro F1, Macro Recall, Fatal Recall, and Fatal F1 alongside accuracy.
+
+## 10. Phase 5.1 Controlled Class-Imbalance Experiment
+
+Phase 5.1 used a protected three-way temporal design: train 2021–2023 (311,349 rows), validation 2024 (100,927 rows), and final holdout 2025 (101,525 rows). Four limited strategies were tested on validation only: Logistic Regression with no weighting, Logistic Regression with balanced weighting, Random Forest with no weighting, and Random Forest with balanced weighting. No SMOTE, synthetic data, or arbitrary weight grid was used.
+
+| Strategy | Accuracy | Macro F1 | Macro Recall | Fatal Precision | Fatal Recall | Fatal F1 |
+|---|---:|---:|---:|---:|---:|---:|
+| Random Forest balanced | 0.5345 | **0.3522** | **0.4887** | 0.0407 | 0.5799 | **0.0760** |
+| Logistic Regression balanced | 0.6395 | 0.3360 | 0.3996 | **0.0414** | 0.2803 | 0.0721 |
+| Logistic Regression none | 0.7516 | 0.2865 | 0.3335 | 0.0000 | 0.0000 | 0.0000 |
+| Random Forest none | 0.7516 | 0.2861 | 0.3333 | 0.0000 | 0.0000 | 0.0000 |
+
+The provisional selected strategy is **Random Forest with `class_weight="balanced"`**, selected using Macro F1, Macro Recall, Fatal F1, Fatal Recall, Fatal Precision, and simplicity. It is not selected solely for Fatal Recall: the unweighted strategies miss all Fatal cases, while balanced Logistic Regression has slightly better Fatal Precision but materially worse Fatal Recall and Macro metrics. The balanced Random Forest still has low Fatal precision, so false-positive trade-offs remain important.
+
+## 11. Final 2025 Holdout After Strategy Selection
+
+After selection using only 2021–2024, the selected Random Forest strategy was refit on all 412,276 rows from 2021–2024 and evaluated once on 2025:
+
+| Metric | Phase 5 baseline RF | Phase 5.1 selected RF | Difference |
+|---|---:|---:|---:|
+| Accuracy | 0.4750 | 0.4826 | +0.0076 |
+| Macro F1 | 0.3386 | **0.3406** | +0.0019 |
+| Macro Recall | 0.4890 | **0.4898** | +0.0008 |
+| Weighted F1 | 0.5447 | 0.5506 | +0.0059 |
+| Fatal Precision | 0.0363 | 0.0370 | +0.0007 |
+| Fatal Recall | 0.6070 | 0.6070 | +0.0000 |
+| Fatal F1 | 0.0686 | 0.0698 | +0.0012 |
+
+The result is a **small improvement**, not evidence of a final or production-ready model. The 2025 result was not used to revise the strategy. Full final metrics are in `results/phase5_1_final_holdout_metrics.csv`, with its confusion matrix in `results/phase5_1_final_confusion_matrix.csv`.
+
+## 12. Phase 5.1 Artifacts and Limitations
+
+The reproducible entry point is `phase5_1_imbalance_experiment.py`. Artifacts include validation comparison/report/confusion matrices, final holdout metrics/confusion matrix, baseline comparison, and `results/phase5_1_imbalance_metadata.json`. Validation encoded 147 columns because some categories were absent from the 2021–2023 fit; the final 2021–2024 fit produced 149 columns. Each pipeline transformed its validation/test data with the training-fitted encoder, and no baseline artifact was overwritten.
+
+Open decisions remain the final prediction timing, official codebook, geographic/admin policy, and whether further class-imbalance or threshold analysis is justified. No final model selection or deployment should be claimed yet.
