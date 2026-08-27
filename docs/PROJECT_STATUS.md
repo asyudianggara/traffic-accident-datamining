@@ -2,11 +2,11 @@
 
 Project: Tugas 2 – Penambangan Data
 Case: Analisis Kecelakaan Lalu Lintas STATS19
-Current Phase: PHASE 8.4 – FINAL SYSTEM CONSISTENCY AND DOCUMENTATION CORRECTION (COMPLETED)
-Overall Progress: PHASE 10.1 / 10
-Status: COMPLETED
+Current Phase: PHASE 10.2 — FINAL REPORT PREPARATION
+Overall Progress: PHASE 10.2 / FINAL REPORT PREPARATION
+Status: IN PROGRESS
 
-## Completed
+## Completed / Locked
 
 - Audit awal Git, struktur proyek, dokumentasi, dataset, artefak, pipeline, dan aplikasi selesai pada 2026-08-27.
 - Dataset raw lokal terverifikasi: `data/raw/dft-road-casualty-statistics-collision-last-5-years.csv` (513.801 baris, 44 kolom, 2021–2025, 97.669.586 byte).
@@ -30,26 +30,29 @@ Status: COMPLETED
 - Phase 9.1 selesai: konflik dokumentasi legacy/final, split temporal, status evaluasi, dan handoff diperbaiki tanpa mengubah artefak.
 - Phase 9.2 selesai: interpretasi hasil, batasan metodologis, klaim yang tidak didukung, dan rekomendasi validasi lanjutan didokumentasikan.
 - Phase 9.3 selesai: hasil classification, clustering, validasi aplikasi, pemisahan legacy, dan batasan dikonsolidasikan untuk pelaporan final.
+- Phase 9.4 selesai: paket research final, status locked, dan kesiapan traceability dikonfirmasi tanpa perubahan pada fakta penelitian atau artifact.
 - Phase 10.1 selesai: blueprint laporan final dan matriks sumber/traceability disusun tanpa eksperimen baru.
 - Phase 8.1 audit alignment selesai: ringkasan UI membedakan final research full dataset dari dashboard legacy 10K; prediction contract tetap lulus.
 - Phase 8.2 selesai: Dashboard Dataset menampilkan ringkasan 513.801 × 44 dan split final; clustering 10K diberi label eksplisit legacy C3–C4; metrik Fatal final dan uji konsistensi UI ditambahkan.
 - Phase 8.4 selesai: terminologi dokumentasi final research, classification legacy, dan clustering legacy C3–C4 dipisahkan; dependency `.venv` diverifikasi pada scikit-learn 1.9.0; validasi aplikasi tetap menggunakan kontrak 18 → 149 dan holdout 2025.
+- Phase 10.2 knowledge synchronization selesai: fakta dataset, temporal split, target, fitur, preprocessing, model, metrik, clustering legacy, aplikasi, klaim, keterbatasan, dan traceability dikonsolidasikan pada `docs/PHASE10_2_RESEARCH_FACTS.md`.
+- Phase 10.2.1 selesai: metadata dokumentasi diselaraskan dengan fokus persiapan laporan; tidak ada perubahan dataset, model, artifact, results ML, aplikasi, atau metodologi.
 
 ## Current
 
-- Phase 8 completed; aplikasi inference classification terintegrasi, tetapi deployment-ready belum diklaim.
+- Modeling, final artifact, dan aplikasi sudah locked; fokus aktif berpindah ke persiapan laporan akademik. Deployment-ready tetap belum diklaim.
 
 ## Current Subphase
 
-- PHASE 10.1 – FINAL REPORT BLUEPRINT (COMPLETED).
+- PHASE 10.2 — FINAL REPORT PREPARATION.
 
 ## Current Task
 
-- Menyelesaikan blueprint laporan final sebelum penyusunan naskah.
+- Menyusun laporan akademik berdasarkan `docs/FINAL_REPORT_BLUEPRINT.md` dan `docs/PHASE10_2_RESEARCH_FACTS.md`.
 
 ## In Progress
 
-- Application integration complete; tidak ada tuning, model replacement, atau retraining yang dilakukan.
+- Penulisan laporan dimulai dari fakta yang sudah locked; tidak ada tuning, model replacement, retraining, atau eksperimen ML baru.
 
 ## Not Started
 
@@ -61,7 +64,7 @@ Status: COMPLETED
 
 ## Next Action
 
-- Gunakan `docs/FINAL_REPORT_BLUEPRINT.md` untuk penyusunan laporan; jangan mengklaim deployment readiness.
+- Mulai penyusunan laporan akademik dari blueprint dan factsheet; jangan mengubah fakta final atau mengklaim deployment readiness.
 
 ## Do Not Do
 
@@ -114,7 +117,7 @@ Status: COMPLETED
 
 ## Next Phase
 
-PHASE 10.1 – FINAL REPORT BLUEPRINT
+PHASE 10.2 — ACADEMIC REPORT WRITING
 
 ## Important Rules
 

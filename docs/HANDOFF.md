@@ -2,9 +2,13 @@
 
 ## Current Phase
 
-PHASE 8.4 – FINAL SYSTEM CONSISTENCY AND DOCUMENTATION CORRECTION (COMPLETED)
+PHASE 10.2 — FINAL REPORT PREPARATION
 
 Blueprint laporan Phase 10.1 tetap tersedia dan tidak diubah.
+
+Modeling, final artifact, dan application consistency sudah locked. Fokus
+berikutnya adalah penulisan laporan akademik menggunakan factsheet yang telah
+disinkronkan.
 
 ## Last Completed
 
@@ -41,10 +45,13 @@ Blueprint laporan Phase 10.1 tetap tersedia dan tidak diubah.
 - Phase 8 mengintegrasikan `models/final_research_model.joblib` ke halaman classification tanpa retraining; prediction consistency dan Streamlit smoke test lulus.
 - Phase 9.2 mendokumentasikan interpretasi final holdout, trade-off Fatal, batasan metodologis, klaim yang tidak didukung, dan status research readiness.
 - Phase 9.3 mengonsolidasikan hasil final classification, clustering, validasi aplikasi, pemisahan legacy, dan batasan untuk pelaporan.
+- Phase 9.4 mengunci paket research final dan traceability tanpa mengubah fakta penelitian atau artifact.
 - Phase 10.1 menyusun blueprint laporan final, matriks sumber, dan checklist traceability.
 - Phase 8.1 melakukan audit alignment aplikasi: teks UI final research, split temporal, dan dashboard legacy diperjelas; `py_compile`, consistency test, dan smoke test lulus.
 - Phase 8.2 menyelaraskan Dashboard Dataset agar ukuran raw/final split tidak tertukar dengan clustering legacy C3–C4 10K, menampilkan metrik Fatal final, dan menambahkan uji konsistensi UI untuk 8 halaman.
 - Phase 8.4 memperbaiki terminologi dokumentasi final research versus legacy, menegaskan kontrak final 18→149 dan holdout 2025, serta memverifikasi `.venv` pada scikit-learn 1.9.0.
+- Phase 10.2 melakukan knowledge synchronization dan membuat `docs/PHASE10_2_RESEARCH_FACTS.md` sebagai sumber fakta internal sebelum penulisan laporan.
+- Phase 10.2.1 menyelaraskan metadata `PROJECT_STATUS.md` dan `HANDOFF.md` dengan status final modeling dan fokus report preparation; tidak ada artifact atau hasil ML yang diubah.
 
 ## Files Changed
 
@@ -99,7 +106,7 @@ Blueprint laporan Phase 10.1 tetap tersedia dan tidak diubah.
 - Leakage risk: outcome/adjusted severity fields, number of casualties, dan police-attendance harus dikeluarkan/ditinjau sebelum model.
 - Pola target-versus-fitur bersifat deskriptif; kategori langka memerlukan kehati-hatian dan tidak boleh dibaca sebagai hubungan kausal.
 - Range checks found no structural invalids in the audited full dataset; IQR flags are retained, not deleted.
-- Final candidate research-ready with conditions but not deployment-ready; runtime `.venv` dan artifact sama-sama menggunakan scikit-learn 1.9.0, sementara domain-range validation tetap perlu dikonfirmasi.
+- Final candidate research-ready with conditions but not deployment-ready; runtime `.venv` dan artifact sama-sama menggunakan scikit-learn 1.9.0. Alignment environment PASS, tetapi compatibility lintas versi bukan klaim penelitian; domain-range validation tetap perlu dikonfirmasi.
 - Phase 5B-1 RF tidak menghasilkan result setelah ~27 menit/~1.08 GB RAM; HGB tidak dijalankan karena established sparse preprocessing incompatible.
 - Baselines preserve natural imbalance; no SMOTE, over/undersampling, or class weighting was applied.
 
@@ -111,7 +118,10 @@ Blueprint laporan Phase 10.1 tetap tersedia dan tidak diubah.
 
 ## Next Required Action
 
-Gunakan `docs/FINAL_REPORT_BLUEPRINT.md` untuk menyusun laporan; jangan klaim deployment readiness sebelum dependency version, input policy, domain validation, dan open methodological decisions selesai.
+Gunakan `docs/FINAL_REPORT_BLUEPRINT.md` dan `docs/PHASE10_2_RESEARCH_FACTS.md`
+untuk menyusun laporan akademik. Jangan melakukan retraining/modeling ulang,
+dan jangan klaim deployment readiness sebelum dependency version, input policy,
+domain validation, dan open methodological decisions selesai.
 
 ## STOP CONDITION
 
