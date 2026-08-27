@@ -2,9 +2,9 @@
 
 ## Analisis Kecelakaan Lalu Lintas STATS19
 
-Status: **PHASE 9.3 — final results consolidated**
+Status: **PHASE 8.4 — final system consistency and documentation correction completed; Phase 10.1 blueprint retained**
 
-Repository ini adalah salinan kerja baru untuk Tugas 2. Tujuannya adalah menyiapkan analisis data kecelakaan lalu lintas STATS19 dengan **seluruh baris data yang tersedia**. Artefak, hasil, dan aplikasi yang terbawa dari proyek sebelumnya hanya menjadi baseline/referensi; mereka bukan hasil final Tugas 2.
+Repository ini adalah salinan kerja baru untuk Tugas 2. Tujuannya adalah menyiapkan analisis data kecelakaan lalu lintas STATS19 dengan **seluruh baris data yang tersedia**. Final research artifact dan hasil final dirujuk secara eksplisit; artifact classification lama dan artifact clustering legacy tetap dipertahankan sebagai baseline/referensi historis.
 
 ## Dataset
 
@@ -14,9 +14,11 @@ Repository ini adalah salinan kerja baru untuk Tugas 2. Tujuannya adalah menyiap
 - Cakupan: 513.801 baris, 44 kolom, tahun 2021–2025.
 - Target classification final research: `collision_severity`.
 
-Baseline lama menggunakan 10.000 record: 2.000 record dari masing-masing tahun 2021–2025 melalui `groupby("collision_year").sample(n=2000, random_state=42)`. Sampling ini tidak dinyatakan stratified; split classification sesudahnya memakai `stratify=y`, `test_size=0.20`, dan `random_state=42`.
+Analisis clustering legacy C3–C4 menggunakan 10.000 record: 2.000 record dari masing-masing tahun 2021–2025 melalui `groupby("collision_year").sample(n=2000, random_state=42)`. Data ini bukan dataset utama penelitian final. Split classification legacy sesudahnya memakai `stratify=y`, `test_size=0.20`, dan `random_state=42`.
 
-Quality audit Phase 1 memverifikasi 0 duplicate row, 53 missing pada masing-masing empat kolom koordinat, serta target valid tiga kelas: Fatal 7.553 (1,470024%), Serious 116.813 (22,735067%), dan Slight 389.435 (75,794909%). Phase 6 memilih final candidate classification: Random Forest balanced dengan threshold Fatal 0,50. Phase 7 memvalidasi artifact dan contract; Phase 8 mengintegrasikannya ke halaman classification Streamlit. Model belum deployment-ready.
+Pada aplikasi, 10.000 record hanya ditampilkan sebagai **clustering legacy C3–C4**. Ringkasan utama Dashboard Dataset menggunakan raw dataset 513.801 × 44 dan memisahkan development 412.276, training 311.349, validation 100.927, serta final holdout 2025 sebanyak 101.525 record.
+
+Quality audit Phase 1 memverifikasi 0 duplicate row, 53 missing pada masing-masing empat kolom koordinat, serta target valid tiga kelas: Fatal 7.553 (1,470024%), Serious 116.813 (22,735067%), dan Slight 389.435 (75,794909%). Phase 6 memilih final candidate classification: Random Forest balanced dengan threshold Fatal 0,50. Phase 7 memvalidasi artifact dan contract; Phase 8 mengintegrasikannya ke halaman classification Streamlit; Phase 8.2 menyelaraskan UI dataset raw/split final dengan clustering legacy C3–C4 10K. Model belum deployment-ready.
 
 ## Progress dan CRISP-DM
 
@@ -29,6 +31,7 @@ Quality audit Phase 1 memverifikasi 0 duplicate row, 53 missing pada masing-masi
 | Phase 4 – Feature selection        | COMPLETED (strategy only)          |
 | Phase 5A – Classification baseline | COMPLETED                          |
 | Phase 5B-1 – Model comparison      | PARTIAL                            |
+| Phase 8.2 – UI consistency         | COMPLETED                          |
 | Business Understanding             | PARTIAL                            |
 | Data Understanding                 | COMPLETED                          |
 | Data Preparation full dataset      | COMPLETED (implemented + validated) |
@@ -42,15 +45,19 @@ Interpretasi hasil dan keterbatasan tersedia di [docs/RESEARCH_INTERPRETATION.md
 Konsolidasi hasil final tersedia di [docs/FINAL_RESULTS_CONSOLIDATION.md](docs/FINAL_RESULTS_CONSOLIDATION.md).
 Blueprint laporan final tersedia di [docs/FINAL_REPORT_BLUEPRINT.md](docs/FINAL_REPORT_BLUEPRINT.md).
 
-## Pipeline dan Model Legacy yang Tersedia
+## Pipeline dan Artifact yang Tersedia
 
-Pipeline lama menyediakan:
+Final research menyediakan:
 
-- Classification: Random Forest dengan 18 fitur input, 105 fitur encoded, dan target `collision_severity`.
-- Clustering: K-Means dengan 18 fitur input dan 108 fitur encoded; script C2/C3 mengevaluasi `k=2..6`, metadata final menunjukkan `k=2`.
+- Classification final research: `models/final_research_model.joblib`, 18 fitur → 149 encoded features, Random Forest balanced, threshold Fatal 0,50, dan final holdout 2025.
+
+Pipeline legacy menyediakan:
+
+- Classification legacy: Random Forest dengan 18 fitur input, 105 fitur encoded, dan target `collision_severity`.
+- Clustering legacy C3–C4: K-Means dengan 18 fitur input dan 108 fitur encoded; script C2/C3 mengevaluasi `k=2..6`, metadata final menunjukkan `k=2` pada 10.000 record legacy.
 - Aplikasi Streamlit: inference satu baris terhadap artifact final research untuk classification, artifact clustering legacy, serta dashboard hasil historis di `results/`.
 
-Metrik/model/result tersebut hanya **VERIFIED sebagai baseline legacy**, bukan klaim hasil full dataset Tugas 2. Jangan membandingkan atau memakai hasilnya sebagai kesimpulan Tugas 2 tanpa eksperimen Phase berikutnya.
+Metrik/model/result legacy hanya **VERIFIED sebagai baseline historis**, bukan klaim hasil full dataset Tugas 2. Hasil final research dirujuk dari `results/final_model_metadata.json` dan `docs/FINAL_MODEL.md`.
 
 ## Struktur Penting
 
@@ -122,6 +129,7 @@ Branch aktif: `main`. Repository GitHub Tugas 2 terverifikasi pada `https://gith
 - [Final model selection](docs/FINAL_MODEL.md)
 - [Operational validation](docs/OPERATIONAL_VALIDATION.md)
 - [Application integration](docs/APPLICATION_INTEGRATION.md)
+- [Phase 8.2 UI consistency test](phase8_2_ui_consistency.py)
 - Dokumen audit legacy yang dibawa dari proyek sebelumnya: `docs/PROJECT_DOCUMENTATION_MASTER.md`, `docs/PROJECT_FACT_SHEET.md`, dan `docs/DOCUMENTATION_GAPS.md`.
 
 ## Next Phase

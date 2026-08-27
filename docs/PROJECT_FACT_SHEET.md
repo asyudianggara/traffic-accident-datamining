@@ -1,6 +1,6 @@
 # Project Fact Sheet — Legacy Baseline Snapshot
 
-> Dokumen historis untuk baseline legacy 10K. Dokumen ini **bukan** sumber fakta
+> Dokumen historis untuk baseline classification legacy dan analisis clustering legacy C3–C4 10K. Dokumen ini **bukan** sumber fakta
 > final Phase 6–8. Kontrak dan metrik final dirujuk dari `docs/FINAL_MODEL.md`.
 > Tanggal audit: 25 Agustus 2026.
 
@@ -18,13 +18,13 @@
 
 - Sumber: STATS19 / DfT Road Safety Open Data (collisions, last 5 years).
 - Periode: 2021–2025.
-- Sampling: 2.000 record/tahun × 5 tahun = **10.000 record** (sample penelitian, `random_state=42`).
-- Raw CSV: 44 kolom; pembacaan penuh ≈ 513.801 baris (notebook 01). 10.000 bukan populasi penuh.
+- Sampling analisis clustering legacy C3–C4: 2.000 record/tahun × 5 tahun = **10.000 record** (`random_state=42`).
+- Raw CSV: 44 kolom; pembacaan penuh ≈ 513.801 baris (notebook 01). 10.000 hanya untuk analisis clustering legacy C3–C4, bukan dataset utama penelitian final.
 - Mapping: `data/processed/stats19_maps.json`.
 - Target classification: `collision_severity` → Fatal, Serious, Slight.
 - Referensi unduhan resmi STATS19: **belum tercatat (gap)**.
 
-## Kontrak fitur final — 18 fitur
+## Kontrak fitur legacy classification — 18 fitur
 
 - Numerik (4): `number_of_vehicles`, `speed_limit`, `hour`, `month`.
 - Kategorikal (14): `day_of_week`, `first_road_class`, `road_type`, `junction_detail`, `junction_control`, `second_road_class`, `pedestrian_crossing`, `light_conditions`, `weather_conditions`, `road_surface_conditions`, `special_conditions_at_site`, `carriageway_hazards`, `urban_or_rural_area`, `trunk_road_flag`.
@@ -36,7 +36,7 @@
 - Split legacy: **8.000 train / 2.000 test**, stratified, `random_state=42`.
 - Preprocessing: numerik median → StandardScaler; kategorikal most_frequent → OneHotEncoder(`handle_unknown="ignore"`).
 - Preprocessor classification **hanya fit pada X_train**.
-- Dimensi: 18 → **105 encoded features**.
+- Dimensi: 18 → **105 encoded features** (kontrak fitur legacy classification).
 - Artifact legacy: `models/final_random_forest.joblib`, `models/final_preprocessor.joblib`, `models/final_classification_metadata.json`.
 
 ### Metrik aggregate final (sumber: `final_classification_metadata.json`)
@@ -59,11 +59,11 @@
 
 Catatan: angka ini hanya baseline legacy 10K. CSV `results/final_classification_report.csv` adalah output evaluator 21 fitur (stale) dan **bukan** sumber angka final Phase 6.
 
-## Clustering
+## Clustering legacy C3–C4
 
 - Algoritma: K-Means.
-- Data: seluruh **10.000** sample (tanpa split train/test).
-- Preprocessing: sama dengan classification, **fit pada seluruh 10.000**.
+- Data: seluruh **10.000 record analisis clustering legacy C3–C4** (tanpa split train/test).
+- Preprocessing: sama dengan classification, **fit pada seluruh 10.000 record analisis clustering legacy C3–C4**.
 - Dimensi: 18 → **108 encoded features**.
 - Final: `KMeans(n_clusters=2, random_state=42, n_init=10)`.
 - Artifact: `models/final_kmeans.joblib`, `models/final_clustering_preprocessor.joblib`, `models/final_clustering_metadata.json`.
@@ -94,7 +94,7 @@ Catatan: angka ini hanya baseline legacy 10K. CSV `results/final_classification_
 ## Artifact final
 
 - Classification legacy: `final_random_forest.joblib`, `final_preprocessor.joblib`, `final_classification_metadata.json`.
-- Classification final research: `final_research_model.joblib` (18 fitur → 149 encoded; lihat `docs/FINAL_MODEL.md`).
+- Classification final research: `final_research_model.joblib` dengan kontrak fitur final research **18 fitur → 149 encoded**; lihat `docs/FINAL_MODEL.md`.
 - Clustering: `final_kmeans.joblib`, `final_clustering_preprocessor.joblib`, `final_clustering_metadata.json`.
 - Legacy 21 fitur (di-ignore, tidak dipakai app): `final_random_forest_legacy_21_features.joblib`, `final_preprocessor_legacy_21_features.joblib`.
 
@@ -106,8 +106,9 @@ Catatan: angka ini hanya baseline legacy 10K. CSV `results/final_classification_
 ## Testing
 
 - `py_compile` PASS; Streamlit startup HTTP 200 PASS; AppTest 8 halaman PASS.
-- Classification legacy 18→105, Clustering 18→108 PASS.
-- Artifact load (105/108) PASS; metadata check PASS; legacy tidak direferensikan PASS.
+- Classification legacy 18→105, final research 18→149, dan clustering legacy C3–C4 18→108 PASS.
+- Artifact load (149/108) PASS; metadata check PASS; aplikasi tidak menukar artifact legacy dengan final research PASS.
+- Runtime `.venv` dan dependency terpin pada scikit-learn 1.9.0, sesuai versi artifact.
 
 ## Status kualitas
 

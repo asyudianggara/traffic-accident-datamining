@@ -73,13 +73,13 @@ Tujuan akademiknya adalah mendemonstrasikan alur *Rekayasa Perangkat Lunak* mode
 | Sumber | Department for Transport (DfT) — Road Safety Open Data / STATS19 |
 | Nama file lokal | `dft-road-casualty-statistics-collision-last-5-years.csv` |
 | Periode | 2021–2025 |
-| Sampling | 2.000 record per tahun, `random_state=42` |
-| Total sample penelitian | **10.000 record** |
+| Sampling analisis clustering legacy C3–C4 | 2.000 record per tahun, `random_state=42` |
+| Total analisis clustering legacy C3–C4 | **10.000 record** |
 | Kolom raw | 44 kolom (lihat *data dictionary* di notebook 01) |
 | Raw CSV | Di-ignore Git (`data/raw/`); tidak di-upload ke repository publik |
 | Mapping | `data/processed/stats19_maps.json` (kode STATS19 → label) |
 
-**Penting:** angka 10.000 adalah **sample penelitian**, bukan keseluruhan populasi STATS19. Pembacaan penuh dataset (notebook 01) mencatat ratusan ribu baris (≈ 513.801 baris). Sample 10.000 dibentuk melalui `groupby(collision_year).sample(n=2000)` agar tiap tahun seimbang.
+**Penting:** angka 10.000 adalah data untuk **analisis clustering legacy C3–C4**, bukan dataset utama/final research dan bukan keseluruhan populasi STATS19. Pembacaan penuh dataset (notebook 01) mencatat ≈ 513.801 baris. Data clustering legacy C3–C4 dibentuk melalui `groupby(collision_year).sample(n=2000)` agar tiap tahun seimbang.
 
 Referensi unduhan resmi STATS19 **belum** tercatat di repository (gap — lihat DOCUMENTATION_GAPS.md).
 
@@ -87,7 +87,9 @@ Referensi unduhan resmi STATS19 **belum** tercatat di repository (gap — lihat 
 
 ## 6. Feature Selection
 
-### 6.1 Kontrak fitur final — tepat 18 fitur
+### 6.1 Kontrak fitur baseline/legacy — tepat 18 fitur
+
+Bagian ini mendokumentasikan kontrak fitur pipeline legacy. Kontrak final research adalah 18 fitur → 149 encoded features dan dirujuk dari `results/final_model_metadata.json` serta `docs/FINAL_MODEL.md`.
 
 | Fitur | Tipe | Arti (bahasa awam) | Classification | Clustering |
 |---|---|---|---|---|
@@ -220,8 +222,8 @@ Angka per kelas di atas hanya baseline legacy 10K dan konsisten dengan metadata 
 
 - **Algoritma:** K-Means (unsupervised learning).
 - **Input:** 18 fitur (sama dengan classification).
-- **Encoded:** 18 → **108** fitur (preprocessor *fit* pada **seluruh** 10.000 sample).
-- **Data:** seluruh 10.000 record (tanpa split train/test).
+- **Encoded:** 18 → **108** fitur (preprocessor *fit* pada **seluruh** 10.000 record analisis clustering legacy C3–C4).
+- **Data:** seluruh 10.000 record analisis clustering legacy C3–C4 (tanpa split train/test).
 - **Final:** `K=2`.
 - **Alur:** `18 fitur → final_clustering_preprocessor.joblib → 108 encoded → final_kmeans.joblib → cluster + distance to centroid`.
 
@@ -408,7 +410,7 @@ Legacy artifact adalah hasil pipeline 21 fitur lama dan **tidak** menggantikan a
 
 ## 21. Keterbatasan
 
-- Sample hanya 10.000 record (bukan seluruh populasi STATS19 ≈ 513.801 baris).
+- Analisis clustering legacy C3–C4 hanya memakai 10.000 record (bukan dataset utama/final research STATS19 ≈ 513.801 baris).
 - Dataset berasal dari STATS19 Inggris; generalisasi ke wilayah lain belum teruji.
 - Performa final antar kelas classification tidak seimbang (Macro F1 37,8410% « Weighted F1 58,4129%).
 - Kelas `Fatal` sangat sulit diprediksi (hanya 28/2.000 pada test).
@@ -448,7 +450,7 @@ Lihat `docs/DOCUMENTATION_GAPS.md` untuk daftar lengkap. Ringkasan:
 3. Pendahuluan: latar belakang, tujuan, batasan.
 4. Landasan teori: classification vs clustering, Random Forest, K-Means, PCA, preprocessing.
 5. Analisis kebutuhan & rancangan (tambahkan diagram RPL bila memungkinkan).
-6. Dataset & data understanding (STATS19, 10.000 sample, 18 fitur).
+6. Dataset & data understanding (STATS19 full dataset; analisis clustering legacy C3–C4 10.000 record; 18 fitur).
 7. Data preparation & audit leakage.
 8. Metodologi classification final research (Random Forest, split temporal 2021–2023/2024/2025, 149 encoded).
 9. Metodologi clustering C2–C4 (108 encoded, k=2, profil, PCA).
@@ -492,7 +494,7 @@ Lihat `docs/DOCUMENTATION_GAPS.md` untuk daftar lengkap. Ringkasan:
 
 | Klaim | Bukti | File | Status |
 |---|---|---|---|
-| Sample 10.000 (2.000/tahun) | Sampling `random_state=42` | `finalize_models.py`, `clustering_c2_c3.py` | Terverifikasi |
+| Analisis clustering legacy C3–C4 10.000 record (2.000/tahun) | Sampling `random_state=42` | `finalize_models.py`, `clustering_c2_c3.py` | Terverifikasi |
 | 18 fitur final | `FEATURES` / `FORBIDDEN_FEATURES` | `finalize_models.py`, `clustering_*.py` | Terverifikasi |
 | Classification 105 encoded | `feature_count_encoded` | `final_classification_metadata.json` | Terverifikasi |
 | Clustering 108 encoded | `feature_count_encoded` | `final_clustering_metadata.json` | Terverifikasi |

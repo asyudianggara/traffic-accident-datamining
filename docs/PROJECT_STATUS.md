@@ -2,7 +2,7 @@
 
 Project: Tugas 2 – Penambangan Data
 Case: Analisis Kecelakaan Lalu Lintas STATS19
-Current Phase: PHASE 10.1 – FINAL REPORT BLUEPRINT
+Current Phase: PHASE 8.4 – FINAL SYSTEM CONSISTENCY AND DOCUMENTATION CORRECTION (COMPLETED)
 Overall Progress: PHASE 10.1 / 10
 Status: COMPLETED
 
@@ -10,7 +10,7 @@ Status: COMPLETED
 
 - Audit awal Git, struktur proyek, dokumentasi, dataset, artefak, pipeline, dan aplikasi selesai pada 2026-08-27.
 - Dataset raw lokal terverifikasi: `data/raw/dft-road-casualty-statistics-collision-last-5-years.csv` (513.801 baris, 44 kolom, 2021–2025, 97.669.586 byte).
-- Baseline lama 10K teridentifikasi sebagai sampling 2.000 baris per tahun (2021–2025), `random_state=42`.
+- Analisis clustering legacy C3–C4 10K teridentifikasi sebagai sampling 2.000 baris per tahun (2021–2025), `random_state=42`.
 - README, handoff, dan changelog Phase 0 dibuat/diperbarui.
 - Repository GitHub baru terhubung dan checkpoint Phase 0 `3a4f9b1` berhasil dipush ke `origin/main` pada 2026-08-27.
 - Strategi full dataset, quality audit ringan, inventory 44 fitur, dan audit sampling legacy selesai; lihat `docs/DATA_STRATEGY.md`.
@@ -32,6 +32,8 @@ Status: COMPLETED
 - Phase 9.3 selesai: hasil classification, clustering, validasi aplikasi, pemisahan legacy, dan batasan dikonsolidasikan untuk pelaporan final.
 - Phase 10.1 selesai: blueprint laporan final dan matriks sumber/traceability disusun tanpa eksperimen baru.
 - Phase 8.1 audit alignment selesai: ringkasan UI membedakan final research full dataset dari dashboard legacy 10K; prediction contract tetap lulus.
+- Phase 8.2 selesai: Dashboard Dataset menampilkan ringkasan 513.801 × 44 dan split final; clustering 10K diberi label eksplisit legacy C3–C4; metrik Fatal final dan uji konsistensi UI ditambahkan.
+- Phase 8.4 selesai: terminologi dokumentasi final research, classification legacy, dan clustering legacy C3–C4 dipisahkan; dependency `.venv` diverifikasi pada scikit-learn 1.9.0; validasi aplikasi tetap menggunakan kontrak 18 → 149 dan holdout 2025.
 
 ## Current
 
@@ -69,21 +71,23 @@ Status: COMPLETED
 
 - Raw: `data/raw/dft-road-casualty-statistics-collision-last-5-years.csv`, lokal dan di-ignore Git.
 - Full available records: 513.801 baris × 44 kolom; `collision_year` 2021: 101.087, 2022: 106.004, 2023: 104.258, 2024: 100.927, 2025: 101.525. Kolom target lama: `collision_severity`.
-- Baseline 10K: artifact/dokumentasi lama menunjukkan 10.000 baris × 44 kolom, 2.000 per tahun; file dataset sample terpisah TIDAK DAPAT DIVERIFIKASI tersedia pada checkout ini.
+- Analisis clustering legacy C3–C4: artifact/dokumentasi lama menunjukkan 10.000 baris × 44 kolom, 2.000 per tahun; file dataset terpisah TIDAK DAPAT DIVERIFIKASI tersedia pada checkout ini.
 - Target final classification: `collision_severity`, dengan mapping 1 = Fatal, 2 = Serious, 3 = Slight.
 
 ## Existing Models and Results
 
 - Classification legacy baseline: Random Forest, 18 fitur input, 105 fitur encoded, train/test 8.000/2.000, `random_state=42`. Metadata melaporkan accuracy 0,6385 dan macro F1 0,3862; baseline ini historis.
 - Classification final research: Random Forest balanced, 18 fitur input, 149 fitur encoded, threshold Fatal 0,50; 2025 final holdout.
-- Clustering legacy baseline: K-Means `k=2`, 18 fitur input, 108 fitur encoded, 10.000 sampel; C2/C3 mengevaluasi `k=2..6`.
-- Hasil di `results/` dan artefak di `models/` adalah hasil legacy baseline; tidak boleh diperlakukan sebagai hasil full dataset Tugas 2.
+- Clustering legacy baseline: K-Means `k=2`, 18 fitur input, 108 fitur encoded, 10.000 record analisis clustering legacy C3–C4; C2/C3 mengevaluasi `k=2..6`.
+- Final research: `models/final_research_model.joblib`, `results/final_model_metadata.json`, dan hasil final terkait memakai kontrak 18 → 149 serta final holdout 2025.
+- Legacy: `models/final_classification_metadata.json` (18 → 105), artifact clustering legacy, dan hasil C3–C4 10.000 record. Artifact/hasil legacy tidak boleh diperlakukan sebagai hasil final research.
 
 ## Existing Application
 
 - `app.py` adalah aplikasi Streamlit inference-only yang memuat `models/final_research_model.joblib` untuk classification dan artefak clustering legacy; aplikasi tidak melakukan retraining saat dijalankan.
 - Perintah terverifikasi: `.venv\Scripts\python.exe -m streamlit run app.py`.
 - Status startup Phase 0: PASS — Streamlit diuji pada 2026-08-27 di port lokal 8502 dan mengembalikan HTTP 200; proses dihentikan setelah verifikasi.
+- Phase 8.2 UI consistency test: `phase8_2_ui_consistency.py` memeriksa angka dataset, label clustering legacy C3–C4, larangan label dataset utama untuk 10K, dan render seluruh 8 halaman.
 
 ## CRISP-DM Status
 
@@ -114,7 +118,7 @@ PHASE 10.1 – FINAL REPORT BLUEPRINT
 
 ## Important Rules
 
-- Full dataset menjadi dataset utama Tugas 2; 10K hanya baseline/referensi.
+- Full dataset menjadi dataset utama Tugas 2; 10K hanya digunakan untuk baseline classification historis dan analisis clustering legacy C3–C4.
 - Project lama tidak boleh diubah.
 - Jangan training, clustering, feature selection, preprocessing baru, atau membuat dataset full tanpa instruksi phase eksplisit.
 - Jangan menganggap visualisasi dan pola Phase 2 sebagai hubungan kausal atau hasil model.
@@ -136,10 +140,10 @@ PHASE 10.1 – FINAL REPORT BLUEPRINT
 
 ## Decisions
 
-- Full dataset adalah kandidat master Tugas 2; 10K hanya baseline legacy.
+- Full dataset adalah kandidat master Tugas 2; analisis clustering legacy C3–C4 menggunakan 10K dan tidak menggantikan dataset utama.
 - Tidak ada model, artifact, processed dataset besar, atau perubahan aplikasi pada Phase 1.
 - Split temporal final: train 2021–2023, validation 2024, refit development 2021–2024, dan holdout 2025.
-- Phase 2 tidak melakukan balancing, preprocessing permanen, sampling 10K, atau pemodelan.
+- Phase 2 tidak melakukan balancing, preprocessing permanen, sampling baru untuk analisis clustering legacy C3–C4 10K, atau pemodelan.
 - Phase 3 preserves raw data, defines train-only fitting for learned transforms, and creates only a small validation manifest; no processed CSV or model artifact is created.
 - Phase 4 does not train final models, tune hyperparameters, run PCA, mine association rules, or change legacy artifacts.
 - Phase 5A applied no balancing and created only two baseline pipelines, metadata, and one concise metrics CSV.

@@ -2,7 +2,9 @@
 
 ## Current Phase
 
-PHASE 10.1 – FINAL REPORT BLUEPRINT (COMPLETED)
+PHASE 8.4 – FINAL SYSTEM CONSISTENCY AND DOCUMENTATION CORRECTION (COMPLETED)
+
+Blueprint laporan Phase 10.1 tetap tersedia dan tidak diubah.
 
 ## Last Completed
 
@@ -24,11 +26,11 @@ PHASE 10.1 – FINAL REPORT BLUEPRINT (COMPLETED)
 ## Current State
 
 - Raw STATS19 tersedia lokal di `data/raw/dft-road-casualty-statistics-collision-last-5-years.csv`: 513.801 baris, 44 kolom, periode 2021–2025. File di-ignore Git.
-- Baseline legacy adalah 10.000 baris (2.000/tahun, `random_state=42`). Tidak ada file sample terpisah yang dapat diverifikasi.
+- Analisis clustering legacy C3–C4 memakai 10.000 baris (2.000/tahun, `random_state=42`). Tidak ada file dataset terpisah yang dapat diverifikasi.
 - Pipeline legacy memakai `collision_severity`, Random Forest 18→105 fitur, serta K-Means 18→108 fitur. Hasilnya historis dan bukan hasil final research.
 - Aplikasi `app.py` Streamlit memuat `models/final_research_model.joblib` untuk classification dan artefak clustering legacy; inference-only.
 - Branch aktif: `main`. Remote `origin` terverifikasi menuju `https://github.com/asyudianggara/traffic-accident-datamining.git` untuk fetch dan push. Checkpoint Phase 0 `3a4f9b1` berhasil dipush ke `origin/main`.
-- Full dataset adalah kandidat master; 10K hanya legacy baseline. Target `collision_severity`: Fatal 7.553 (1,470024%), Serious 116.813 (22,735067%), Slight 389.435 (75,794909%).
+- Full dataset adalah kandidat master; 10K hanya analisis clustering legacy C3–C4. Target `collision_severity`: Fatal 7.553 (1,470024%), Serious 116.813 (22,735067%), Slight 389.435 (75,794909%).
 - Phase 2 memverifikasi pola temporal, statistik numerik, distribusi kategori, target-versus-fitur, missingness, feature roles, dan relevansi lima peran data mining.
 - Phase 3 memverifikasi range/logical checks, mempertahankan target tiga kelas tanpa balancing, dan mendokumentasikan derived `month`/`hour` serta provisional temporal holdout.
 - Phase 4 menetapkan provisional classification/clustering sets (18 masing-masing), association basket (15), temporal set (4), dan leakage-safe selection rules.
@@ -41,6 +43,8 @@ PHASE 10.1 – FINAL REPORT BLUEPRINT (COMPLETED)
 - Phase 9.3 mengonsolidasikan hasil final classification, clustering, validasi aplikasi, pemisahan legacy, dan batasan untuk pelaporan.
 - Phase 10.1 menyusun blueprint laporan final, matriks sumber, dan checklist traceability.
 - Phase 8.1 melakukan audit alignment aplikasi: teks UI final research, split temporal, dan dashboard legacy diperjelas; `py_compile`, consistency test, dan smoke test lulus.
+- Phase 8.2 menyelaraskan Dashboard Dataset agar ukuran raw/final split tidak tertukar dengan clustering legacy C3–C4 10K, menampilkan metrik Fatal final, dan menambahkan uji konsistensi UI untuk 8 halaman.
+- Phase 8.4 memperbaiki terminologi dokumentasi final research versus legacy, menegaskan kontrak final 18→149 dan holdout 2025, serta memverifikasi `.venv` pada scikit-learn 1.9.0.
 
 ## Files Changed
 
@@ -60,7 +64,7 @@ PHASE 10.1 – FINAL REPORT BLUEPRINT (COMPLETED)
 - `docs/MODELING_PHASE5B1.md`, `models/classification_phase5b_logistic_regression.joblib`, `models/classification_phase5b_decision_tree.joblib`, `models/classification_phase5b_metadata.json`, dan `results/classification_phase5b_comparison.csv`
 - `finalize_research_model.py`, `docs/FINAL_MODEL.md`, `models/final_research_model.joblib`, `results/final_model_metadata.json`, dan `results/final_model_comparison.csv`
 - `phase7_operational_validation.py`, `docs/OPERATIONAL_VALIDATION.md`, dan `results/phase7_operational_validation.json`
-- `app.py`, `docs/APPLICATION_INTEGRATION.md`, `phase8_application_consistency.py`, `phase8_streamlit_smoke_test.py`, dan hasil JSON Phase 8.
+- `app.py`, `docs/APPLICATION_INTEGRATION.md`, `phase8_application_consistency.py`, `phase8_streamlit_smoke_test.py`, `phase8_2_ui_consistency.py`, dan hasil JSON Phase 8.
 - `docs/MODELING_PHASE5A.md`, `models/classification_baseline_logistic_regression.joblib`, `models/classification_baseline_decision_tree.joblib`, `models/classification_baseline_metadata.json`, dan `results/classification_baseline.csv`
 
 ## Files Not Changed in Documentation Audit
@@ -70,7 +74,7 @@ PHASE 10.1 – FINAL REPORT BLUEPRINT (COMPLETED)
 ## Verified Results
 
 - Raw full data: 513.801 × 44, tahun 2021–2025.
-- Sampling legacy: `groupby("collision_year").sample(n=2000, random_state=42)` untuk 2021–2025.
+- Sampling analisis clustering legacy C3–C4: `groupby("collision_year").sample(n=2000, random_state=42)` untuk 2021–2025.
 - Classification legacy split: `test_size=0.20`, `random_state=42`, `stratify=y`.
 - Clustering legacy: `KMeans`, evaluasi `k=2..6`, final metadata `k=2`.
 - Full CSV: 0 duplicate row; 53 missing pada masing-masing empat kolom koordinat; seluruh date/time valid; tidak ada kode tak terpetakan pada kolom yang memiliki mapping lokal.
@@ -79,10 +83,12 @@ PHASE 10.1 – FINAL REPORT BLUEPRINT (COMPLETED)
 - Exploratory MI used only 2021–2024 development rows; 2025 was not used for feature selection.
 - Logistic Regression holdout macro F1 0.2907; Decision Tree holdout macro F1 0.3006; Fatal recall 0 untuk keduanya.
 - Logistic Regression holdout macro F1 0.2907; Decision Tree holdout macro F1 0.3006; Fatal recall 0 untuk keduanya.
+- Phase 8.2 UI contract: raw 513.801, development 412.276, train 311.349, validation 100.927, holdout 101.525, classification 18→149, clustering legacy C3–C4 10.000; validasi terbaru PASS.
+- Phase 8.4 documentation contract: final research 18→149 dan holdout 2025 dipisahkan dari classification legacy 18→105 serta clustering legacy C3–C4 10K; `.venv` diverifikasi pada scikit-learn 1.9.0.
 
 ## Unverified Items
 
-- Keberadaan file dataset sample 10K terpisah dan waktu persis sampling pertama kali dilakukan.
+- Keberadaan file dataset analisis clustering legacy C3–C4 10K terpisah dan waktu persis sampling pertama kali dilakukan.
 - Definisi use case/timing prediksi, split yang diminta dosen, penggunaan fitur geografis/admin, dan data dictionary STATS19 lengkap.
 - Arti seluruh kode unresolved dan daftar fitur data-mining yang wajib dinilai masih belum terverifikasi.
 - Prediction timing, geographic/privacy policy, official codebook version, and operational acceptance criteria remain unconfirmed.
@@ -93,7 +99,7 @@ PHASE 10.1 – FINAL REPORT BLUEPRINT (COMPLETED)
 - Leakage risk: outcome/adjusted severity fields, number of casualties, dan police-attendance harus dikeluarkan/ditinjau sebelum model.
 - Pola target-versus-fitur bersifat deskriptif; kategori langka memerlukan kehati-hatian dan tidak boleh dibaca sebagai hubungan kausal.
 - Range checks found no structural invalids in the audited full dataset; IQR flags are retained, not deleted.
-- Final candidate research-ready with conditions but not deployment-ready; sklearn cross-version compatibility and domain-range validation are NOT VERIFIED.
+- Final candidate research-ready with conditions but not deployment-ready; runtime `.venv` dan artifact sama-sama menggunakan scikit-learn 1.9.0, sementara domain-range validation tetap perlu dikonfirmasi.
 - Phase 5B-1 RF tidak menghasilkan result setelah ~27 menit/~1.08 GB RAM; HGB tidak dijalankan karena established sparse preprocessing incompatible.
 - Baselines preserve natural imbalance; no SMOTE, over/undersampling, or class weighting was applied.
 
