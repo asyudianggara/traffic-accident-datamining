@@ -40,6 +40,7 @@ Rincian strategi tersedia di [docs/DATA_STRATEGY.md](docs/DATA_STRATEGY.md), aud
 Rincian final model tersedia di [docs/FINAL_MODEL.md](docs/FINAL_MODEL.md). Status dan handoff tersedia di [docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md) dan [docs/HANDOFF.md](docs/HANDOFF.md).
 Interpretasi hasil dan keterbatasan tersedia di [docs/RESEARCH_INTERPRETATION.md](docs/RESEARCH_INTERPRETATION.md).
 Konsolidasi hasil final tersedia di [docs/FINAL_RESULTS_CONSOLIDATION.md](docs/FINAL_RESULTS_CONSOLIDATION.md).
+Blueprint laporan final tersedia di [docs/FINAL_REPORT_BLUEPRINT.md](docs/FINAL_REPORT_BLUEPRINT.md).
 
 ## Pipeline dan Model Legacy yang Tersedia
 
@@ -125,4 +126,4 @@ Branch aktif: `main`. Repository GitHub Tugas 2 terverifikasi pada `https://gith
 
 ## Next Phase
 
-**PHASE 9.3 — FINAL RESULTS CONSOLIDATION:** selesai; deployment operasional tetap belum diklaim siap.
+**PHASE 10.1 — FINAL REPORT BLUEPRINT:** selesai; deployment operasional tetap belum diklaim siap.
