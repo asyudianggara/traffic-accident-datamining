@@ -2,7 +2,7 @@
 
 ## Analisis Kecelakaan Lalu Lintas STATS19
 
-Status: **PHASE 8 COMPLETED — application integration terdokumentasi**
+Status: **PHASE 9.2 — research interpretation terdokumentasi**
 
 Repository ini adalah salinan kerja baru untuk Tugas 2. Tujuannya adalah menyiapkan analisis data kecelakaan lalu lintas STATS19 dengan **seluruh baris data yang tersedia**. Artefak, hasil, dan aplikasi yang terbawa dari proyek sebelumnya hanya menjadi baseline/referensi; mereka bukan hasil final Tugas 2.
 
@@ -12,7 +12,7 @@ Repository ini adalah salinan kerja baru untuk Tugas 2. Tujuannya adalah menyiap
 - Status: **VERIFIED** tersedia lokal, tetapi di-ignore Git dan tidak akan diunggah.
 - Ukuran: 97.669.586 byte
 - Cakupan: 513.801 baris, 44 kolom, tahun 2021–2025.
-- Target legacy classification: `collision_severity`.
+- Target classification final research: `collision_severity`.
 
 Baseline lama menggunakan 10.000 record: 2.000 record dari masing-masing tahun 2021–2025 melalui `groupby("collision_year").sample(n=2000, random_state=42)`. Sampling ini tidak dinyatakan stratified; split classification sesudahnya memakai `stratify=y`, `test_size=0.20`, dan `random_state=42`.
 
@@ -32,12 +32,13 @@ Quality audit Phase 1 memverifikasi 0 duplicate row, 53 missing pada masing-masi
 | Business Understanding             | PARTIAL                            |
 | Data Understanding                 | COMPLETED                          |
 | Data Preparation full dataset      | COMPLETED (implemented + validated) |
-| Modeling full dataset              | PARTIAL (5A + 5B-1)                |
-| Evaluation full dataset            | PARTIAL (comparison incomplete)    |
+| Modeling full dataset              | COMPLETED WITH LIMITATIONS         |
+| Evaluation full dataset            | COMPLETED WITH LIMITATIONS         |
 | Deployment untuk Tugas 2           | PARTIAL                            |
 
 Rincian strategi tersedia di [docs/DATA_STRATEGY.md](docs/DATA_STRATEGY.md), audit deskriptif di [docs/DATA_UNDERSTANDING.md](docs/DATA_UNDERSTANDING.md), kontrak preparation di [docs/DATA_PREPARATION.md](docs/DATA_PREPARATION.md), strategi feature selection di [docs/FEATURE_SELECTION.md](docs/FEATURE_SELECTION.md), baseline di [docs/MODELING_PHASE5A.md](docs/MODELING_PHASE5A.md), dan comparison di [docs/MODELING_PHASE5B1.md](docs/MODELING_PHASE5B1.md). Status dan handoff tersedia di [docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md) dan [docs/HANDOFF.md](docs/HANDOFF.md).
 Rincian final model tersedia di [docs/FINAL_MODEL.md](docs/FINAL_MODEL.md). Status dan handoff tersedia di [docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md) dan [docs/HANDOFF.md](docs/HANDOFF.md).
+Interpretasi hasil dan keterbatasan tersedia di [docs/RESEARCH_INTERPRETATION.md](docs/RESEARCH_INTERPRETATION.md).
 
 ## Pipeline dan Model Legacy yang Tersedia
 
@@ -45,14 +46,14 @@ Pipeline lama menyediakan:
 
 - Classification: Random Forest dengan 18 fitur input, 105 fitur encoded, dan target `collision_severity`.
 - Clustering: K-Means dengan 18 fitur input dan 108 fitur encoded; script C2/C3 mengevaluasi `k=2..6`, metadata final menunjukkan `k=2`.
-- Aplikasi Streamlit: inference satu baris terhadap artefak legacy serta dashboard hasil historis di `results/`.
+- Aplikasi Streamlit: inference satu baris terhadap artifact final research untuk classification, artifact clustering legacy, serta dashboard hasil historis di `results/`.
 
 Metrik/model/result tersebut hanya **VERIFIED sebagai baseline legacy**, bukan klaim hasil full dataset Tugas 2. Jangan membandingkan atau memakai hasilnya sebagai kesimpulan Tugas 2 tanpa eksperimen Phase berikutnya.
 
 ## Struktur Penting
 
 ```text
-├── app.py                         # aplikasi Streamlit legacy
+├── app.py                         # aplikasi Streamlit inference-only
 ├── data/raw/                      # CSV STATS19 lokal, di-ignore Git
 ├── data/processed/stats19_maps.json
 ├── notebooks/                     # notebook lama: understanding, preparation, classification
@@ -123,4 +124,4 @@ Branch aktif: `main`. Repository GitHub Tugas 2 terverifikasi pada `https://gith
 
 ## Next Phase
 
-**PHASE 9 – DEPLOYMENT / OPERATIONAL HANDOFF:** scope to be confirmed after review of dependency, input policy, and operational criteria.
+**PHASE 9.2 — RESEARCH INTERPRETATION & LIMITATIONS:** selesai; deployment operasional tetap belum diklaim siap.

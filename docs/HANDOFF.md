@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-PHASE 9.1 – DOCUMENTATION CONFLICT CORRECTION (COMPLETED)
+PHASE 9.2 – RESEARCH INTERPRETATION & LIMITATIONS (COMPLETED)
 
 ## Last Completed
 
@@ -37,6 +37,7 @@ PHASE 9.1 – DOCUMENTATION CONFLICT CORRECTION (COMPLETED)
 - Phase 6 memilih final candidate; metrik 2025 diambil dari hasil Phase 5.2 yang telah dibekukan dan tidak dievaluasi ulang untuk seleksi.
 - Phase 7 memvalidasi reload/prediction artifact, 18-feature contract, 149 encoded features, threshold, reproducibility, dan edge cases tanpa fitting atau pemilihan model baru.
 - Phase 8 mengintegrasikan `models/final_research_model.joblib` ke halaman classification tanpa retraining; prediction consistency dan Streamlit smoke test lulus.
+- Phase 9.2 mendokumentasikan interpretasi final holdout, trade-off Fatal, batasan metodologis, klaim yang tidak didukung, dan status research readiness.
 
 ## Files Changed
 
@@ -101,7 +102,7 @@ PHASE 9.1 – DOCUMENTATION CONFLICT CORRECTION (COMPLETED)
 
 ## Next Required Action
 
-Selesaikan Phase 9 final research documentation dan konsolidasi hasil; jangan klaim deployment readiness sebelum dependency version, input policy, dan open methodological decisions selesai.
+Review `docs/RESEARCH_INTERPRETATION.md`; jangan klaim deployment readiness sebelum dependency version, input policy, domain validation, dan open methodological decisions selesai.
 
 ## STOP CONDITION
 

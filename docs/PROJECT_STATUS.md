@@ -2,8 +2,8 @@
 
 Project: Tugas 2 – Penambangan Data
 Case: Analisis Kecelakaan Lalu Lintas STATS19
-Current Phase: PHASE 9.1 – DOCUMENTATION CONFLICT CORRECTION
-Overall Progress: PHASE 9.1 / 10
+Current Phase: PHASE 9.2 – RESEARCH INTERPRETATION & LIMITATIONS
+Overall Progress: PHASE 9.2 / 10
 Status: COMPLETED
 
 ## Completed
@@ -28,6 +28,7 @@ Status: COMPLETED
 - Phase 7 operational validation selesai: artifact reload, input contract, prediction rule, reproducibility, dan edge cases didokumentasikan.
 - Phase 8 selesai: halaman classification diintegrasikan dengan final research artifact 18→149, threshold 0,50, output probabilitas, dan smoke test Streamlit.
 - Phase 9.1 selesai: konflik dokumentasi legacy/final, split temporal, status evaluasi, dan handoff diperbaiki tanpa mengubah artefak.
+- Phase 9.2 selesai: interpretasi hasil, batasan metodologis, klaim yang tidak didukung, dan rekomendasi validasi lanjutan didokumentasikan.
 
 ## Current
 
@@ -35,11 +36,11 @@ Status: COMPLETED
 
 ## Current Subphase
 
-- PHASE 9.1 – DOCUMENTATION CONFLICT CORRECTION (COMPLETED).
+- PHASE 9.2 – RESEARCH INTERPRETATION & LIMITATIONS (COMPLETED).
 
 ## Current Task
 
-- Menyelesaikan audit dan konsolidasi dokumentasi riset Phase 9 sebelum pekerjaan lanjutan.
+- Menyelesaikan dokumentasi interpretasi riset dan keterbatasan sebelum handoff berikutnya.
 
 ## In Progress
 
@@ -55,7 +56,7 @@ Status: COMPLETED
 
 ## Next Action
 
-- Selesaikan review dokumentasi Phase 9; jangan memulai deployment sebelum keputusan operasional dikonfirmasi.
+- Review `docs/RESEARCH_INTERPRETATION.md`; jangan memulai deployment sebelum keputusan operasional dikonfirmasi.
 
 ## Do Not Do
 
@@ -106,7 +107,7 @@ Status: COMPLETED
 
 ## Next Phase
 
-PHASE 9 – FINAL RESEARCH DOCUMENTATION & RESULTS CONSOLIDATION
+PHASE 9.2 – RESEARCH INTERPRETATION & LIMITATIONS
 
 ## Important Rules
 
