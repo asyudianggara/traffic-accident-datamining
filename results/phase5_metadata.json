@@ -1,0 +1,102 @@
+{
+  "phase": "5",
+  "source": "data/raw/dft-road-casualty-statistics-collision-last-5-years.csv",
+  "target": "collision_severity",
+  "feature_list": [
+    "number_of_vehicles",
+    "speed_limit",
+    "first_road_class",
+    "road_type",
+    "junction_detail",
+    "junction_control",
+    "second_road_class",
+    "pedestrian_crossing",
+    "light_conditions",
+    "weather_conditions",
+    "road_surface_conditions",
+    "special_conditions_at_site",
+    "carriageway_hazards",
+    "urban_or_rural_area",
+    "trunk_road_flag",
+    "day_of_week",
+    "month",
+    "hour"
+  ],
+  "development_period": "2021-2024",
+  "holdout_period": "2025",
+  "train_rows": 412276,
+  "test_rows": 101525,
+  "random_state": 42,
+  "preprocessing": "Phase 3 ColumnTransformer: median numeric imputation; most-frequent categorical imputation; OneHotEncoder(handle_unknown=ignore, sparse_output=True)",
+  "class_weight": "balanced",
+  "hist_gradient_boosting": "not_run: HistGradientBoosting requires dense input; sparse-to-dense conversion was not attempted",
+  "python_version": "3.14.0",
+  "sklearn_version": "1.9.0",
+  "models": {
+    "logistic_regression": {
+      "configuration": {
+        "C": 1.0,
+        "class_weight": "balanced",
+        "dual": false,
+        "fit_intercept": true,
+        "intercept_scaling": 1,
+        "l1_ratio": 0.0,
+        "max_iter": 1000,
+        "n_jobs": null,
+        "penalty": "deprecated",
+        "random_state": 42,
+        "solver": "lbfgs",
+        "tol": 0.0001,
+        "verbose": 0,
+        "warm_start": false
+      },
+      "train_seconds": 78.16857450001407,
+      "prediction_seconds": 2.02439500001492
+    },
+    "decision_tree": {
+      "configuration": {
+        "ccp_alpha": 0.0,
+        "class_weight": "balanced",
+        "criterion": "gini",
+        "max_depth": 12,
+        "max_features": null,
+        "max_leaf_nodes": null,
+        "min_impurity_decrease": 0.0,
+        "min_samples_leaf": 20,
+        "min_samples_split": 2,
+        "min_weight_fraction_leaf": 0.0,
+        "monotonic_cst": null,
+        "random_state": 42,
+        "splitter": "best"
+      },
+      "train_seconds": 90.34968059998937,
+      "prediction_seconds": 1.3263826999464072
+    },
+    "random_forest": {
+      "configuration": {
+        "bootstrap": true,
+        "ccp_alpha": 0.0,
+        "class_weight": "balanced",
+        "criterion": "gini",
+        "max_depth": 12,
+        "max_features": "sqrt",
+        "max_leaf_nodes": null,
+        "max_samples": null,
+        "min_impurity_decrease": 0.0,
+        "min_samples_leaf": 20,
+        "min_samples_split": 2,
+        "min_weight_fraction_leaf": 0.0,
+        "monotonic_cst": null,
+        "n_estimators": 100,
+        "n_jobs": -1,
+        "oob_score": false,
+        "random_state": 42,
+        "verbose": 0,
+        "warm_start": false
+      },
+      "train_seconds": 122.66504609998083,
+      "prediction_seconds": 2.0740363000077195
+    }
+  },
+  "test_year_used_for_fit": false
+}

@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-PHASE 4 – FEATURE SELECTION & ALGORITHM STRATEGY (COMPLETED)
+PHASE 5 – MODELING BASELINES (COMPLETED)
 
 ## Last Completed
 
@@ -15,6 +15,7 @@ PHASE 4 – FEATURE SELECTION & ALGORITHM STRATEGY (COMPLETED)
 - `docs/MODELING_PHASE5B1.md` dibuat; Logistic Regression dan Decision Tree comparison selesai, RF dihentikan karena resource bottleneck, dan HGB ditolak sparse input.
 - `prepare_phase3.py` dibuat; full raw dataset diprepare in-memory dengan train-only preprocessing dan validasi kecil.
 - `feature_selection_phase4.py` dibuat; evidence MI/tree importance, redundancy, dan stability training-only dihasilkan.
+- `modeling_phase5.py` dibuat; tiga baseline classification dievaluasi pada temporal holdout 2025.
 
 ## Current State
 
@@ -41,6 +42,7 @@ PHASE 4 – FEATURE SELECTION & ALGORITHM STRATEGY (COMPLETED)
 - `docs/DATA_PREPARATION.md`
 - `prepare_phase3.py` dan `results/phase3_preparation_validation.json`
 - `feature_selection_phase4.py`, `results/feature_selection_summary.csv`, `results/feature_selection_redundancy.csv`, dan `results/feature_selection_metadata.json`
+- `modeling_phase5.py`, `docs/MODELING_PHASE5.md`, `results/phase5_model_comparison.csv`, `results/phase5_classification_report.csv`, `results/phase5_confusion_matrix_*.csv`, dan `results/phase5_metadata.json`
 - `docs/FEATURE_SELECTION.md`
 - `docs/MODELING_PHASE5B1.md`, `models/classification_phase5b_logistic_regression.joblib`, `models/classification_phase5b_decision_tree.joblib`, `models/classification_phase5b_metadata.json`, dan `results/classification_phase5b_comparison.csv`
 - `docs/MODELING_PHASE5A.md`, `models/classification_baseline_logistic_regression.joblib`, `models/classification_baseline_decision_tree.joblib`, `models/classification_baseline_metadata.json`, dan `results/classification_baseline.csv`
@@ -87,8 +89,8 @@ PHASE 4 – FEATURE SELECTION & ALGORITHM STRATEGY (COMPLETED)
 
 ## Next Required Action
 
-Review Phase 4 feature contract dan evidence training-only, lalu lanjutkan Phase 5 modeling hanya setelah feature set dan kebijakan leakage disetujui.
+Review `docs/MODELING_PHASE5.md` dan artifact Phase 5; scope controlled imbalance/final evaluation sebelum lanjut ke phase berikutnya.
 
 ## STOP CONDITION
 
-Jangan masuk Phase 5 sebelum kontrak fitur, evidence training-only, dan open methodological decisions direview.
+Jangan klaim final model atau lanjut deployment sebelum evaluation dan open methodological decisions diselesaikan.

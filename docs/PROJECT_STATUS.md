@@ -2,8 +2,8 @@
 
 Project: Tugas 2 – Penambangan Data
 Case: Analisis Kecelakaan Lalu Lintas STATS19
-Current Phase: PHASE 4 – FEATURE SELECTION & ALGORITHM STRATEGY
-Overall Progress: PHASE 4 / 10
+Current Phase: PHASE 5 – MODELING BASELINES
+Overall Progress: PHASE 5 / 10
 Status: COMPLETED
 
 ## Completed
@@ -21,27 +21,28 @@ Status: COMPLETED
 - Phase 5B-1 partial: Logistic Regression dan Decision Tree selesai; Random Forest dihentikan karena bottleneck resource; HistGradientBoosting menolak sparse input; lihat `docs/MODELING_PHASE5B1.md`.
 - Implementasi Phase 3 selesai melalui `prepare_phase3.py`; validation manifest kecil dibuat tanpa processed dataset/model baru.
 - Implementasi Phase 4 selesai melalui `feature_selection_phase4.py`; ranking training-only, redundancy report, dan metadata reproducibility dibuat.
+- Phase 5 baseline modeling selesai melalui `modeling_phase5.py`; Logistic Regression, Decision Tree, dan bounded Random Forest dievaluasi pada holdout 2025.
 
 ## Current
 
-- Phase 4 completed; menunggu review/otorisasi eksplisit untuk Phase 5.
+- Phase 5 baseline completed; final evaluation/model selection belum dilakukan.
 
 ## Current Subphase
 
-- PHASE 4 – FEATURE SELECTION & ALGORITHM STRATEGY (COMPLETED).
+- PHASE 5 – MODELING BASELINES (COMPLETED).
 
 ## Current Task
 
-- Menunggu instruksi eksplisit untuk memulai PHASE 5 – MODELING.
+- Menunggu review/otorisasi eksplisit untuk controlled imbalance/final evaluation.
 
 ## In Progress
 
-- Phase 4 feature review and training-only analytical evidence are complete; no final model selection or tuning is in progress.
+- Baseline comparison complete; no final model selection, extensive tuning, or deployment is in progress.
 
 ## Not Started
 
 - Controlled imbalance experiment and final model evaluation.
-- Feature selection final, modeling lanjutan, evaluation final, dan deployment untuk Tugas 2 berbasis full dataset.
+- Controlled imbalance experiment, final evaluation, feature sensitivity, and deployment untuk Tugas 2 berbasis full dataset.
 
 ## Blocked
 
@@ -49,11 +50,11 @@ Status: COMPLETED
 
 ## Next Action
 
-- Menunggu review/otorisasi eksplisit untuk Phase 5.
+- Menunggu review/otorisasi eksplisit untuk controlled imbalance/final evaluation.
 
 ## Do Not Do
 
-- Jangan melakukan final model selection, tuning, clustering, association mining, forecasting, deployment, atau mengubah artefak legacy sebelum scope Phase 5B berikutnya.
+- Jangan melakukan final model selection, tuning ekstensif, clustering, association mining, forecasting, deployment, atau mengubah artefak legacy sebelum scope phase berikutnya.
 
 ## Dataset
 
@@ -99,7 +100,7 @@ Status: COMPLETED
 
 ## Next Phase
 
-PHASE 5 – MODELING
+PHASE 6 – EVALUATION / CONTROLLED IMBALANCE (SCOPE TO BE CONFIRMED)
 
 ## Important Rules
 

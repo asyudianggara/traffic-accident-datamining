@@ -2,7 +2,7 @@
 
 ## Analisis Kecelakaan Lalu Lintas STATS19
 
-Status: **PHASE 4 COMPLETED — menunggu instruksi PHASE 5**
+Status: **PHASE 5 BASELINES COMPLETED — menunggu evaluation lanjutan**
 
 Repository ini adalah salinan kerja baru untuk Tugas 2. Tujuannya adalah menyiapkan analisis data kecelakaan lalu lintas STATS19 dengan **seluruh baris data yang tersedia**. Artefak, hasil, dan aplikasi yang terbawa dari proyek sebelumnya hanya menjadi baseline/referensi; mereka bukan hasil final Tugas 2.
 
@@ -114,8 +114,9 @@ Branch aktif: `main`. Repository GitHub Tugas 2 terverifikasi pada `https://gith
 - [Feature selection](docs/FEATURE_SELECTION.md)
 - [Modeling Phase 5A](docs/MODELING_PHASE5A.md)
 - [Modeling Phase 5B-1](docs/MODELING_PHASE5B1.md)
+- [Modeling Phase 5 baselines](docs/MODELING_PHASE5.md)
 - Dokumen audit legacy yang dibawa dari proyek sebelumnya: `docs/PROJECT_DOCUMENTATION_MASTER.md`, `docs/PROJECT_FACT_SHEET.md`, dan `docs/DOCUMENTATION_GAPS.md`.
 
 ## Next Phase
 
-**PHASE 5 – MODELING:** compare approved algorithms using the documented provisional feature set and protected temporal holdout.
+**PHASE 6 – EVALUATION:** controlled imbalance and final evaluation using the protected temporal holdout.
