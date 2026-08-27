@@ -2,7 +2,7 @@
 
 ## Analisis Kecelakaan Lalu Lintas STATS19
 
-Status: **PHASE 9.2 — research interpretation terdokumentasi**
+Status: **PHASE 9.3 — final results consolidated**
 
 Repository ini adalah salinan kerja baru untuk Tugas 2. Tujuannya adalah menyiapkan analisis data kecelakaan lalu lintas STATS19 dengan **seluruh baris data yang tersedia**. Artefak, hasil, dan aplikasi yang terbawa dari proyek sebelumnya hanya menjadi baseline/referensi; mereka bukan hasil final Tugas 2.
 
@@ -39,6 +39,7 @@ Quality audit Phase 1 memverifikasi 0 duplicate row, 53 missing pada masing-masi
 Rincian strategi tersedia di [docs/DATA_STRATEGY.md](docs/DATA_STRATEGY.md), audit deskriptif di [docs/DATA_UNDERSTANDING.md](docs/DATA_UNDERSTANDING.md), kontrak preparation di [docs/DATA_PREPARATION.md](docs/DATA_PREPARATION.md), strategi feature selection di [docs/FEATURE_SELECTION.md](docs/FEATURE_SELECTION.md), baseline di [docs/MODELING_PHASE5A.md](docs/MODELING_PHASE5A.md), dan comparison di [docs/MODELING_PHASE5B1.md](docs/MODELING_PHASE5B1.md). Status dan handoff tersedia di [docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md) dan [docs/HANDOFF.md](docs/HANDOFF.md).
 Rincian final model tersedia di [docs/FINAL_MODEL.md](docs/FINAL_MODEL.md). Status dan handoff tersedia di [docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md) dan [docs/HANDOFF.md](docs/HANDOFF.md).
 Interpretasi hasil dan keterbatasan tersedia di [docs/RESEARCH_INTERPRETATION.md](docs/RESEARCH_INTERPRETATION.md).
+Konsolidasi hasil final tersedia di [docs/FINAL_RESULTS_CONSOLIDATION.md](docs/FINAL_RESULTS_CONSOLIDATION.md).
 
 ## Pipeline dan Model Legacy yang Tersedia
 
@@ -124,4 +125,4 @@ Branch aktif: `main`. Repository GitHub Tugas 2 terverifikasi pada `https://gith
 
 ## Next Phase
 
-**PHASE 9.2 — RESEARCH INTERPRETATION & LIMITATIONS:** selesai; deployment operasional tetap belum diklaim siap.
+**PHASE 9.3 — FINAL RESULTS CONSOLIDATION:** selesai; deployment operasional tetap belum diklaim siap.
