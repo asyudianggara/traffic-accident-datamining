@@ -2,7 +2,7 @@
 
 ## Analisis Kecelakaan Lalu Lintas STATS19
 
-Status: **PHASE 5B-1 PARTIAL — menunggu instruksi PHASE 5B-2**
+Status: **PHASE 3 COMPLETED — menunggu instruksi PHASE 4**
 
 Repository ini adalah salinan kerja baru untuk Tugas 2. Tujuannya adalah menyiapkan analisis data kecelakaan lalu lintas STATS19 dengan **seluruh baris data yang tersedia**. Artefak, hasil, dan aplikasi yang terbawa dari proyek sebelumnya hanya menjadi baseline/referensi; mereka bukan hasil final Tugas 2.
 
@@ -25,13 +25,13 @@ Quality audit Phase 1 memverifikasi 0 duplicate row, 53 missing pada masing-masi
 | Phase 0 – Audit & governance       | COMPLETED                          |
 | Phase 1 – Data strategy            | COMPLETED                          |
 | Phase 2 – Data understanding       | COMPLETED                          |
-| Phase 3 – Data preparation         | COMPLETED (strategy/contract only) |
+| Phase 3 – Data preparation         | COMPLETED (implemented + validated) |
 | Phase 4 – Feature selection        | COMPLETED (strategy only)          |
 | Phase 5A – Classification baseline | COMPLETED                          |
 | Phase 5B-1 – Model comparison      | PARTIAL                            |
 | Business Understanding             | PARTIAL                            |
 | Data Understanding                 | COMPLETED                          |
-| Data Preparation full dataset      | COMPLETED (strategy/contract only) |
+| Data Preparation full dataset      | COMPLETED (implemented + validated) |
 | Modeling full dataset              | PARTIAL (5A + 5B-1)                |
 | Evaluation full dataset            | PARTIAL (comparison incomplete)    |
 | Deployment untuk Tugas 2           | PARTIAL                            |
@@ -94,6 +94,7 @@ Streamlit secara default membuka aplikasi pada URL lokal yang ditampilkan di ter
 ## Notebook dan Script
 
 - `notebooks/01_data_understanding.ipynb`, `02_data_preparation.ipynb`, dan `03_classification.ipynb` adalah bahan pipeline legacy.
+- `prepare_phase3.py` adalah pipeline preparation full dataset yang hanya menghasilkan manifest validasi kecil.
 - `clustering_c2_c3.py`, `clustering_c4.py`, `finalize_models.py`, dan `final_model_evaluation.py` adalah script legacy.
 
 Jangan menjalankan notebook/script tersebut untuk Tugas 2 tanpa instruksi Phase yang eksplisit, karena dapat menghasilkan atau mengubah output baseline.
@@ -117,4 +118,4 @@ Branch aktif: `main`. Repository GitHub Tugas 2 terverifikasi pada `https://gith
 
 ## Next Phase
 
-**PHASE 5B-2 – CONTROLLED CLASS IMBALANCE EXPERIMENT:** uji strategi imbalance terkontrol dengan split dan preprocessing yang sama. Phase 5B-1 partial; Random Forest tidak selesai dan HistGradientBoosting incompatible dengan sparse input.
+**PHASE 4 – FEATURE SELECTION:** review feature contract and preparation validation before selecting final feature sets.

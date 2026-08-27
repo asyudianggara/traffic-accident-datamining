@@ -2,8 +2,8 @@
 
 Project: Tugas 2 – Penambangan Data
 Case: Analisis Kecelakaan Lalu Lintas STATS19
-Current Phase: PHASE 5B-1 – CLASSIFICATION MODEL COMPARISON
-Overall Progress: PHASE 5B-1 / 10
+Current Phase: PHASE 3 – DATA PREPARATION
+Overall Progress: PHASE 3 / 10
 Status: COMPLETED
 
 ## Completed
@@ -19,35 +19,36 @@ Status: COMPLETED
 - Strategi feature selection, redundancy, candidate sets, algorithm strategy, dan desain eksperimen Phase 5 selesai; lihat `docs/FEATURE_SELECTION.md`.
 - Baseline classification full dataset selesai: Logistic Regression dan Decision Tree pada development 2021–2024 dengan holdout temporal 2025; lihat `docs/MODELING_PHASE5A.md`.
 - Phase 5B-1 partial: Logistic Regression dan Decision Tree selesai; Random Forest dihentikan karena bottleneck resource; HistGradientBoosting menolak sparse input; lihat `docs/MODELING_PHASE5B1.md`.
+- Implementasi Phase 3 selesai melalui `prepare_phase3.py`; validation manifest kecil dibuat tanpa processed dataset/model baru.
 
 ## Current
 
-- Phase 5B-1 partial; menunggu instruksi eksplisit untuk PHASE 5B-2 – CONTROLLED CLASS IMBALANCE EXPERIMENT.
+- Phase 3 completed; menunggu review/otorisasi eksplisit untuk Phase 4.
 
 ## Current Subphase
 
-- PHASE 5B-1 – CLASSIFICATION MODEL COMPARISON (PARTIAL).
+- PHASE 3 – DATA PREPARATION (COMPLETED).
 
 ## Current Task
 
-- Menunggu instruksi eksplisit untuk memulai PHASE 5B-2 – CONTROLLED CLASS IMBALANCE EXPERIMENT.
+- Menunggu instruksi eksplisit untuk memulai PHASE 4 – FEATURE SELECTION.
 
 ## In Progress
 
-- Logistic Regression dan Decision Tree comparison selesai; Random Forest tidak selesai karena resource bottleneck; HistGradientBoosting tidak kompatibel dengan sparse matrix.
+- Phase 3 implementation and validation are complete; no model training is in progress.
 
 ## Not Started
 
 - Controlled imbalance experiment and final model evaluation.
-- Data preparation, modeling, comparison algoritma, feature selection, evaluation, dan deployment untuk Tugas 2 berbasis full dataset.
+- Feature selection final, modeling lanjutan, evaluation final, dan deployment untuk Tugas 2 berbasis full dataset.
 
 ## Blocked
 
-- Data dictionary version, prediction timing, geographic policy, final split rule, and 5B-2 scope still await confirmation.
+- Data dictionary version, prediction timing, geographic policy, and final split rule still await confirmation.
 
 ## Next Action
 
-- Menunggu instruksi eksplisit untuk memulai PHASE 5B-2 – CONTROLLED CLASS IMBALANCE EXPERIMENT.
+- Menunggu review/otorisasi eksplisit untuk Phase 4.
 
 ## Do Not Do
 
@@ -76,7 +77,7 @@ Status: COMPLETED
 
 - Business Understanding: PARTIAL — case tersedia; use case/waktu prediksi masih open question.
 - Data Understanding: COMPLETED — schema, kualitas dasar, target, periode, dan baseline/full comparison terverifikasi.
-- Data Preparation: COMPLETED (strategy/contract only) — belum membuat dataset turunan atau learned transformer.
+- Data Preparation: COMPLETED (implemented + validated) — no processed dataset or learned artifact persisted.
 - Modeling: PARTIAL — Phase 5A baselines plus two completed Phase 5B-1 comparison runs; Random Forest incomplete.
 - Evaluation: PARTIAL — two comparison holdout metrics recorded; complete comparison/final evaluation not started.
 - Deployment: PARTIAL — aplikasi legacy tersedia, tetapi belum merepresentasikan pipeline full dataset Tugas 2.
@@ -97,7 +98,7 @@ Status: COMPLETED
 
 ## Next Phase
 
-PHASE 5B-2 – CONTROLLED CLASS IMBALANCE EXPERIMENT
+PHASE 4 – FEATURE SELECTION
 
 ## Important Rules
 
@@ -127,7 +128,7 @@ PHASE 5B-2 – CONTROLLED CLASS IMBALANCE EXPERIMENT
 - Tidak ada model, artifact, processed dataset besar, atau perubahan aplikasi pada Phase 1.
 - Split temporal direkomendasikan secara kondisional; keputusan final menunggu use case.
 - Phase 2 tidak melakukan balancing, preprocessing permanen, sampling 10K, atau pemodelan.
-- Phase 3 preserves raw data, defines train-only fitting for learned transforms, and creates no processed CSV or model artifact.
+- Phase 3 preserves raw data, defines train-only fitting for learned transforms, and creates only a small validation manifest; no processed CSV or model artifact is created.
 - Phase 4 does not train final models, tune hyperparameters, run PCA, mine association rules, or change legacy artifacts.
 - Phase 5A applied no balancing and created only two baseline pipelines, metadata, and one concise metrics CSV.
 - Phase 5B-1 did not apply SMOTE or resampling; only the requested RF class-weight configuration was attempted and did not complete.

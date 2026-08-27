@@ -2,9 +2,9 @@
 
 ## 1. Objective
 
-Phase 3 menetapkan kontrak preparation yang reproducible untuk full dataset sebelum feature selection dan modeling. Dokumen ini mendefinisikan perlakuan awal terhadap identifier, target, temporal fields, missing values, sentinel, anomaly, leakage, kategori, numerik, dan geografis.
+Phase 3 menetapkan dan mengimplementasikan kontrak preparation yang reproducible untuk full dataset sebelum feature selection dan modeling. Dokumen ini mendefinisikan perlakuan awal terhadap identifier, target, temporal fields, missing values, sentinel, anomaly, leakage, kategori, numerik, dan geografis.
 
-Tidak ada training, balancing, feature selection final, model, sampling 10K, atau CSV processed besar pada Phase 3. Raw dataset tetap menjadi master immutable.
+Tidak ada training, balancing, feature selection final, model, sampling 10K, atau CSV processed besar pada Phase 3. Raw dataset tetap menjadi master immutable. Implementasi berada di `prepare_phase3.py` dan hanya menulis manifest validasi kecil.
 
 ## 2. Input Dataset
 
@@ -226,9 +226,26 @@ The eventual implementation should follow this order:
 7. Transform validation/test with the fitted training objects.
 8. Record schema, feature roles, excluded fields, split rule, counts, codebook version, and dependency versions in a manifest.
 
-No learned preprocessing object or processed CSV is created by this documentation-only Phase 3 checkpoint.
+Implementasi `prepare_phase3.py` menjalankan urutan tersebut pada full dataset, dengan split temporal provisional 2021–2024 versus 2025. Pipeline menggunakan median imputation untuk `number_of_vehicles` dan most-frequent imputation lalu sparse one-hot encoding untuk 17 fitur kategorikal. Kode sentinel `-1` tetap berupa kategori string. Tidak ada learned preprocessing object atau processed CSV yang disimpan permanen.
 
-## 16. Data Preparation Decisions
+## 16. Implemented Validation
+
+Validation dijalankan pada 2026-08-27 melalui `.venv\\Scripts\\python.exe prepare_phase3.py`.
+
+| Check | Result |
+|---|---|
+| Raw schema and shape | PASS — 513,801 × 44 |
+| Target classes | PASS — 1, 2, 3; no missing target |
+| Temporal split | PASS — 412,276 train rows and 101,525 test rows |
+| Predictor leakage guard | PASS — identifiers, target, outcome-derived, post-event, date/time excluded |
+| Encoded output | PASS — 149 features for train and test |
+| Missing encoded values | PASS — none |
+| Repeated transformation | PASS — feature shape remains identical |
+| Raw immutability | PASS — SHA-256 unchanged during run |
+
+The small machine-readable report is `results/phase3_preparation_validation.json`. It records the source SHA-256, feature lists, split, policies, versions, and validation results. The script does not write a processed dataset, model, or preprocessing artifact.
+
+## 17. Data Preparation Decisions
 
 1. Use all 513,801 raw records; retain the legacy 10K only for historical comparison.
 2. Preserve all raw columns and do not delete rows for coordinate missingness or IQR flags.
@@ -240,7 +257,7 @@ No learned preprocessing object or processed CSV is created by this documentatio
 8. Use temporal holdout as the provisional recommendation; obtain academic confirmation before locking it.
 9. Require all learned transforms to be fitted on training data only.
 
-## 17. Risks
+## 18. Risks
 
 - Prediction timing is unresolved, so availability-based leakage exclusions may change.
 - The local mapping does not provide a complete official codebook for all fields.
@@ -249,7 +266,7 @@ No learned preprocessing object or processed CSV is created by this documentatio
 - Rare and high-cardinality geographic/administrative categories may overfit.
 - The 2025 data may differ in collection or reporting from earlier years; temporal drift must be evaluated later.
 
-## 18. Open Questions
+## 19. Open Questions
 
 1. Which official data guide version should be frozen for the project manifest?
 2. Is the assignment use case pre-event, at-scene, or post-event prediction?
@@ -258,6 +275,6 @@ No learned preprocessing object or processed CSV is created by this documentatio
 5. Should 2025 be the final test year, or does the academic rubric require a stratified random split?
 6. Which data-mining roles are mandatory, and does the association task require a dedicated transaction representation?
 
-## 19. Next Phase
+## 20. Next Phase
 
-**PHASE 5 – MODELING:** use this preparation contract and `docs/FEATURE_SELECTION.md` to evaluate approved algorithms and provisional feature sets. Do not use the final holdout for feature selection.
+**PHASE 4 – FEATURE SELECTION:** review the preparation manifest and decide final feature sets without using the 2025 holdout for selection.

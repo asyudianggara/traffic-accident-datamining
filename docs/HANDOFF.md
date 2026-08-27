@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-PHASE 5B-1 – CLASSIFICATION MODEL COMPARISON (PARTIAL)
+PHASE 3 – DATA PREPARATION (COMPLETED)
 
 ## Last Completed
 
@@ -13,6 +13,7 @@ PHASE 5B-1 – CLASSIFICATION MODEL COMPARISON (PARTIAL)
 - `docs/FEATURE_SELECTION.md` dibuat dengan review seluruh 44 fitur, provisional sets, exploratory MI pada development data, redundancy review, algorithm strategy, dan Phase 5 experiment design; tidak ada final model.
 - `docs/MODELING_PHASE5A.md` dibuat dan dua baseline full-dataset pipeline selesai: Logistic Regression dan Decision Tree dengan 2025 temporal holdout.
 - `docs/MODELING_PHASE5B1.md` dibuat; Logistic Regression dan Decision Tree comparison selesai, RF dihentikan karena resource bottleneck, dan HGB ditolak sparse input.
+- `prepare_phase3.py` dibuat; full raw dataset diprepare in-memory dengan train-only preprocessing dan validasi kecil.
 
 ## Current State
 
@@ -37,6 +38,7 @@ PHASE 5B-1 – CLASSIFICATION MODEL COMPARISON (PARTIAL)
 - `docs/DATA_STRATEGY.md`
 - `docs/DATA_UNDERSTANDING.md` dan `docs/figures/data-understanding/*.png`
 - `docs/DATA_PREPARATION.md`
+- `prepare_phase3.py` dan `results/phase3_preparation_validation.json`
 - `docs/FEATURE_SELECTION.md`
 - `docs/MODELING_PHASE5B1.md`, `models/classification_phase5b_logistic_regression.joblib`, `models/classification_phase5b_decision_tree.joblib`, `models/classification_phase5b_metadata.json`, dan `results/classification_phase5b_comparison.csv`
 - `docs/MODELING_PHASE5A.md`, `models/classification_baseline_logistic_regression.joblib`, `models/classification_baseline_decision_tree.joblib`, `models/classification_baseline_metadata.json`, dan `results/classification_baseline.csv`
@@ -83,8 +85,8 @@ PHASE 5B-1 – CLASSIFICATION MODEL COMPARISON (PARTIAL)
 
 ## Next Required Action
 
-Setelah instruksi eksplisit Phase 5B-2: lakukan controlled imbalance experiment dengan protocol yang sama; jangan gunakan 2025 holdout untuk selection.
+Review manifest Phase 3, lalu lanjutkan Phase 4 feature selection hanya setelah kontrak fitur dan kebijakan leakage disetujui.
 
 ## STOP CONDITION
 
-Jangan masuk Phase 5B-2 sebelum mendapat instruksi eksplisit.
+Jangan masuk Phase 4 sebelum kontrak fitur dan validation manifest direview.

@@ -1,0 +1,115 @@
+{
+  "phase": "3",
+  "source": "data/raw/dft-road-casualty-statistics-collision-last-5-years.csv",
+  "source_sha256": "8ce3f1290ea4830c041ddd737b543fb06b8667215208a101b4432005386072ec",
+  "raw_shape": [
+    513801,
+    44
+  ],
+  "target": "collision_severity",
+  "target_classes": {
+    "1": 7553,
+    "2": 116813,
+    "3": 389435
+  },
+  "split": {
+    "rule": "collision_year <= 2024 train; collision_year == 2025 test",
+    "train_rows": 412276,
+    "test_rows": 101525
+  },
+  "classification_features": [
+    "number_of_vehicles",
+    "speed_limit",
+    "first_road_class",
+    "road_type",
+    "junction_detail",
+    "junction_control",
+    "second_road_class",
+    "pedestrian_crossing",
+    "light_conditions",
+    "weather_conditions",
+    "road_surface_conditions",
+    "special_conditions_at_site",
+    "carriageway_hazards",
+    "urban_or_rural_area",
+    "trunk_road_flag",
+    "day_of_week",
+    "month",
+    "hour"
+  ],
+  "clustering_features": [
+    "number_of_vehicles",
+    "speed_limit",
+    "first_road_class",
+    "road_type",
+    "junction_detail",
+    "junction_control",
+    "second_road_class",
+    "pedestrian_crossing",
+    "light_conditions",
+    "weather_conditions",
+    "road_surface_conditions",
+    "special_conditions_at_site",
+    "carriageway_hazards",
+    "urban_or_rural_area",
+    "trunk_road_flag",
+    "day_of_week",
+    "month",
+    "hour"
+  ],
+  "numeric_features": [
+    "number_of_vehicles"
+  ],
+  "categorical_features": [
+    "speed_limit",
+    "first_road_class",
+    "road_type",
+    "junction_detail",
+    "junction_control",
+    "second_road_class",
+    "pedestrian_crossing",
+    "light_conditions",
+    "weather_conditions",
+    "road_surface_conditions",
+    "special_conditions_at_site",
+    "carriageway_hazards",
+    "urban_or_rural_area",
+    "trunk_road_flag",
+    "day_of_week",
+    "month",
+    "hour"
+  ],
+  "excluded_predictors": [
+    "collision_index",
+    "collision_ref_no",
+    "collision_severity",
+    "number_of_casualties",
+    "date",
+    "time",
+    "enhanced_severity_collision",
+    "collision_injury_based",
+    "collision_adjusted_severity_serious",
+    "collision_adjusted_severity_slight",
+    "did_police_officer_attend_scene_of_accident"
+  ],
+  "sentinel_policy": "preserve coded -1 values; categorical fields are not relabeled or collapsed",
+  "missing_policy": "training-fitted median for numeric and most-frequent for categorical; no rows dropped",
+  "encoded_shape": {
+    "train": [
+      412276,
+      149
+    ],
+    "test": [
+      101525,
+      149
+    ]
+  },
+  "train_test_feature_count_consistent": true,
+  "repeated_transform_shape_consistent": true,
+  "raw_unchanged_during_run": true,
+  "sklearn_version": "1.9.0",
+  "random_state": 42,
+  "artifacts_written": [
+    "results/phase3_preparation_validation.json"
+  ]
+}
