@@ -2,7 +2,7 @@
 
 ## Analisis Kecelakaan Lalu Lintas STATS19
 
-Status: **PHASE 5.1 COMPLETED — menunggu final evaluation**
+Status: **PHASE 5.2 COMPLETED — menunggu final evaluation**
 
 Repository ini adalah salinan kerja baru untuk Tugas 2. Tujuannya adalah menyiapkan analisis data kecelakaan lalu lintas STATS19 dengan **seluruh baris data yang tersedia**. Artefak, hasil, dan aplikasi yang terbawa dari proyek sebelumnya hanya menjadi baseline/referensi; mereka bukan hasil final Tugas 2.
 
@@ -119,4 +119,4 @@ Branch aktif: `main`. Repository GitHub Tugas 2 terverifikasi pada `https://gith
 
 ## Next Phase
 
-**PHASE 6 – FINAL EVALUATION:** review provisional strategy and complete final model-selection decisions.
+**PHASE 6 – FINAL EVALUATION:** review provisional threshold/strategy and complete final model-selection decisions.

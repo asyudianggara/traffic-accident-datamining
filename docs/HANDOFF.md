@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-PHASE 5.1 – CONTROLLED CLASS-IMBALANCE EXPERIMENT (COMPLETED)
+PHASE 5.2 – PROBABILITY / THRESHOLD ANALYSIS (COMPLETED)
 
 ## Last Completed
 
@@ -17,6 +17,7 @@ PHASE 5.1 – CONTROLLED CLASS-IMBALANCE EXPERIMENT (COMPLETED)
 - `feature_selection_phase4.py` dibuat; evidence MI/tree importance, redundancy, dan stability training-only dihasilkan.
 - `modeling_phase5.py` dibuat; tiga baseline classification dievaluasi pada temporal holdout 2025.
 - `phase5_1_imbalance_experiment.py` dibuat; empat strategi diuji pada validation 2024 dan balanced Random Forest dievaluasi sekali pada 2025.
+- `phase5_2_threshold_analysis.py` dibuat; threshold Fatal 0.50 dipilih pada validation 2024 dan diuji sekali pada 2025.
 
 ## Current State
 
@@ -45,6 +46,7 @@ PHASE 5.1 – CONTROLLED CLASS-IMBALANCE EXPERIMENT (COMPLETED)
 - `feature_selection_phase4.py`, `results/feature_selection_summary.csv`, `results/feature_selection_redundancy.csv`, dan `results/feature_selection_metadata.json`
 - `modeling_phase5.py`, `docs/MODELING_PHASE5.md`, `results/phase5_model_comparison.csv`, `results/phase5_classification_report.csv`, `results/phase5_confusion_matrix_*.csv`, dan `results/phase5_metadata.json`
 - `phase5_1_imbalance_experiment.py`, `results/phase5_1_*.csv`, dan `results/phase5_1_imbalance_metadata.json`
+- `phase5_2_threshold_analysis.py`, `results/phase5_2_*.csv`, `results/phase5_2_*.png`, dan `results/phase5_2_metadata.json`
 - `docs/FEATURE_SELECTION.md`
 - `docs/MODELING_PHASE5B1.md`, `models/classification_phase5b_logistic_regression.joblib`, `models/classification_phase5b_decision_tree.joblib`, `models/classification_phase5b_metadata.json`, dan `results/classification_phase5b_comparison.csv`
 - `docs/MODELING_PHASE5A.md`, `models/classification_baseline_logistic_regression.joblib`, `models/classification_baseline_decision_tree.joblib`, `models/classification_baseline_metadata.json`, dan `results/classification_baseline.csv`
@@ -91,7 +93,7 @@ PHASE 5.1 – CONTROLLED CLASS-IMBALANCE EXPERIMENT (COMPLETED)
 
 ## Next Required Action
 
-Review bagian Phase 5.1 di `docs/MODELING_PHASE5.md`; final model selection dan deployment belum boleh diklaim.
+Review bagian Phase 5.2 di `docs/MODELING_PHASE5.md`; final model selection dan deployment belum boleh diklaim.
 
 ## STOP CONDITION
 

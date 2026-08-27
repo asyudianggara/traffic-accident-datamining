@@ -103,3 +103,36 @@ The result is a **small improvement**, not evidence of a final or production-rea
 The reproducible entry point is `phase5_1_imbalance_experiment.py`. Artifacts include validation comparison/report/confusion matrices, final holdout metrics/confusion matrix, baseline comparison, and `results/phase5_1_imbalance_metadata.json`. Validation encoded 147 columns because some categories were absent from the 2021–2023 fit; the final 2021–2024 fit produced 149 columns. Each pipeline transformed its validation/test data with the training-fitted encoder, and no baseline artifact was overwritten.
 
 Open decisions remain the final prediction timing, official codebook, geographic/admin policy, and whether further class-imbalance or threshold analysis is justified. No final model selection or deployment should be claimed yet.
+
+## 13. Phase 5.2 Probability and Threshold Analysis
+
+Phase 5.2 investigated the low Fatal precision/F1 observed with the provisional balanced Random Forest. The same temporal design was preserved: Random Forest was fit on 2021–2023 (311,349 rows), threshold candidates were selected using 2024 validation (100,927 rows), and the frozen rule was evaluated once on 2025 (101,525 rows).
+
+The deterministic multiclass rule was: if `P(Fatal) >= threshold`, predict Fatal; otherwise predict whichever of `P(Serious)` and `P(Slight)` is larger. Therefore every row receives exactly one valid class. Candidates were `0.10` through `0.50` in increments of `0.05`; the ordinary `argmax` rule was also retained as the default reference.
+
+| Rule | Threshold | Macro F1 | Macro Recall | Fatal Precision | Fatal Recall | Fatal F1 |
+|---|---:|---:|---:|---:|---:|---:|
+| Default argmax | — | 0.3522 | 0.4887 | 0.0407 | 0.5799 | 0.0760 |
+| Fatal threshold | 0.30 | 0.3293 | 0.4951 | 0.0360 | 0.6931 | 0.0685 |
+| Fatal threshold | 0.40 | 0.3686 | 0.4804 | 0.0475 | 0.4814 | 0.0864 |
+| Fatal threshold | 0.45 | 0.3867 | 0.4656 | 0.0591 | 0.3569 | 0.1015 |
+| Fatal threshold | **0.50** | **0.3948** | 0.4399 | **0.0674** | 0.2264 | **0.1038** |
+
+The **provisional selected threshold is 0.50**. It was selected using validation Macro F1, Macro Recall, Fatal F1, Fatal Precision, and Fatal Recall in that order, not by Fatal Recall alone. It provides the best validation Macro F1/Fatal F1 among the small candidate set while making the precision-recall trade-off explicit. This is not a final threshold or production decision.
+
+## 14. Final 2025 Threshold Result
+
+After freezing threshold 0.50 using 2024, the model was refit on all 2021–2024 rows and evaluated once on 2025:
+
+| Rule | Accuracy | Macro F1 | Macro Recall | Fatal Precision | Fatal Recall | Fatal F1 |
+|---|---:|---:|---:|---:|---:|---:|
+| Default argmax | 0.4826 | 0.3406 | **0.4898** | 0.0370 | **0.6070** | 0.0698 |
+| Threshold 0.50 | **0.5429** | **0.3784** | 0.4605 | **0.0575** | 0.3297 | **0.0980** |
+
+Compared with default argmax, threshold 0.50 improves Fatal Precision, Fatal F1, Accuracy, and Macro F1, but substantially lowers Fatal Recall. The appropriate conclusion is a **trade-off improvement**, not universal improvement. The complete metrics and confusion matrices are in the Phase 5.2 artifacts.
+
+## 15. Phase 5.2 Artifacts and Limitations
+
+The reproducible entry point is `phase5_2_threshold_analysis.py`. It creates compact threshold validation results, probability summary, final holdout comparison, baseline comparison, confusion matrices, one sensitivity chart, and `results/phase5_2_metadata.json`. The 2025 holdout was not used to select the threshold, and Phase 5/5.1 artifacts were not overwritten.
+
+Probability thresholding changes the operating point; it does not recalibrate probabilities or solve class imbalance by itself. Fatal false positives remain material, the validation is one future year, and prediction timing/codebook/geographic policy remain open. No final production model is selected.
