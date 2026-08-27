@@ -1,399 +1,108 @@
-# Traffic Accident Analysis
+# Tugas 2 – Penambangan Data
 
-Aplikasi analitik edukatif untuk menganalisis karakteristik kecelakaan lalu
-lintas menggunakan machine learning. Project ini menggabungkan hasil penelitian
-classification dan clustering dengan aplikasi Streamlit yang dapat digunakan
-untuk demonstrasi akademik.
+## Analisis Kecelakaan Lalu Lintas STATS19
 
-## Academic Project
+Status: **PHASE 0 COMPLETED — menunggu instruksi PHASE 1**
 
-- **Course**: Rekayasa Perangkat Lunak
-- **Student**: Asyudi Anggara
-- **NIM**: F552630019
-- **Institution**: Universitas Tadulako (UNTAD) — Palu
-- **Repository**: <https://github.com/asyudianggara/traffic-accident-ml>
-
-## Overview
-
-Project menggunakan data kecelakaan lalu lintas STATS19 untuk dua tujuan:
-
-1. **Classification** memprediksi kelas `collision_severity`: Fatal, Serious,
-   atau Slight.
-2. **Clustering** menemukan kelompok karakteristik kecelakaan yang mirip tanpa
-   menggunakan severity sebagai input.
-
-Aplikasi juga menyediakan dashboard historis untuk menjelajahi hasil C3/C4 yang
-sudah tersedia. Dashboard historis berbeda dari inference: dashboard membaca
-output penelitian, sedangkan inference memakai model final untuk satu input baru.
-
-## Project Objective
-
-Tujuan project adalah memahami pipeline data mining dari preprocessing,
-classification, feature ablation, hyperparameter review, K-Means clustering,
-profiling cluster, hingga productization dalam aplikasi Streamlit.
-
-Project tidak melakukan retraining atau tuning saat aplikasi dijalankan.
+Repository ini adalah salinan kerja baru untuk Tugas 2. Tujuannya adalah menyiapkan analisis data kecelakaan lalu lintas STATS19 dengan **seluruh baris data yang tersedia**. Artefak, hasil, dan aplikasi yang terbawa dari proyek sebelumnya hanya menjadi baseline/referensi; mereka bukan hasil final Tugas 2.
 
 ## Dataset
 
-- **Source**: Department for Transport (DfT) — Road Safety Open Data / STATS19
-- **Dataset**: Road Safety Data — Collisions — Last 5 Years
-- **Periode**: 2021–2025
-- **Sample penelitian**: 10.000 record, 2.000 record per tahun
+- Raw lokal: `data/raw/dft-road-casualty-statistics-collision-last-5-years.csv`
+- Status: **VERIFIED** tersedia lokal, tetapi di-ignore Git dan tidak akan diunggah.
+- Ukuran: 97.669.586 byte
+- Cakupan: 513.801 baris, 44 kolom, tahun 2021–2025.
+- Target legacy classification: `collision_severity`.
 
-Dataset mentah berukuran besar tidak disertakan dalam repository public.
-File lokalnya di-ignore melalui `.gitignore`. Siapkan dataset pada lokasi:
+Baseline lama menggunakan 10.000 record: 2.000 record dari masing-masing tahun 2021–2025 melalui `groupby("collision_year").sample(n=2000, random_state=42)`. Sampling ini tidak dinyatakan stratified; split classification sesudahnya memakai `stratify=y`, `test_size=0.20`, dan `random_state=42`.
 
-```text
-data/raw/dft-road-casualty-statistics-collision-last-5-years.csv
-```
+**Penting:** full dataset belum dipreproses, belum dibuatkan dataset turunan, dan belum digunakan untuk modeling pada Phase 0.
 
-Mapping kecil yang diperlukan aplikasi tersedia di `data/processed/stats19_maps.json`.
+## Progress dan CRISP-DM
 
-## Sampling
+| Area | Status |
+|---|---|
+| Phase 0 – Audit & governance | COMPLETED |
+| Business Understanding | PARTIAL |
+| Data Understanding | PARTIAL |
+| Data Preparation full dataset | NOT STARTED |
+| Modeling full dataset | NOT STARTED |
+| Evaluation full dataset | NOT STARTED |
+| Deployment untuk Tugas 2 | PARTIAL |
 
-Notebook dan script penelitian mengambil 2.000 record per tahun untuk periode
-2021–2025 menggunakan `random_state=42`, sehingga total sample menjadi 10.000
-record. Dashboard menampilkan output sample tersebut dan tidak mengambil sample
-baru.
+Rincian status, gap tugas, dan evidence tersedia di [docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md). Handoff antarsesi/agent tersedia di [docs/HANDOFF.md](docs/HANDOFF.md).
 
-## Feature Selection
+## Pipeline dan Model Legacy yang Tersedia
 
-Pipeline final menggunakan tepat 18 input features.
+Pipeline lama menyediakan:
 
-### Numerik
+- Classification: Random Forest dengan 18 fitur input, 105 fitur encoded, dan target `collision_severity`.
+- Clustering: K-Means dengan 18 fitur input dan 108 fitur encoded; script C2/C3 mengevaluasi `k=2..6`, metadata final menunjukkan `k=2`.
+- Aplikasi Streamlit: inference satu baris terhadap artefak legacy serta dashboard hasil historis di `results/`.
 
-- `number_of_vehicles`
-- `speed_limit`
-- `hour`
-- `month`
+Metrik/model/result tersebut hanya **VERIFIED sebagai baseline legacy**, bukan klaim hasil full dataset Tugas 2. Jangan membandingkan atau memakai hasilnya sebagai kesimpulan Tugas 2 tanpa eksperimen Phase berikutnya.
 
-### Kategorikal
-
-- `day_of_week`
-- `first_road_class`
-- `road_type`
-- `junction_detail`
-- `junction_control`
-- `second_road_class`
-- `pedestrian_crossing`
-- `light_conditions`
-- `weather_conditions`
-- `road_surface_conditions`
-- `special_conditions_at_site`
-- `carriageway_hazards`
-- `urban_or_rural_area`
-- `trunk_road_flag`
-
-Classification menggunakan target `collision_severity`. Clustering tidak
-menggunakan `collision_severity`, `number_of_casualties`, identifier, kode
-administratif, atau fitur outcome setelah kecelakaan.
-
-## Data Preprocessing
-
-Preprocessing final:
-
-- Numerik: `SimpleImputer(strategy="median")` → `StandardScaler`
-- Kategorikal: `SimpleImputer(strategy="most_frequent")` →
-  `OneHotEncoder(handle_unknown="ignore")`
-
-Classification menghasilkan **105 encoded features**. Clustering menghasilkan
-**108 encoded features**.
-
-## Classification
-
-Model final:
+## Struktur Penting
 
 ```text
-RandomForestClassifier(
-    n_estimators=300,
-    max_depth=15,
-    class_weight="balanced",
-    random_state=42,
-    n_jobs=-1,
-)
+├── app.py                         # aplikasi Streamlit legacy
+├── data/raw/                      # CSV STATS19 lokal, di-ignore Git
+├── data/processed/stats19_maps.json
+├── notebooks/                     # notebook lama: understanding, preparation, classification
+├── models/                        # artefak legacy
+├── results/                       # hasil eksperimen/profil legacy
+├── clustering_c2_c3.py            # evaluasi clustering legacy
+├── clustering_c4.py               # profiling/visualisasi legacy
+├── finalize_models.py             # finalisasi artefak legacy
+└── docs/                          # status, handoff, dan changelog proyek baru
 ```
 
-Alur inference:
+## Environment dan Instalasi
 
-```text
-18 input features → final_preprocessor.joblib → 105 encoded features
-→ final_random_forest.joblib → predicted severity + probabilities
-```
-
-Hasil evaluasi final yang dicatat pada metadata artefak:
-
-- Accuracy: **63,85%**
-- Macro Precision: **38,02%**
-- Macro Recall: **40,08%**
-- Macro F1: **38,62%**
-- Weighted F1: **64,96%**
-
-Accuracy tidak sebaiknya dibaca sendirian karena performa antar kelas berbeda. Laporan per kelas
-(sumber: `notebooks/03_classification.ipynb`, konsisten dengan metadata aggregate):
-
-| Kelas | Precision | Recall | F1 | Support |
-|---|---:|---:|---:|---:|
-| Fatal | 0,07 | 0,14 | 0,10 | 28 |
-| Serious | 0,28 | 0,32 | 0,30 | 453 |
-| Slight | 0,79 | 0,74 | 0,76 | 1.519 |
-
-> Catatan: `results/final_test_results.csv`, `results/final_classification_report.csv`, dan
-> `results/final_confusion_matrix.*` berasal dari evaluator lama 21 fitur (`final_model_evaluation.py`)
-> dan bukan sumber angka final aplikasi. Gunakan `models/final_classification_metadata.json` sebagai
-> sumber kebenaran evaluasi classification.
-
-## Clustering
-
-Model final:
-
-```text
-KMeans(n_clusters=2, random_state=42, n_init=10)
-```
-
-Alur inference:
-
-```text
-18 input features → final_clustering_preprocessor.joblib → 108 encoded features
-→ final_kmeans.joblib → cluster + distance to centroid
-```
-
-Clustering tidak memakai target severity dan tidak menggunakan PCA untuk
-membentuk cluster.
-
-## Cluster Profiling
-
-Hasil profiling C4 menunjukkan:
-
-- **Cluster 0**: 2.528 record atau 25,28%; dominan rural (92,37%), mean speed
-  limit 57,69, dan first road class A sebesar 54,11%.
-- **Cluster 1**: 7.472 record atau 74,72%; dominan urban (87,47%), mean speed
-  limit 28,51, first road class Unclassified sebesar 41,82%, single carriageway
-  75,46%, dan give way or uncontrolled 48,43%.
-
-Interpretasi tersebut bersifat deskriptif. Cluster tidak berarti Fatal,
-Serious, Slight, aman, atau berbahaya.
-
-## PCA Visualization
-
-PCA hanya digunakan untuk membantu visualisasi hasil clustering dalam dua
-dimensi:
-
-- PC1: 14,9170%
-- PC2: 9,5219%
-- Total: 24,4388%
-
-**PCA tidak digunakan untuk membentuk cluster atau melakukan prediction.**
-
-## Model Evaluation
-
-C3 mengevaluasi `k=2,3,4,5,6` dengan inertia, Silhouette,
-Davies-Bouldin, dan Calinski-Harabasz. `k=2` dipilih karena memiliki Silhouette
-tertinggi, Davies-Bouldin terendah, dan Calinski-Harabasz tertinggi.
-
-Output C3/C4 tersedia di `results/`, termasuk:
-
-- `clustering_k_evaluation.csv`
-- `clustering_cluster_size.csv`
-- `clustering_numeric_profile.csv`
-- `clustering_categorical_profile.csv`
-- `clustering_feature_comparison.csv`
-- `clustering_final_assignments.csv`
-- `clustering_pca_variance.csv`
-- `clustering_elbow.png`
-- `clustering_silhouette.png`
-- `clustering_pca.png`
-
-## Web Application
-
-Jalankan aplikasi dari root project:
+Environment lokal yang dapat diverifikasi adalah `.venv`; dependensi dipin pada `requirements.txt`, termasuk Streamlit, pandas, NumPy, joblib, dan scikit-learn.
 
 ```bat
-.venv\Scripts\activate
-streamlit run app.py
-```
-
-Atau:
-
-```bat
-.venv\Scripts\python.exe -m streamlit run app.py
-```
-
-## Application Features
-
-Sidebar aplikasi menyediakan:
-
-- Beranda
-- Dashboard Dataset
-- Tentang Data
-- Prediksi Severity
-- Analisis Cluster
-- Panduan Penggunaan
-- Kamus Fitur
-- Tentang Model
-
-Dashboard Dataset membaca output historis C3/C4. Prediksi Severity dan Analisis
-Cluster melakukan inference satu baris menggunakan artefak final. Kamus Fitur
-memiliki pencarian dan mapping kategori yang tersedia.
-
-## Academic explanation
-
-### Apa itu classification?
-
-Classification adalah supervised learning: model mempelajari data berlabel, lalu memprediksi kelas untuk data baru. Pada project ini targetnya adalah collision_severity dengan tiga kelas: Fatal, Serious, dan Slight. Random Forest memakai 300 decision tree; hasil banyak tree digabungkan menjadi prediksi akhir.
-
-### Apa itu clustering?
-
-Clustering adalah unsupervised learning: model mencari kelompok berdasarkan kemiripan karakteristik tanpa memakai label severity sebagai dasar. K-Means final membentuk dua kelompok, yaitu Cluster 0 dan Cluster 1. Cluster bukan severity dan tidak boleh dibaca sebagai tingkat bahaya.
-
-### Apa arti probability dan distance to centroid?
-
-Probability adalah keyakinan relatif model classification terhadap tiap kelas, bukan jaminan kebenaran. Distance to centroid menunjukkan kedekatan input terhadap pusat cluster; nilai lebih kecil berarti karakteristik input lebih dekat dengan centroid.
-
-### Preprocessing dalam bahasa awam
-
-Imputation menangani nilai kosong. StandardScaler menyetarakan skala fitur numerik. One-Hot Encoding mengubah kategori menjadi representasi numerik. Classification menghasilkan 105 fitur encoded karena preprocessor dipelajari dari 8.000 data training, sedangkan clustering menghasilkan 108 fitur encoded karena menggunakan 10.000 record.
-
-## Information architecture aplikasi
-
-- Beranda: membedakan data penelitian historis dan data baru/inference.
-- Dashboard Dataset: menampilkan hasil historis C3–C4 tanpa training ulang.
-- Tentang Data: menjelaskan STATS19, periode, sampling, target, fitur, dan pemisahan classification/clustering.
-- Prediksi Severity: menerima data baru dan menjalankan inference Random Forest.
-- Analisis Cluster: menerima data baru dan menjalankan inference K-Means.
-- Panduan Penggunaan: alur penggunaan dan glosarium.
-- Kamus Fitur: arti 18 fitur input.
-- Tentang Model: penjelasan akademik, pipeline, konfigurasi, evaluasi, profil cluster, PCA, leakage check, dan keterbatasan.
-
-## System Architecture
-
-```text
-STATS19 raw dataset
-        ↓
-Sampling + feature engineering pada notebook/script penelitian
-        ↓
-Preprocessing final
-        ├── Random Forest classification artifact
-        └── K-Means clustering artifact
-        ↓
-Streamlit
-        ├── Dashboard Dataset: hasil CSV/PNG C3-C4
-        └── Inference: input 18 fitur → model final
-```
-
-## Installation
-
-```bat
-git clone https://github.com/asyudianggara/traffic-accident-ml.git
-cd traffic-accident-ml
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-Dataset mentah perlu disiapkan secara lokal karena tidak di-upload ke GitHub.
-Model final dan mapping yang diperlukan aplikasi disimpan terpisah dari dataset
-mentah.
+Pembuatan environment/dependency baru tidak dilakukan dalam Phase 0.
 
-## Running Locally
+## Menjalankan Aplikasi
+
+Jalankan dari root proyek setelah environment tersedia:
 
 ```bat
 .venv\Scripts\python.exe -m streamlit run app.py
 ```
 
-Notebook penelitian berada di `notebooks/`. Script C2/C3, C4, dan finalisasi
-artefak berada di root project. Aplikasi tidak perlu menjalankan script tersebut
-untuk inference.
+Alternatif setelah aktivasi environment:
 
-## Usage Guide
-
-1. Gunakan **Dashboard Dataset** untuk membaca hasil penelitian historis.
-2. Gunakan **Prediksi Severity** untuk memasukkan karakteristik satu kecelakaan
-   dan membaca kelas serta probabilitas model.
-3. Gunakan **Analisis Cluster** untuk mengetahui kelompok karakteristik dan
-   jarak ke centroid.
-4. Gunakan **Tentang Data** untuk memahami sumber, sampling, target, dan 18 fitur.
-5. Gunakan **Panduan Penggunaan**, **Kamus Fitur**, dan **Tentang Model** untuk
-   memahami istilah, evaluasi, dan keterbatasan.
-
-## Project Structure
-
-```text
-traffic-accident-ml/
-├── app.py
-├── README.md
-├── README_APP.md
-├── requirements.txt
-├── data/
-│   ├── raw/                  # dataset lokal, tidak di-commit
-│   └── processed/            # mapping STATS19 yang diperlukan
-├── models/                   # artefak final yang digunakan aplikasi
-├── notebooks/                # notebook penelitian C1-C3/classification
-├── results/                  # hasil eksperimen dan profiling C3-C4
-├── src/
-└── .gitignore
+```bat
+streamlit run app.py
 ```
 
-## Model Artifacts
+Streamlit secara default membuka aplikasi pada URL lokal yang ditampilkan di terminal (umumnya `http://localhost:8501`). Status startup Phase 0: **PASS** — uji pada port lokal 8502 mengembalikan HTTP 200, lalu proses dihentikan. Aplikasi tidak diubah dan tidak melakukan training saat dijalankan.
 
-Classification:
+## Notebook dan Script
 
-- `models/final_random_forest.joblib`
-- `models/final_preprocessor.joblib`
-- `models/final_classification_metadata.json`
+- `notebooks/01_data_understanding.ipynb`, `02_data_preparation.ipynb`, dan `03_classification.ipynb` adalah bahan pipeline legacy.
+- `clustering_c2_c3.py`, `clustering_c4.py`, `finalize_models.py`, dan `final_model_evaluation.py` adalah script legacy.
 
-Clustering:
+Jangan menjalankan notebook/script tersebut untuk Tugas 2 tanpa instruksi Phase yang eksplisit, karena dapat menghasilkan atau mengubah output baseline.
 
-- `models/final_kmeans.joblib`
-- `models/final_clustering_preprocessor.joblib`
-- `models/final_clustering_metadata.json`
+## Git dan Repository
 
-Artifact legacy 21 fitur tersedia lokal sebagai backup penelitian, tetapi tidak
-digunakan aplikasi dan tetap di-ignore oleh Git.
+Branch aktif: `main`. Remote terkonfigurasi saat audit ke `https://github.com/asyudianggara/traffic-accident-ml.git`. Kesesuaiannya dengan repository GitHub baru untuk Tugas 2 adalah **TIDAK DAPAT DIVERIFIKASI**, sehingga checkpoint commit/push Phase 0 ditahan sampai remote yang benar dikonfirmasi. Jangan force push.
 
-## Testing
+## Dokumentasi
 
-Validasi yang telah dilakukan:
+- [Project status](docs/PROJECT_STATUS.md)
+- [Handoff](docs/HANDOFF.md)
+- [Changelog](docs/CHANGELOG.md)
+- Dokumen audit legacy yang dibawa dari proyek sebelumnya: `docs/PROJECT_DOCUMENTATION_MASTER.md`, `docs/PROJECT_FACT_SHEET.md`, dan `docs/DOCUMENTATION_GAPS.md`.
 
-- Python compile `app.py`
-- Streamlit startup dengan HTTP 200
-- Streamlit AppTest untuk Beranda, Dashboard Dataset, Tentang Data,
-  Prediksi Severity, Analisis Cluster, Panduan, Kamus Fitur, dan Tentang Model
-- Classification: 18 input → 105 encoded features → prediction
-- Clustering: 18 input → 108 encoded features → cluster
-- Pengecekan bahwa aplikasi tidak merujuk artifact legacy atau
-  `final_model_evaluation.py`
+## Next Phase
 
-Tidak ada retraining atau hyperparameter tuning saat testing aplikasi.
-
-## Limitations
-
-- Model dibuat dari sample 10.000 record periode 2021–2025.
-- Kualitas hasil bergantung pada kesesuaian karakteristik input.
-- Performa classification antar kelas tidak sama; Macro F1 lebih rendah daripada
-  Weighted F1.
-- Clustering menemukan pola berdasarkan fitur yang digunakan, bukan tingkat
-  keparahan kecelakaan.
-- PCA hanya digunakan untuk visualisasi dua dimensi.
-- Dashboard bersifat deskriptif dan tidak memperbarui hasil penelitian secara
-  otomatis.
-
-## Disclaimer
-
-Hasil merupakan prediksi model berdasarkan karakteristik input dan bukan
-penilaian resmi tingkat keparahan kecelakaan. Cluster bukan label severity,
-tingkat keamanan, atau tingkat bahaya.
-
-## Documentation
-
-Dokumentasi lengkap project berada di `docs/`:
-
-- `docs/PROJECT_DOCUMENTATION_MASTER.md` — dokumentasi induk (struktur, metodologi, hasil, traceability).
-- `docs/PROJECT_FACT_SHEET.md` — fakta dan angka final (single source of truth).
-- `docs/DOCUMENTATION_GAPS.md` — daftar kekurangan dokumentasi yang belum terisi.
-
-## Author
-
-Asyudi Anggara — F552630019
-Universitas Tadulako (UNTAD) — Palu
-Mata Kuliah: Rekayasa Perangkat Lunak
+**PHASE 1 – DATA STRATEGY:** menentukan strategi penggunaan seluruh baris dataset, memvalidasi jumlah record, target dan fitur, split, serta strategi preprocessing. Tahap tersebut tidak dimulai sebelum instruksi eksplisit.
