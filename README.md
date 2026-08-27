@@ -2,7 +2,7 @@
 
 ## Analisis Kecelakaan Lalu Lintas STATS19
 
-Status: **PHASE 6 COMPLETED — final candidate model terdokumentasi**
+Status: **PHASE 7 COMPLETED — operational validation terdokumentasi**
 
 Repository ini adalah salinan kerja baru untuk Tugas 2. Tujuannya adalah menyiapkan analisis data kecelakaan lalu lintas STATS19 dengan **seluruh baris data yang tersedia**. Artefak, hasil, dan aplikasi yang terbawa dari proyek sebelumnya hanya menjadi baseline/referensi; mereka bukan hasil final Tugas 2.
 
@@ -16,7 +16,7 @@ Repository ini adalah salinan kerja baru untuk Tugas 2. Tujuannya adalah menyiap
 
 Baseline lama menggunakan 10.000 record: 2.000 record dari masing-masing tahun 2021–2025 melalui `groupby("collision_year").sample(n=2000, random_state=42)`. Sampling ini tidak dinyatakan stratified; split classification sesudahnya memakai `stratify=y`, `test_size=0.20`, dan `random_state=42`.
 
-Quality audit Phase 1 memverifikasi 0 duplicate row, 53 missing pada masing-masing empat kolom koordinat, serta target valid tiga kelas: Fatal 7.553 (1,470024%), Serious 116.813 (22,735067%), dan Slight 389.435 (75,794909%). Phase 6 telah memilih final candidate classification: Random Forest balanced dengan threshold Fatal 0,50. Model belum production-ready; clustering, association mining, forecasting, dan deployment belum dilakukan.
+Quality audit Phase 1 memverifikasi 0 duplicate row, 53 missing pada masing-masing empat kolom koordinat, serta target valid tiga kelas: Fatal 7.553 (1,470024%), Serious 116.813 (22,735067%), dan Slight 389.435 (75,794909%). Phase 6 memilih final candidate classification: Random Forest balanced dengan threshold Fatal 0,50. Phase 7 memvalidasi penggunaan ulang artifact dan contract; model belum deployment-ready.
 
 ## Progress dan CRISP-DM
 
@@ -117,8 +117,9 @@ Branch aktif: `main`. Repository GitHub Tugas 2 terverifikasi pada `https://gith
 - [Modeling Phase 5B-1](docs/MODELING_PHASE5B1.md)
 - [Modeling Phase 5 baselines](docs/MODELING_PHASE5.md)
 - [Final model selection](docs/FINAL_MODEL.md)
+- [Operational validation](docs/OPERATIONAL_VALIDATION.md)
 - Dokumen audit legacy yang dibawa dari proyek sebelumnya: `docs/PROJECT_DOCUMENTATION_MASTER.md`, `docs/PROJECT_FACT_SHEET.md`, dan `docs/DOCUMENTATION_GAPS.md`.
 
 ## Next Phase
 
-**PHASE 7 – DEPLOYMENT / OPERATIONAL VALIDATION:** scope to be confirmed after review of the final candidate and open methodological decisions.
+**PHASE 8 – DEPLOYMENT / APPLICATION INTEGRATION:** scope to be confirmed after review of dependency, input policy, and operational criteria.

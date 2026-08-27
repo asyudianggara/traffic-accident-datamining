@@ -2,8 +2,8 @@
 
 Project: Tugas 2 – Penambangan Data
 Case: Analisis Kecelakaan Lalu Lintas STATS19
-Current Phase: PHASE 6 – FINAL MODEL SELECTION & EVALUATION
-Overall Progress: PHASE 6 / 10
+Current Phase: PHASE 7 – OPERATIONAL VALIDATION & RESEARCH READINESS
+Overall Progress: PHASE 7 / 10
 Status: COMPLETED
 
 ## Completed
@@ -25,26 +25,27 @@ Status: COMPLETED
 - Phase 5.1 selesai: empat strategi imbalance dibandingkan pada validation 2024; balanced Random Forest dipilih provisional dan dievaluasi sekali pada holdout 2025.
 - Phase 5.2 selesai: threshold Fatal dipilih menggunakan validation 2024 dan dievaluasi sekali pada holdout 2025.
 - Phase 6 selesai: final candidate model dipilih dan artifact/metadata dibuat tanpa memakai ulang 2025 untuk seleksi.
+- Phase 7 operational validation selesai: artifact reload, input contract, prediction rule, reproducibility, dan edge cases didokumentasikan.
 
 ## Current
 
-- Phase 6 completed; final candidate terdokumentasi, tetapi belum production-ready dan belum diintegrasikan ke aplikasi.
+- Phase 7 completed; final candidate research-ready dengan kondisi, tetapi belum deployment-ready dan belum diintegrasikan ke aplikasi.
 
 ## Current Subphase
 
-- PHASE 6 – FINAL MODEL SELECTION & EVALUATION (COMPLETED).
+- PHASE 7 – OPERATIONAL VALIDATION & RESEARCH READINESS (COMPLETED).
 
 ## Current Task
 
-- Meninjau final candidate dan open methodological decisions sebelum deployment/integrasi.
+- Meninjau hasil operational validation dan kondisi readiness sebelum deployment/integrasi.
 
 ## In Progress
 
-- Final candidate: Random Forest balanced + Fatal threshold 0,50; tidak ada tuning ekstensif atau deployment yang dilakukan.
+- Operational validation complete; tidak ada tuning, model replacement, atau deployment yang dilakukan.
 
 ## Not Started
 
-- Deployment/integrasi aplikasi dan validasi operasional final.
+- Dependency pinning, domain-range validation, codebook/use-case confirmation, dan deployment/integrasi aplikasi.
 
 ## Blocked
 
@@ -52,7 +53,7 @@ Status: COMPLETED
 
 ## Next Action
 
-- Review `docs/FINAL_MODEL.md`; konfirmasi use case, timing prediksi, codebook, dan kebijakan geografis.
+- Review `docs/OPERATIONAL_VALIDATION.md`; konfirmasi dependency version, use case, timing prediksi, codebook, dan kebijakan geografis.
 
 ## Do Not Do
 
@@ -102,7 +103,7 @@ Status: COMPLETED
 
 ## Next Phase
 
-PHASE 7 – DEPLOYMENT / OPERATIONAL VALIDATION (SCOPE TO BE CONFIRMED)
+PHASE 8 – DEPLOYMENT / APPLICATION INTEGRATION (SCOPE TO BE CONFIRMED)
 
 ## Important Rules
 

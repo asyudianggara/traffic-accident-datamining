@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-PHASE 6 – FINAL MODEL SELECTION & EVALUATION (COMPLETED)
+PHASE 7 – OPERATIONAL VALIDATION & RESEARCH READINESS (COMPLETED)
 
 ## Last Completed
 
@@ -35,6 +35,7 @@ PHASE 6 – FINAL MODEL SELECTION & EVALUATION (COMPLETED)
 - Phase 5A menggunakan 412.276 development rows dan 101.525 holdout rows; preprocessing fitted pada development saja; kedua model mencatat Fatal recall 0.
 - Phase 5B-1 memakai split/features/preprocessing yang sama; hanya dua model completed dengan metrik valid, keduanya Fatal recall 0.
 - Phase 6 memilih final candidate; metrik 2025 diambil dari hasil Phase 5.2 yang telah dibekukan dan tidak dievaluasi ulang untuk seleksi.
+- Phase 7 memvalidasi reload/prediction artifact, 18-feature contract, 149 encoded features, threshold, reproducibility, dan edge cases tanpa fitting atau pemilihan model baru.
 
 ## Files Changed
 
@@ -53,6 +54,7 @@ PHASE 6 – FINAL MODEL SELECTION & EVALUATION (COMPLETED)
 - `docs/FEATURE_SELECTION.md`
 - `docs/MODELING_PHASE5B1.md`, `models/classification_phase5b_logistic_regression.joblib`, `models/classification_phase5b_decision_tree.joblib`, `models/classification_phase5b_metadata.json`, dan `results/classification_phase5b_comparison.csv`
 - `finalize_research_model.py`, `docs/FINAL_MODEL.md`, `models/final_research_model.joblib`, `results/final_model_metadata.json`, dan `results/final_model_comparison.csv`
+- `phase7_operational_validation.py`, `docs/OPERATIONAL_VALIDATION.md`, dan `results/phase7_operational_validation.json`
 - `docs/MODELING_PHASE5A.md`, `models/classification_baseline_logistic_regression.joblib`, `models/classification_baseline_decision_tree.joblib`, `models/classification_baseline_metadata.json`, dan `results/classification_baseline.csv`
 
 ## Files Not Changed
@@ -85,7 +87,7 @@ PHASE 6 – FINAL MODEL SELECTION & EVALUATION (COMPLETED)
 - Leakage risk: outcome/adjusted severity fields, number of casualties, dan police-attendance harus dikeluarkan/ditinjau sebelum model.
 - Pola target-versus-fitur bersifat deskriptif; kategori langka memerlukan kehati-hatian dan tidak boleh dibaca sebagai hubungan kausal.
 - Range checks found no structural invalids in the audited full dataset; IQR flags are retained, not deleted.
-- Final candidate is research-ready but not production-ready; use case and operational acceptance criteria remain open.
+- Final candidate research-ready with conditions but not deployment-ready; sklearn cross-version compatibility and domain-range validation are NOT VERIFIED.
 - Phase 5B-1 RF tidak menghasilkan result setelah ~27 menit/~1.08 GB RAM; HGB tidak dijalankan karena established sparse preprocessing incompatible.
 - Baselines preserve natural imbalance; no SMOTE, over/undersampling, or class weighting was applied.
 
@@ -97,7 +99,7 @@ PHASE 6 – FINAL MODEL SELECTION & EVALUATION (COMPLETED)
 
 ## Next Required Action
 
-Review `docs/FINAL_MODEL.md`; jangan klaim production readiness sebelum open methodological decisions dan validasi operasional selesai.
+Review `docs/OPERATIONAL_VALIDATION.md`; jangan klaim deployment readiness sebelum dependency version, input policy, dan open methodological decisions selesai.
 
 ## STOP CONDITION
 

@@ -1,0 +1,68 @@
+{
+  "phase": "7",
+  "artifact_loaded": true,
+  "artifact": "models\\final_research_model.joblib",
+  "artifact_training_sklearn_version": "1.9.0",
+  "runtime_sklearn_version": "1.8.0",
+  "runtime_version_compatibility": "NOT VERIFIED",
+  "feature_contract_count": 18,
+  "encoded_feature_count": 149,
+  "class_order": {
+    "estimator_codes": [
+      1,
+      2,
+      3
+    ],
+    "labels": [
+      "Fatal",
+      "Serious",
+      "Slight"
+    ]
+  },
+  "threshold": 0.5,
+  "development_sample_rows": 3,
+  "development_sample_source": "raw dataset rows with collision_year <= 2024; deterministic first 3 by collision_index",
+  "prediction": {
+    "passed": true,
+    "classes": [
+      "Slight",
+      "Slight",
+      "Slight"
+    ],
+    "threshold_boundary_test": "PASS"
+  },
+  "probability": {
+    "passed": true,
+    "rows_sum_to_one": true,
+    "repeated_identical": true
+  },
+  "edge_cases": {
+    "missing_values": {
+      "status": "PASS",
+      "behavior": "pipeline imputation produced probabilities",
+      "probability_rows": 1
+    },
+    "unknown_category": {
+      "status": "PASS",
+      "behavior": "handle_unknown=ignore produced probabilities",
+      "probability_rows": 1
+    },
+    "out_of_pattern_numeric": {
+      "status": "NOT VERIFIED",
+      "reason": "pipeline has no standalone domain-range validator"
+    },
+    "invalid_numeric_type": {
+      "status": "PASS",
+      "behavior": "prediction rejected invalid numeric type",
+      "error": "ValueError"
+    },
+    "incomplete_input": {
+      "status": "PASS",
+      "behavior": "prediction rejected missing feature",
+      "error": "ValueError"
+    }
+  },
+  "holdout_2025_used": false,
+  "fit_or_selection_performed": false,
+  "raw_dataset_modified": false
+}
