@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-PHASE 5A – CLASSIFICATION MODELING BASELINE (COMPLETED)
+PHASE 5B-1 – CLASSIFICATION MODEL COMPARISON (PARTIAL)
 
 ## Last Completed
 
@@ -12,6 +12,7 @@ PHASE 5A – CLASSIFICATION MODELING BASELINE (COMPLETED)
 - `docs/DATA_PREPARATION.md` dibuat dengan kontrak preparation seluruh 44 fitur, leakage/sentinel/anomaly rules, dan train-only pipeline design; tidak ada data turunan atau model baru.
 - `docs/FEATURE_SELECTION.md` dibuat dengan review seluruh 44 fitur, provisional sets, exploratory MI pada development data, redundancy review, algorithm strategy, dan Phase 5 experiment design; tidak ada final model.
 - `docs/MODELING_PHASE5A.md` dibuat dan dua baseline full-dataset pipeline selesai: Logistic Regression dan Decision Tree dengan 2025 temporal holdout.
+- `docs/MODELING_PHASE5B1.md` dibuat; Logistic Regression dan Decision Tree comparison selesai, RF dihentikan karena resource bottleneck, dan HGB ditolak sparse input.
 
 ## Current State
 
@@ -25,6 +26,7 @@ PHASE 5A – CLASSIFICATION MODELING BASELINE (COMPLETED)
 - Phase 3 memverifikasi range/logical checks, mempertahankan target tiga kelas tanpa balancing, dan mendokumentasikan derived `month`/`hour` serta provisional temporal holdout.
 - Phase 4 menetapkan provisional classification/clustering sets (18 masing-masing), association basket (15), temporal set (4), dan leakage-safe selection rules.
 - Phase 5A menggunakan 412.276 development rows dan 101.525 holdout rows; preprocessing fitted pada development saja; kedua model mencatat Fatal recall 0.
+- Phase 5B-1 memakai split/features/preprocessing yang sama; hanya dua model completed dengan metrik valid, keduanya Fatal recall 0.
 
 ## Files Changed
 
@@ -36,6 +38,7 @@ PHASE 5A – CLASSIFICATION MODELING BASELINE (COMPLETED)
 - `docs/DATA_UNDERSTANDING.md` dan `docs/figures/data-understanding/*.png`
 - `docs/DATA_PREPARATION.md`
 - `docs/FEATURE_SELECTION.md`
+- `docs/MODELING_PHASE5B1.md`, `models/classification_phase5b_logistic_regression.joblib`, `models/classification_phase5b_decision_tree.joblib`, `models/classification_phase5b_metadata.json`, dan `results/classification_phase5b_comparison.csv`
 - `docs/MODELING_PHASE5A.md`, `models/classification_baseline_logistic_regression.joblib`, `models/classification_baseline_decision_tree.joblib`, `models/classification_baseline_metadata.json`, dan `results/classification_baseline.csv`
 
 ## Files Not Changed
@@ -53,6 +56,7 @@ PHASE 5A – CLASSIFICATION MODELING BASELINE (COMPLETED)
 - Official DfT data-guide source identified; unresolved coded values remain unchanged until the guide version is frozen.
 - Exploratory MI used only 2021–2024 development rows; 2025 was not used for feature selection.
 - Logistic Regression holdout macro F1 0.2907; Decision Tree holdout macro F1 0.3006; Fatal recall 0 untuk keduanya.
+- Logistic Regression holdout macro F1 0.2907; Decision Tree holdout macro F1 0.3006; Fatal recall 0 untuk keduanya.
 
 ## Unverified Items
 
@@ -68,6 +72,7 @@ PHASE 5A – CLASSIFICATION MODELING BASELINE (COMPLETED)
 - Pola target-versus-fitur bersifat deskriptif; kategori langka memerlukan kehati-hatian dan tidak boleh dibaca sebagai hubungan kausal.
 - Range checks found no structural invalids in the audited full dataset; IQR flags are retained, not deleted.
 - Candidate sets are provisional and must be tested in Phase 5 without using the final holdout for selection.
+- Phase 5B-1 RF tidak menghasilkan result setelah ~27 menit/~1.08 GB RAM; HGB tidak dijalankan karena established sparse preprocessing incompatible.
 - Baselines preserve natural imbalance; no SMOTE, over/undersampling, or class weighting was applied.
 
 ## Do Not
@@ -78,8 +83,8 @@ PHASE 5A – CLASSIFICATION MODELING BASELINE (COMPLETED)
 
 ## Next Required Action
 
-Setelah instruksi eksplisit Phase 5B: lakukan comparison classification dan controlled imbalance experiments dengan protocol yang sama; jangan gunakan 2025 holdout untuk selection.
+Setelah instruksi eksplisit Phase 5B-2: lakukan controlled imbalance experiment dengan protocol yang sama; jangan gunakan 2025 holdout untuk selection.
 
 ## STOP CONDITION
 
-Jangan masuk Phase 5B sebelum mendapat instruksi eksplisit.
+Jangan masuk Phase 5B-2 sebelum mendapat instruksi eksplisit.

@@ -2,7 +2,7 @@
 
 ## Analisis Kecelakaan Lalu Lintas STATS19
 
-Status: **PHASE 5A COMPLETED — menunggu instruksi PHASE 5B**
+Status: **PHASE 5B-1 PARTIAL — menunggu instruksi PHASE 5B-2**
 
 Repository ini adalah salinan kerja baru untuk Tugas 2. Tujuannya adalah menyiapkan analisis data kecelakaan lalu lintas STATS19 dengan **seluruh baris data yang tersedia**. Artefak, hasil, dan aplikasi yang terbawa dari proyek sebelumnya hanya menjadi baseline/referensi; mereka bukan hasil final Tugas 2.
 
@@ -28,14 +28,15 @@ Quality audit Phase 1 memverifikasi 0 duplicate row, 53 missing pada masing-masi
 | Phase 3 – Data preparation         | COMPLETED (strategy/contract only) |
 | Phase 4 – Feature selection        | COMPLETED (strategy only)          |
 | Phase 5A – Classification baseline | COMPLETED                          |
+| Phase 5B-1 – Model comparison      | PARTIAL                            |
 | Business Understanding             | PARTIAL                            |
 | Data Understanding                 | COMPLETED                          |
 | Data Preparation full dataset      | COMPLETED (strategy/contract only) |
-| Modeling full dataset              | PARTIAL (Phase 5A baselines)       |
-| Evaluation full dataset            | PARTIAL (baseline holdout metrics) |
+| Modeling full dataset              | PARTIAL (5A + 5B-1)                |
+| Evaluation full dataset            | PARTIAL (comparison incomplete)    |
 | Deployment untuk Tugas 2           | PARTIAL                            |
 
-Rincian strategi tersedia di [docs/DATA_STRATEGY.md](docs/DATA_STRATEGY.md), audit deskriptif di [docs/DATA_UNDERSTANDING.md](docs/DATA_UNDERSTANDING.md), kontrak preparation di [docs/DATA_PREPARATION.md](docs/DATA_PREPARATION.md), strategi feature selection di [docs/FEATURE_SELECTION.md](docs/FEATURE_SELECTION.md), dan hasil baseline di [docs/MODELING_PHASE5A.md](docs/MODELING_PHASE5A.md). Status dan handoff tersedia di [docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md) dan [docs/HANDOFF.md](docs/HANDOFF.md).
+Rincian strategi tersedia di [docs/DATA_STRATEGY.md](docs/DATA_STRATEGY.md), audit deskriptif di [docs/DATA_UNDERSTANDING.md](docs/DATA_UNDERSTANDING.md), kontrak preparation di [docs/DATA_PREPARATION.md](docs/DATA_PREPARATION.md), strategi feature selection di [docs/FEATURE_SELECTION.md](docs/FEATURE_SELECTION.md), baseline di [docs/MODELING_PHASE5A.md](docs/MODELING_PHASE5A.md), dan comparison di [docs/MODELING_PHASE5B1.md](docs/MODELING_PHASE5B1.md). Status dan handoff tersedia di [docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md) dan [docs/HANDOFF.md](docs/HANDOFF.md).
 
 ## Pipeline dan Model Legacy yang Tersedia
 
@@ -111,8 +112,9 @@ Branch aktif: `main`. Repository GitHub Tugas 2 terverifikasi pada `https://gith
 - [Data preparation](docs/DATA_PREPARATION.md)
 - [Feature selection](docs/FEATURE_SELECTION.md)
 - [Modeling Phase 5A](docs/MODELING_PHASE5A.md)
+- [Modeling Phase 5B-1](docs/MODELING_PHASE5B1.md)
 - Dokumen audit legacy yang dibawa dari proyek sebelumnya: `docs/PROJECT_DOCUMENTATION_MASTER.md`, `docs/PROJECT_FACT_SHEET.md`, dan `docs/DOCUMENTATION_GAPS.md`.
 
 ## Next Phase
 
-**PHASE 5B – CLASSIFICATION MODEL COMPARISON:** lanjutkan perbandingan model dan controlled imbalance experiments. Phase 5A hanya baseline; belum ada final model selection, tuning, clustering, association mining, forecasting, atau perubahan aplikasi.
+**PHASE 5B-2 – CONTROLLED CLASS IMBALANCE EXPERIMENT:** uji strategi imbalance terkontrol dengan split dan preprocessing yang sama. Phase 5B-1 partial; Random Forest tidak selesai dan HistGradientBoosting incompatible dengan sparse input.

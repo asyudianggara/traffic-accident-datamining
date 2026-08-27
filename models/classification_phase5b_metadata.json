@@ -1,0 +1,225 @@
+{
+  "phase": "5B-1",
+  "status": "PARTIAL",
+  "dataset": {
+    "path": "data/raw/dft-road-casualty-statistics-collision-last-5-years.csv",
+    "rows": 513801,
+    "columns": 44,
+    "period": "2021-2025"
+  },
+  "split": {
+    "development_years": [
+      2021,
+      2022,
+      2023,
+      2024
+    ],
+    "development_rows": 412276,
+    "holdout_year": 2025,
+    "holdout_rows": 101525,
+    "random_state": 42
+  },
+  "target": {
+    "name": "collision_severity",
+    "classes": {
+      "1": "Fatal",
+      "2": "Serious",
+      "3": "Slight"
+    },
+    "development_distribution": {
+      "1": 6100,
+      "2": 91622,
+      "3": 314554
+    },
+    "holdout_distribution": {
+      "1": 1453,
+      "2": 25191,
+      "3": 74881
+    }
+  },
+  "features": {
+    "classification_features": [
+      "number_of_vehicles",
+      "speed_limit",
+      "first_road_class",
+      "road_type",
+      "junction_detail",
+      "junction_control",
+      "second_road_class",
+      "pedestrian_crossing",
+      "light_conditions",
+      "weather_conditions",
+      "road_surface_conditions",
+      "special_conditions_at_site",
+      "carriageway_hazards",
+      "urban_or_rural_area",
+      "trunk_road_flag",
+      "day_of_week",
+      "month",
+      "hour"
+    ],
+    "numeric_features": [
+      "number_of_vehicles"
+    ],
+    "categorical_features": [
+      "speed_limit",
+      "first_road_class",
+      "road_type",
+      "junction_detail",
+      "junction_control",
+      "second_road_class",
+      "pedestrian_crossing",
+      "light_conditions",
+      "weather_conditions",
+      "road_surface_conditions",
+      "special_conditions_at_site",
+      "carriageway_hazards",
+      "urban_or_rural_area",
+      "trunk_road_flag",
+      "day_of_week",
+      "month",
+      "hour"
+    ],
+    "leakage_excluded": [
+      "collision_index",
+      "collision_ref_no",
+      "collision_severity",
+      "number_of_casualties",
+      "enhanced_severity_collision",
+      "collision_injury_based",
+      "collision_adjusted_severity_serious",
+      "collision_adjusted_severity_slight",
+      "did_police_officer_attend_scene_of_accident"
+    ],
+    "derived_features": {
+      "month": "date parsed with %d/%m/%Y",
+      "hour": "time parsed with %H:%M"
+    }
+  },
+  "preprocessing": {
+    "same_as_phase5a": true,
+    "numeric": "median imputation fitted on development only",
+    "categorical": "most-frequent imputation + OneHotEncoder(handle_unknown=ignore) fitted on development only",
+    "encoded_training_shape": [
+      412276,
+      149
+    ],
+    "sparse_output": true
+  },
+  "models": {
+    "logistic_regression": {
+      "status": "completed",
+      "solver": "lbfgs",
+      "max_iter": 1000,
+      "random_state": 42
+    },
+    "decision_tree": {
+      "status": "completed",
+      "max_depth": 12,
+      "min_samples_leaf": 20,
+      "random_state": 42
+    },
+    "random_forest": {
+      "status": "not_completed",
+      "configuration": {
+        "n_estimators": 300,
+        "max_depth": 15,
+        "class_weight": "balanced",
+        "random_state": 42,
+        "n_jobs": -1
+      },
+      "bottleneck": "After approximately 27 minutes, process remained active/responsive at approximately 1.08 GB RAM without producing result; stopped to protect local resources."
+    },
+    "hist_gradient_boosting": {
+      "status": "not_run",
+      "reason": "Established preprocessing emits sparse matrix; sklearn HistGradientBoostingClassifier rejects sparse input. Dense conversion was not attempted."
+    }
+  },
+  "metrics_completed_models": [
+    {
+      "model": "logistic_regression",
+      "accuracy": 0.7370598374784536,
+      "macro_precision": 0.3912640417828692,
+      "macro_recall": 0.33581955249164186,
+      "macro_f1": 0.29071959052484125,
+      "weighted_precision": 0.6530361592781928,
+      "weighted_recall": 0.7370598374784536,
+      "weighted_f1": 0.6315937871616566,
+      "fatal_precision": 0.0,
+      "fatal_recall": 0.0,
+      "fatal_f1": 0.0,
+      "serious_precision": 0.4345991561181435,
+      "serious_recall": 0.012266285578182684,
+      "serious_f1": 0.023859161454713923,
+      "slight_precision": 0.7391929692304641,
+      "slight_recall": 0.9951923718967428,
+      "slight_f1": 0.8482996101198099
+    },
+    {
+      "model": "decision_tree",
+      "accuracy": 0.7350012312238365,
+      "macro_precision": 0.3819633326254168,
+      "macro_recall": 0.33876149002566164,
+      "macro_f1": 0.3006223734300578,
+      "weighted_precision": 0.6470663221760767,
+      "weighted_recall": 0.7350012312238365,
+      "weighted_f1": 0.638036421007248,
+      "fatal_precision": 0.0,
+      "fatal_recall": 0.0,
+      "fatal_f1": 0.0,
+      "serious_precision": 0.404749055585537,
+      "serious_recall": 0.02977253781112302,
+      "serious_f1": 0.05546516787457477,
+      "slight_precision": 0.7411409422907136,
+      "slight_recall": 0.9865119322658619,
+      "slight_f1": 0.8464019524155987
+    }
+  ],
+  "confusion_matrices_labels_1_2_3": {
+    "logistic_regression": [
+      [
+        0,
+        42,
+        1411
+      ],
+      [
+        0,
+        309,
+        24882
+      ],
+      [
+        0,
+        360,
+        74521
+      ]
+    ],
+    "decision_tree": [
+      [
+        0,
+        93,
+        1360
+      ],
+      [
+        0,
+        750,
+        24441
+      ],
+      [
+        0,
+        1010,
+        73871
+      ]
+    ]
+  },
+  "environment": {
+    "python": "3.14.0",
+    "scikit_learn": "1.9.0"
+  },
+  "legacy_context": {
+    "model": "Random Forest",
+    "rows": 10000,
+    "accuracy": 0.6385,
+    "macro_f1": 0.3862,
+    "comparison_warning": "Not directly equivalent to full-data temporal holdout."
+  }
+}
