@@ -2,8 +2,8 @@
 
 Project: Tugas 2 – Penambangan Data
 Case: Analisis Kecelakaan Lalu Lintas STATS19
-Current Phase: PHASE 7 – OPERATIONAL VALIDATION & RESEARCH READINESS
-Overall Progress: PHASE 7 / 10
+Current Phase: PHASE 8 – APPLICATION INTEGRATION & OPERATIONAL PREDICTION
+Overall Progress: PHASE 8 / 10
 Status: COMPLETED
 
 ## Completed
@@ -26,26 +26,27 @@ Status: COMPLETED
 - Phase 5.2 selesai: threshold Fatal dipilih menggunakan validation 2024 dan dievaluasi sekali pada holdout 2025.
 - Phase 6 selesai: final candidate model dipilih dan artifact/metadata dibuat tanpa memakai ulang 2025 untuk seleksi.
 - Phase 7 operational validation selesai: artifact reload, input contract, prediction rule, reproducibility, dan edge cases didokumentasikan.
+- Phase 8 selesai: halaman classification diintegrasikan dengan final research artifact 18→149, threshold 0,50, output probabilitas, dan smoke test Streamlit.
 
 ## Current
 
-- Phase 7 completed; final candidate research-ready dengan kondisi, tetapi belum deployment-ready dan belum diintegrasikan ke aplikasi.
+- Phase 8 completed; aplikasi inference classification terintegrasi, tetapi deployment-ready belum diklaim.
 
 ## Current Subphase
 
-- PHASE 7 – OPERATIONAL VALIDATION & RESEARCH READINESS (COMPLETED).
+- PHASE 8 – APPLICATION INTEGRATION & OPERATIONAL PREDICTION (COMPLETED).
 
 ## Current Task
 
-- Meninjau hasil operational validation dan kondisi readiness sebelum deployment/integrasi.
+- Meninjau hasil integrasi aplikasi dan operational prediction sebelum deployment lanjutan.
 
 ## In Progress
 
-- Operational validation complete; tidak ada tuning, model replacement, atau deployment yang dilakukan.
+- Application integration complete; tidak ada tuning, model replacement, atau retraining yang dilakukan.
 
 ## Not Started
 
-- Dependency pinning, domain-range validation, codebook/use-case confirmation, dan deployment/integrasi aplikasi.
+- Domain-range validation, codebook/use-case confirmation, dan deployment operasional.
 
 ## Blocked
 
@@ -53,7 +54,7 @@ Status: COMPLETED
 
 ## Next Action
 
-- Review `docs/OPERATIONAL_VALIDATION.md`; konfirmasi dependency version, use case, timing prediksi, codebook, dan kebijakan geografis.
+- Review `docs/APPLICATION_INTEGRATION.md`; konfirmasi dependency version, input policy, use case, timing prediksi, dan deployment scope.
 
 ## Do Not Do
 
@@ -103,7 +104,7 @@ Status: COMPLETED
 
 ## Next Phase
 
-PHASE 8 – DEPLOYMENT / APPLICATION INTEGRATION (SCOPE TO BE CONFIRMED)
+PHASE 9 – DEPLOYMENT / OPERATIONAL HANDOFF (SCOPE TO BE CONFIRMED)
 
 ## Important Rules
 

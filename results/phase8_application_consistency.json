@@ -1,0 +1,13 @@
+{
+  "app_artifacts_loaded": true,
+  "sample_source": "development row with collision_year <= 2024; first collision_index",
+  "feature_count": 18,
+  "encoded_feature_count": 149,
+  "application_prediction": "Slight",
+  "direct_prediction": "Slight",
+  "prediction_match": true,
+  "probability_match_within_tolerance": true,
+  "threshold": 0.5,
+  "raw_dataset_modified": false,
+  "holdout_2025_used": false
+}

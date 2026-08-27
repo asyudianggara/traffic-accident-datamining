@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-PHASE 7 – OPERATIONAL VALIDATION & RESEARCH READINESS (COMPLETED)
+PHASE 8 – APPLICATION INTEGRATION & OPERATIONAL PREDICTION (COMPLETED)
 
 ## Last Completed
 
@@ -36,6 +36,7 @@ PHASE 7 – OPERATIONAL VALIDATION & RESEARCH READINESS (COMPLETED)
 - Phase 5B-1 memakai split/features/preprocessing yang sama; hanya dua model completed dengan metrik valid, keduanya Fatal recall 0.
 - Phase 6 memilih final candidate; metrik 2025 diambil dari hasil Phase 5.2 yang telah dibekukan dan tidak dievaluasi ulang untuk seleksi.
 - Phase 7 memvalidasi reload/prediction artifact, 18-feature contract, 149 encoded features, threshold, reproducibility, dan edge cases tanpa fitting atau pemilihan model baru.
+- Phase 8 mengintegrasikan `models/final_research_model.joblib` ke halaman classification tanpa retraining; prediction consistency dan Streamlit smoke test lulus.
 
 ## Files Changed
 
@@ -55,6 +56,7 @@ PHASE 7 – OPERATIONAL VALIDATION & RESEARCH READINESS (COMPLETED)
 - `docs/MODELING_PHASE5B1.md`, `models/classification_phase5b_logistic_regression.joblib`, `models/classification_phase5b_decision_tree.joblib`, `models/classification_phase5b_metadata.json`, dan `results/classification_phase5b_comparison.csv`
 - `finalize_research_model.py`, `docs/FINAL_MODEL.md`, `models/final_research_model.joblib`, `results/final_model_metadata.json`, dan `results/final_model_comparison.csv`
 - `phase7_operational_validation.py`, `docs/OPERATIONAL_VALIDATION.md`, dan `results/phase7_operational_validation.json`
+- `app.py`, `docs/APPLICATION_INTEGRATION.md`, `phase8_application_consistency.py`, `phase8_streamlit_smoke_test.py`, dan hasil JSON Phase 8.
 - `docs/MODELING_PHASE5A.md`, `models/classification_baseline_logistic_regression.joblib`, `models/classification_baseline_decision_tree.joblib`, `models/classification_baseline_metadata.json`, dan `results/classification_baseline.csv`
 
 ## Files Not Changed
@@ -99,7 +101,7 @@ PHASE 7 – OPERATIONAL VALIDATION & RESEARCH READINESS (COMPLETED)
 
 ## Next Required Action
 
-Review `docs/OPERATIONAL_VALIDATION.md`; jangan klaim deployment readiness sebelum dependency version, input policy, dan open methodological decisions selesai.
+Review `docs/APPLICATION_INTEGRATION.md`; jangan klaim deployment readiness sebelum dependency version, input policy, dan open methodological decisions selesai.
 
 ## STOP CONDITION
 

@@ -1,0 +1,10 @@
+{
+  "startup": "PASS",
+  "classification_page": "PASS",
+  "input_feature_widgets": 18,
+  "prediction_submission": "PASS",
+  "probability_output": "PASS",
+  "threshold_output": "PASS",
+  "training_on_startup": false,
+  "raw_dataset_needed_for_prediction": false
+}

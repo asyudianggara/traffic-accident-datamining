@@ -16,13 +16,18 @@ MAP_PATH = ROOT / "data" / "processed" / "stats19_maps.json"
 CLUSTERING_EVALUATION_PATH = ROOT / "results" / "clustering_k_evaluation.csv"
 DATASET_RESULTS_DIR = ROOT / "results"
 
-NUMERIC_FEATURES = [
-    "number_of_vehicles",
-    "speed_limit",
-    "hour",
-    "month",
+CLASSIFICATION_FEATURES = [
+    "number_of_vehicles", "speed_limit", "first_road_class", "road_type",
+    "junction_detail", "junction_control", "second_road_class",
+    "pedestrian_crossing", "light_conditions", "weather_conditions",
+    "road_surface_conditions", "special_conditions_at_site",
+    "carriageway_hazards", "urban_or_rural_area", "trunk_road_flag",
+    "day_of_week", "month", "hour",
 ]
-CATEGORICAL_FEATURES = [
+CLASSIFICATION_NUMERIC_FEATURES = ["number_of_vehicles"]
+CLASSIFICATION_CATEGORICAL_FEATURES = [feature for feature in CLASSIFICATION_FEATURES if feature not in CLASSIFICATION_NUMERIC_FEATURES]
+CLUSTERING_NUMERIC_FEATURES = ["number_of_vehicles", "speed_limit", "hour", "month"]
+CLUSTERING_CATEGORICAL_FEATURES = [
     "day_of_week",
     "first_road_class",
     "road_type",
@@ -38,8 +43,12 @@ CATEGORICAL_FEATURES = [
     "urban_or_rural_area",
     "trunk_road_flag",
 ]
-FEATURES = NUMERIC_FEATURES + CATEGORICAL_FEATURES
+FEATURES = CLASSIFICATION_FEATURES
+NUMERIC_FEATURES = CLASSIFICATION_NUMERIC_FEATURES
+CATEGORICAL_FEATURES = CLASSIFICATION_CATEGORICAL_FEATURES
 TARGET_LABELS = ["Fatal", "Serious", "Slight"]
+CLASS_LABELS = {1: "Fatal", 2: "Serious", 3: "Slight"}
+FATAL_THRESHOLD = 0.50
 
 SCENARIO_DEFINITIONS = {
     "Input bebas": {
@@ -93,11 +102,11 @@ NAV_ITEMS = [
 ]
 
 CLASSIFICATION_METRICS = {
-    "Accuracy": "63,85%",
-    "Macro Precision": "38,02%",
-    "Macro Recall": "40,08%",
-    "Macro F1": "38,62%",
-    "Weighted F1": "64,96%",
+    "Accuracy": "54,29%",
+    "Macro Precision": "38,81%",
+    "Macro Recall": "46,05%",
+    "Macro F1": "37,84%",
+    "Weighted F1": "58,41%",
 }
 
 CLUSTER_INTERPRETATIONS = {
@@ -206,9 +215,8 @@ GLOSSARY = {
 
 def require_files() -> None:
     required = [
-        MODELS_DIR / "final_random_forest.joblib",
-        MODELS_DIR / "final_preprocessor.joblib",
-        MODELS_DIR / "final_classification_metadata.json",
+        MODELS_DIR / "final_research_model.joblib",
+        ROOT / "results" / "final_model_metadata.json",
         MODELS_DIR / "final_kmeans.joblib",
         MODELS_DIR / "final_clustering_preprocessor.joblib",
         MODELS_DIR / "final_clustering_metadata.json",
@@ -222,44 +230,43 @@ def require_files() -> None:
 @st.cache_resource(show_spinner=False)
 def load_artifacts() -> dict:
     require_files()
-    with (MODELS_DIR / "final_classification_metadata.json").open("r", encoding="utf-8") as file:
+    with (ROOT / "results" / "final_model_metadata.json").open("r", encoding="utf-8") as file:
         classification_metadata = json.load(file)
     with (MODELS_DIR / "final_clustering_metadata.json").open("r", encoding="utf-8") as file:
         clustering_metadata = json.load(file)
     with MAP_PATH.open("r", encoding="utf-8") as file:
         mappings = json.load(file)
 
-    classification_model = joblib.load(MODELS_DIR / "final_random_forest.joblib")
-    classification_preprocessor = joblib.load(MODELS_DIR / "final_preprocessor.joblib")
+    final_artifact = joblib.load(MODELS_DIR / "final_research_model.joblib")
+    classification_model = final_artifact["pipeline"]
+    classification_preprocessor = classification_model.named_steps["preprocessor"]
     clustering_model = joblib.load(MODELS_DIR / "final_kmeans.joblib")
     clustering_preprocessor = joblib.load(MODELS_DIR / "final_clustering_preprocessor.joblib")
 
-    if classification_metadata.get("feature_count_original") != 18:
+    if classification_metadata.get("encoded_feature_count") != 149:
         raise RuntimeError("Artefak classification bukan konfigurasi final 18 fitur")
-    if classification_metadata.get("feature_count_encoded") != 105:
-        raise RuntimeError("Artefak classification bukan konfigurasi final 105 fitur")
     if clustering_metadata.get("feature_count_original") != 18:
         raise RuntimeError("Artefak clustering bukan konfigurasi final 18 fitur")
     if clustering_metadata.get("feature_count_encoded") != 108:
         raise RuntimeError("Artefak clustering bukan konfigurasi final 108 fitur")
-    if len(classification_preprocessor.get_feature_names_out()) != 105:
-        raise RuntimeError("Preprocessor classification tidak menghasilkan 105 fitur")
+    if len(classification_preprocessor.get_feature_names_out()) != 149:
+        raise RuntimeError("Preprocessor classification tidak menghasilkan 149 fitur")
     if len(clustering_preprocessor.get_feature_names_out()) != 108:
         raise RuntimeError("Preprocessor clustering tidak menghasilkan 108 fitur")
-    if getattr(classification_model, "n_features_in_", None) != 105:
-        raise RuntimeError("Model classification tidak mengharapkan 105 fitur")
+    if list(classification_model.named_steps["model"].classes_) != [1, 2, 3]:
+        raise RuntimeError("Urutan kelas classification tidak sesuai kontrak [1, 2, 3]")
     if getattr(clustering_model, "n_features_in_", None) != 108:
         raise RuntimeError("Model clustering tidak mengharapkan 108 fitur")
 
-    classification_encoder = classification_preprocessor.named_transformers_["cat"].named_steps["encoder"]
+    classification_encoder = classification_preprocessor.named_transformers_["categorical"].named_steps["onehot"]
     clustering_encoder = clustering_preprocessor.named_transformers_["cat"].named_steps["encoder"]
     classification_category_options = {
         feature: list(values)
-        for feature, values in zip(CATEGORICAL_FEATURES, classification_encoder.categories_)
+        for feature, values in zip(CLASSIFICATION_CATEGORICAL_FEATURES, classification_encoder.categories_)
     }
     clustering_category_options = {
         feature: list(values)
-        for feature, values in zip(CATEGORICAL_FEATURES, clustering_encoder.categories_)
+        for feature, values in zip(CLUSTERING_CATEGORICAL_FEATURES, clustering_encoder.categories_)
     }
 
     if CLUSTERING_EVALUATION_PATH.exists():
@@ -277,6 +284,7 @@ def load_artifacts() -> dict:
         "classification_model": classification_model,
         "classification_preprocessor": classification_preprocessor,
         "classification_metadata": classification_metadata,
+        "classification_threshold": float(final_artifact["threshold"]),
         "clustering_model": clustering_model,
         "clustering_preprocessor": clustering_preprocessor,
         "clustering_metadata": clustering_metadata,
@@ -460,6 +468,23 @@ def input_form(artifacts: dict, prefix: str, category_options_key: str, submit_l
 
 def values_to_frame(values: dict) -> pd.DataFrame:
     return pd.DataFrame([{feature: values[feature] for feature in FEATURES}], columns=FEATURES)
+
+
+def classification_frame(values: dict) -> pd.DataFrame:
+    frame = values_to_frame(values)
+    for feature in CLASSIFICATION_CATEGORICAL_FEATURES:
+        frame[feature] = frame[feature].astype("string")
+    return frame[CLASSIFICATION_FEATURES]
+
+
+def final_classification_prediction(model, frame: pd.DataFrame, threshold: float) -> tuple[str, np.ndarray]:
+    probabilities = model.predict_proba(frame)[0]
+    class_indices = {int(code): index for index, code in enumerate(model.named_steps["model"].classes_)}
+    if probabilities[class_indices[1]] >= threshold:
+        prediction_code = 1
+    else:
+        prediction_code = max((2, 3), key=lambda code: probabilities[class_indices[code]])
+    return CLASS_LABELS[prediction_code], probabilities
 
 
 def navigate_to(page: str) -> None:
@@ -655,13 +680,13 @@ def render_about_data(artifacts: dict) -> None:
     prep_left, prep_right = st.columns(2)
     with prep_left.container(border=True):
         st.subheader("Classification")
-        st.markdown("- Numerik: Median Imputation → StandardScaler\n- Kategorikal: Most Frequent Imputation → One-Hot Encoding")
-        st.caption("18 fitur → 105 encoded features. Preprocessor dipelajari dari 8.000 data training.")
+        st.markdown("- Numerik: Median Imputation\n- Kategorikal: Most Frequent Imputation → One-Hot Encoding")
+        st.caption("18 fitur → 149 encoded features. Final preprocessor dipelajari dari development 2021–2024.")
     with prep_right.container(border=True):
         st.subheader("Clustering")
         st.markdown("- Numerik: imputation bila diperlukan → StandardScaler\n- Kategorikal: Most Frequent Imputation → One-Hot Encoding")
         st.caption("18 fitur → 108 encoded features. Preprocessor dipelajari dari 10.000 record clustering.")
-    st.write("Imputation menangani nilai kosong. StandardScaler menyetarakan skala numerik. One-Hot Encoding mengubah kategori menjadi representasi numerik.")
+    st.write("Imputation menangani nilai kosong. One-Hot Encoding mengubah kategori menjadi representasi numerik.")
 
     st.subheader("Mengapa data ini digunakan?")
     st.write("Fitur yang dipilih menggambarkan kendaraan, jalan, persimpangan, kondisi lingkungan, dan waktu kejadian. "
@@ -772,7 +797,7 @@ def render_dataset_dashboard(artifacts: dict) -> None:
         st.dataframe(results["feature_comparison"], hide_index=True, width="stretch")
 
     st.subheader("🔵 Hasil classification — evaluasi model")
-    st.caption("Metrik berikut adalah evaluasi model final Random Forest pada test set 2.000 record.")
+    st.caption("Metrik berikut adalah evaluasi final candidate Random Forest pada final holdout 2025 (101.525 record).")
     metric_columns = st.columns(5)
     for column, (label, value) in zip(metric_columns, CLASSIFICATION_METRICS.items()):
         with column.container(border=True):
@@ -795,7 +820,7 @@ def render_classification(artifacts: dict) -> None:
     render_pipeline(["Data kecelakaan", "18 fitur", "Preprocessing", "Random Forest", "Prediksi severity"])
     with st.expander("🌳 Apa itu Random Forest?", icon=":material/forest:"):
         st.write("Random Forest menggabungkan banyak decision tree. Setiap tree memberikan keputusan, kemudian hasil dari banyak tree digabungkan menjadi prediksi akhir.")
-        st.markdown("- Model: **Random Forest**\n- Trees: **300**\n- max_depth: **15**\n- class_weight: **balanced**\n- random_state: **42**\n- Fitur awal: **18**\n- Setelah preprocessing dan One-Hot Encoding: **105**")
+        st.markdown("- Model: **Random Forest**\n- Trees: **100**\n- max_depth: **12**\n- min_samples_leaf: **20**\n- class_weight: **balanced**\n- random_state: **42**\n- Fitur awal: **18**\n- Setelah preprocessing dan One-Hot Encoding: **149**")
         st.caption("Model sudah dilatih menggunakan data penelitian. Saat data baru dimasukkan, aplikasi hanya menjalankan inference dan tidak melakukan training ulang.")
 
     st.selectbox(
@@ -812,11 +837,10 @@ def render_classification(artifacts: dict) -> None:
         st.caption("Tip: arahkan kursor ke ikon bantuan (?) pada setiap input untuk membaca arti fitur.")
         return
 
-    frame = values_to_frame(values)
-    encoded = artifacts["classification_preprocessor"].transform(frame)
     model = artifacts["classification_model"]
-    prediction = model.predict(encoded)[0]
-    probabilities = model.predict_proba(encoded)[0] if hasattr(model, "predict_proba") else None
+    threshold = artifacts["classification_threshold"]
+    frame = classification_frame(values)
+    prediction, probabilities = final_classification_prediction(model, frame, threshold)
 
     st.subheader("🔵 Hasil classification")
     st.markdown(f"<div class='severity-card'><div class='label'>Prediksi tingkat keparahan</div><div class='value'>{prediction}</div></div>", unsafe_allow_html=True)
@@ -824,20 +848,21 @@ def render_classification(artifacts: dict) -> None:
     if probabilities is not None:
         st.subheader("Probability")
         probability_columns = st.columns(len(model.classes_))
-        for column, label, probability in zip(probability_columns, model.classes_, probabilities):
+        for column, label_code, probability in zip(probability_columns, model.named_steps["model"].classes_, probabilities):
+            label = CLASS_LABELS[int(label_code)]
             with column:
-                st.metric(str(label), f"{probability:.2%}")
+                st.metric(label, f"{probability:.2%}")
                 st.progress(float(probability), text=f"{label}: {probability:.2%}")
         probability_table = pd.DataFrame(
-            {"Kelas": [str(label) for label in model.classes_], "Probability": probabilities}
+            {"Kelas": [CLASS_LABELS[int(label)] for label in model.named_steps["model"].classes_], "Probability": probabilities}
         ).set_index("Kelas")
         st.bar_chart(probability_table, y="Probability", x_label="Kelas", y_label="Probability", height=250)
-        st.caption("Probability menunjukkan tingkat keyakinan relatif model terhadap tiap kelas berdasarkan pola yang dipelajari. Probability bukan jaminan hasil pasti.")
-        if float(np.max(probabilities)) == 1.0:
-            st.info(f"Model memberikan probabilitas 1,00 untuk kelas {prediction} pada input ini.", icon=":material/info:")
+        st.caption("Probabilitas prediksi model menunjukkan skor relatif untuk tiap kelas, bukan kepastian atau jaminan hasil pasti.")
+        st.metric("Threshold Fatal", f"{threshold:.2f}")
+        st.info("Jika probabilitas Fatal mencapai threshold, hasil diputuskan sebagai Fatal. Jika tidak, kelas Serious/Slight dengan probabilitas terbesar dipilih.", icon=":material/info:")
 
     with st.expander("Bagaimana hasil ini diperoleh?", icon=":material/account_tree:"):
-        st.write("18 fitur input → preprocessing → 105 fitur hasil encoding → Random Forest → prediksi collision_severity")
+        st.write("18 fitur input → preprocessing → 149 fitur hasil encoding → Random Forest → threshold Fatal 0,50 → prediksi collision_severity")
     st.warning("Hasil ini merupakan prediksi model machine learning berdasarkan karakteristik input dan bukan diagnosis atau penilaian resmi tingkat keparahan kecelakaan.", icon=":material/warning:")
 
 
@@ -992,10 +1017,10 @@ def render_about(artifacts: dict) -> None:
             st.metric(label, value)
     feature_left, feature_right = st.columns(2)
     with feature_left.container(border=True):
-        st.markdown("**Numerik (4)**")
+        st.markdown("**Numerik (1)**")
         st.markdown("\n".join(f"- {feature}" for feature in NUMERIC_FEATURES))
     with feature_right.container(border=True):
-        st.markdown("**Kategorikal (14)**")
+        st.markdown("**Kategorikal (17)**")
         st.markdown("\n".join(f"- {feature}" for feature in CATEGORICAL_FEATURES))
     st.caption("Target classification: collision_severity. Target tidak digunakan sebagai input clustering.")
 
@@ -1004,9 +1029,9 @@ def render_about(artifacts: dict) -> None:
     prep_columns = st.columns(2)
     with prep_columns[0].container(border=True):
         st.subheader("Classification")
-        st.write("Numerik: Median Imputation → StandardScaler")
+        st.write("Numerik: Median Imputation")
         st.write("Kategorikal: Most Frequent Imputation → One-Hot Encoding")
-        st.caption("18 → 105 encoded features. Preprocessor fit hanya pada 8.000 data training; test hanya ditransform.")
+        st.caption("18 → 149 encoded features. Preprocessor fit pada development 2021–2024; holdout 2025 hanya ditransform.")
     with prep_columns[1].container(border=True):
         st.subheader("Clustering")
         st.write("Numerik: imputation bila diperlukan → StandardScaler")
@@ -1018,7 +1043,7 @@ def render_about(artifacts: dict) -> None:
     with st.container(border=True):
         st.write("Random Forest adalah supervised learning yang menggabungkan banyak decision tree. "
                  "Setiap tree memberi keputusan dan hasilnya digabungkan menjadi prediksi akhir.")
-        st.markdown("- Model: **Random Forest**\n- 300 trees\n- max_depth = 15\n- class_weight = balanced\n- random_state = 42\n- Output: Fatal / Serious / Slight")
+        st.markdown("- Model: **Random Forest**\n- 100 trees\n- max_depth = 12\n- min_samples_leaf = 20\n- class_weight = balanced\n- random_state = 42\n- Output: Fatal / Serious / Slight\n- Fatal threshold = 0,50")
         st.caption("Model final sudah dilatih sebelumnya. Aplikasi hanya menjalankan inference, tanpa retraining atau tuning.")
     st.subheader("Evaluasi classification")
     metric_columns = st.columns(5)
