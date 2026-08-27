@@ -4,9 +4,36 @@
 
 Halaman classification pada `app.py` memuat `models/final_research_model.joblib`. Artifact berisi pipeline preprocessing dan Random Forest final candidate Phase 6. Aplikasi tidak melakukan fit, retraining, tuning, atau feature selection saat startup maupun inference.
 
-Ringkasan UI membedakan dataset final research (513.801 baris, 2021–2025,
-development 2021–2024, holdout 2025) dari dashboard clustering legacy 10.000
-record. Dashboard legacy tidak menjadi sumber metrik classification final.
+Ringkasan UI dan Dashboard Dataset membedakan dataset raw penelitian (513.801
+baris × 44 kolom, 2021–2025) dari analisis clustering legacy C3–C4 yang
+menggunakan 10.000 record. Dashboard legacy tidak menjadi sumber metrik
+classification final.
+
+## Kontrak tampilan dataset
+
+Dashboard menampilkan hierarki data penelitian berikut:
+
+- Raw dataset: 513.801 record, 44 kolom, periode 2021–2025.
+- Development: 412.276 record pada 2021–2024.
+- Training: 311.349 record pada 2021–2023.
+- Validation: 100.927 record pada 2024.
+- Final holdout: 101.525 record pada 2025.
+
+Training digunakan untuk pembelajaran; validation untuk pemilihan strategi,
+model, dan threshold; setelah keputusan final model di-refit pada development.
+Tahun 2025 dipertahankan sebagai final holdout dan tidak digunakan untuk
+fitting, tuning, feature selection, threshold search, atau model selection.
+
+Untuk mengurangi loading yang tidak diperlukan, halaman Beranda, Dashboard
+Dataset, Tentang Data, dan Panduan Penggunaan tidak memuat joblib model.
+Artifact dimuat melalui cache hanya ketika halaman Prediksi Severity, Analisis
+Cluster, Kamus Fitur, atau Tentang Model membutuhkannya. Aplikasi tetap tidak
+membaca raw CSV untuk inference dan tidak melakukan training saat startup.
+
+Section `Hasil Clustering — Analisis Legacy C3–C4` memisahkan hasil C3–C4
+secara visual dan naratif. Angka 10.000 hanya merujuk pada 2.000 record per
+tahun untuk clustering legacy, bukan jumlah dataset penelitian atau data
+classification.
 
 - Input: 18 fitur
 - Encoded output: 149 fitur
@@ -37,7 +64,8 @@ Runtime 1.8.0 sebelumnya masih dapat melakukan inference tetapi menampilkan `Inc
 
 - `phase8_application_consistency.py`: PASS; prediction aplikasi dan pipeline langsung sama pada sample development deterministik, termasuk probabilitas dalam toleransi `1e-12`.
 - `phase8_streamlit_smoke_test.py`: PASS; startup, halaman classification, 18 input widget, submit prediction, probability output, dan threshold output berhasil.
-- Compile `app.py` dan kedua test script: PASS.
+- `phase8_2_ui_consistency.py`: PASS; kontrak angka/label dataset, konteks 10.000, dan render seluruh 8 halaman diperiksa.
+- Compile `app.py` dan ketiga test script: PASS.
 - Tahun 2025 tidak dipakai untuk fitting atau pemilihan model baru.
 
 ## Batasan

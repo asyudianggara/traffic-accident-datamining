@@ -1,5 +1,6 @@
 {
   "startup": "PASS",
+  "dashboard_dataset_page": "PASS",
   "classification_page": "PASS",
   "input_feature_widgets": 18,
   "prediction_submission": "PASS",

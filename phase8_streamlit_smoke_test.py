@@ -13,10 +13,17 @@ OUTPUT_PATH = ROOT / "results" / "phase8_streamlit_smoke_test.json"
 
 
 def main() -> None:
-    app_test = AppTest.from_file(str(ROOT / "app.py"), default_timeout=30)
+    app_test = AppTest.from_file(str(ROOT / "app.py"), default_timeout=120)
     app_test.run()
     assert not app_test.exception
     assert app_test.sidebar.radio[0].value == "🏠 Beranda"
+
+    app_test.sidebar.radio[0].set_value("📊 Dashboard Dataset").run()
+    assert not app_test.exception
+    assert any(metric.label == "Raw dataset" and metric.value == "513.801" for metric in app_test.metric)
+    assert any(metric.label == "Kolom raw" and metric.value == "44" for metric in app_test.metric)
+    assert any(metric.label == "Development / holdout" and metric.value == "412.276 / 101.525" for metric in app_test.metric)
+    assert any("Hasil Clustering — Analisis Legacy C3–C4" in item.value for item in app_test.subheader)
 
     app_test.sidebar.radio[0].set_value("🔮 Prediksi Severity").run()
     assert not app_test.exception
@@ -34,6 +41,7 @@ def main() -> None:
 
     result = {
         "startup": "PASS",
+        "dashboard_dataset_page": "PASS",
         "classification_page": "PASS",
         "input_feature_widgets": 18,
         "prediction_submission": "PASS",

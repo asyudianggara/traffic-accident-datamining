@@ -1,0 +1,29 @@
+{
+  "status": "PASS",
+  "static_checks": {
+    "dataset_raw": "PASS",
+    "data_split": "PASS",
+    "classification_18_to_149": "PASS",
+    "clustering_legacy_10k_labeled": "PASS",
+    "no_ambiguous_10k_dataset_label": "PASS"
+  },
+  "pages": {
+    "🏠 Beranda": "PASS",
+    "📊 Dashboard Dataset": "PASS",
+    "📊 Tentang Data": "PASS",
+    "🔮 Prediksi Severity": "PASS",
+    "🧩 Analisis Cluster": "PASS",
+    "📖 Panduan Penggunaan": "PASS",
+    "📚 Kamus Fitur": "PASS",
+    "📊 Tentang Model": "PASS"
+  },
+  "dataset_raw_records": 513801,
+  "development_records": 412276,
+  "training_records": 311349,
+  "validation_records": 100927,
+  "holdout_2025_records": 101525,
+  "final_input_features": 18,
+  "final_encoded_features": 149,
+  "legacy_clustering_records": 10000,
+  "legacy_clustering_label": "Clustering legacy C3–C4"
+}

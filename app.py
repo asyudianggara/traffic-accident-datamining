@@ -109,6 +109,12 @@ CLASSIFICATION_METRICS = {
     "Weighted F1": "58,41%",
 }
 
+CLASSIFICATION_FATAL_METRICS = {
+    "Fatal Precision": "5,75%",
+    "Fatal Recall": "32,97%",
+    "Fatal F1": "9,80%",
+}
+
 CLUSTER_INTERPRETATIONS = {
     0: {
         "title": "Pola dominan wilayah rural",
@@ -514,6 +520,34 @@ def render_pipeline(steps: list[str]) -> None:
         st.markdown(" → ".join(f"**{step}**" for step in steps))
 
 
+def render_research_data_split() -> None:
+    st.subheader("Pembagian Data Penelitian")
+    split_columns = st.columns(4)
+    split_values = [
+        ("Training", "311.349", "2021–2023"),
+        ("Validation", "100.927", "2024"),
+        ("Development", "412.276", "2021–2024"),
+        ("Final holdout", "101.525", "2025"),
+    ]
+    for column, (label, value, period) in zip(split_columns, split_values):
+        with column.container(border=True):
+            st.metric(label, value)
+            st.caption(period)
+    st.caption(
+        "Training digunakan untuk pembelajaran model. Validation digunakan untuk pemilihan strategi, model, dan threshold. "
+        "Setelah keputusan final, model di-refit pada development 2021–2024. Tahun 2025 disimpan sebagai final holdout "
+        "dan tidak digunakan untuk fitting, tuning, feature selection, threshold search, atau model selection."
+    )
+
+
+def render_fatal_metrics() -> None:
+    st.caption("Metrik kelas Fatal pada final holdout 2025")
+    metric_columns = st.columns(3)
+    for column, (label, value) in zip(metric_columns, CLASSIFICATION_FATAL_METRICS.items()):
+        with column.container(border=True):
+            st.metric(label, value)
+
+
 def render_model_cards() -> None:
     st.subheader("🤖 Model machine learning")
     model_columns = st.columns(3)
@@ -628,7 +662,7 @@ def render_about_data(artifacts: dict) -> None:
         "Sumber dan cakupan penelitian",
         "Data apa yang digunakan project ini?",
         "Project ini menggunakan seluruh dataset final research STATS19 periode 2021–2025. "
-        "Dashboard clustering yang tersedia tetap merupakan hasil historis dari baseline legacy 10.000 record.",
+        "Dashboard clustering yang tersedia tetap merupakan hasil historis legacy C3–C4 dari 10.000 record.",
     )
 
     metric_columns = st.columns(4)
@@ -643,9 +677,11 @@ def render_about_data(artifacts: dict) -> None:
     with st.container(border=True):
         st.subheader("Sumber data")
         st.write("Sumber data: **STATS19** — dataset data kecelakaan lalu lintas jalan.")
-        st.write("Dataset final research: **513.801 record**. Baseline legacy menggunakan **10.000 record**, yaitu 2.000 record per tahun.")
+        st.write("Dataset raw penelitian: **513.801 record × 44 kolom**. Clustering legacy C3–C4 menggunakan **10.000 record**, yaitu 2.000 record per tahun.")
         st.caption("Classification final memakai development 2021–2024 dan final holdout 2025. Dashboard clustering tetap menampilkan hasil legacy 10K.")
         st.caption("URL resmi STATS19 belum disimpan sebagai referensi project. Tambahkan URL resmi jika diperlukan untuk laporan akademik.")
+
+    render_research_data_split()
 
     st.subheader("18 fitur yang digunakan")
     numeric, categorical = st.columns(2)
@@ -665,7 +701,7 @@ def render_about_data(artifacts: dict) -> None:
         st.markdown("- Training/eksperimen: **311.349 record (2021–2023)**\n- Validation: **100.927 record (2024)**\n- Refit development: **412.276 record (2021–2024)**\n- Final holdout: **101.525 record (2025)**\n- Tujuan: memprediksi kelas pada data baru")
     with clustering.container(border=True):
         st.subheader("🟠 Clustering")
-        st.write("Menggunakan baseline historis **10.000 record** untuk menemukan kelompok karakteristik.")
+        st.write("Clustering legacy C3–C4 menggunakan **10.000 record** untuk menemukan kelompok karakteristik.")
         st.markdown("- Tidak memakai collision_severity\n- Tidak memakai number_of_casualties\n- Tidak memakai identifier atau kode administratif")
 
     st.subheader("Data yang sengaja tidak digunakan")
@@ -685,7 +721,7 @@ def render_about_data(artifacts: dict) -> None:
     with prep_right.container(border=True):
         st.subheader("Clustering")
         st.markdown("- Numerik: imputation bila diperlukan → StandardScaler\n- Kategorikal: Most Frequent Imputation → One-Hot Encoding")
-        st.caption("18 fitur → 108 encoded features. Preprocessor dipelajari dari baseline legacy 10.000 record clustering.")
+        st.caption("18 fitur → 108 encoded features. Preprocessor dipelajari dari clustering legacy C3–C4 menggunakan 10.000 record.")
     st.write("Imputation menangani nilai kosong. One-Hot Encoding mengubah kategori menjadi representasi numerik.")
 
     st.subheader("Mengapa data ini digunakan?")
@@ -699,8 +735,8 @@ def render_dataset_dashboard(artifacts: dict) -> None:
     render_section_banner(
         "data",
         "Hasil analisis data penelitian",
-        "Dashboard historis C3–C4",
-        "Bagian ini menampilkan hasil analisis terhadap 10.000 record penelitian yang telah diproses sebelumnya. "
+        "Dashboard dataset penelitian",
+        "Ringkasan berikut menggunakan dataset final research. Bagian clustering di bawah dipisahkan sebagai analisis legacy C3–C4 dengan 10.000 record. "
         "Dashboard ini tidak melakukan training ulang dan bukan halaman inference.",
     )
     results = load_dataset_results()
@@ -716,12 +752,22 @@ def render_dataset_dashboard(artifacts: dict) -> None:
 
     st.subheader("Ringkasan dataset")
     with st.container(horizontal=True):
-        st.metric("Sample", "10.000", border=True)
+        st.metric("Raw dataset", "513.801", border=True)
+        st.metric("Kolom raw", "44", border=True)
         st.metric("Periode", "2021–2025", border=True)
-        st.metric("Fitur input", "18", border=True)
-        st.metric("Jumlah cluster", "2", border=True)
+        st.metric("Fitur final", "18", border=True)
+        st.metric("Development / holdout", "412.276 / 101.525", border=True)
 
-    st.subheader("🟠 Hasil clustering")
+    st.info(
+        "Split classification final: train 2021–2023 = 311.349, validation 2024 = 100.927, "
+        "refit development 2021–2024 = 412.276, dan final holdout 2025 = 101.525. "
+        "Hasil clustering pada bagian berikut berasal dari pipeline legacy C3–C4 dengan 10.000 record dan bukan seluruh raw dataset.",
+        icon=":material/info:",
+    )
+
+    render_research_data_split()
+
+    st.subheader("🟠 Hasil Clustering — Analisis Legacy C3–C4")
     st.write("Bagian ini merangkum ukuran, profil, evaluasi k, dan visualisasi cluster. Semua hasil berasal dari output C3–C4 yang sudah tersedia.")
     st.subheader("Distribusi cluster")
     distribution_left, distribution_right = st.columns(2)
@@ -802,6 +848,7 @@ def render_dataset_dashboard(artifacts: dict) -> None:
     for column, (label, value) in zip(metric_columns, CLASSIFICATION_METRICS.items()):
         with column.container(border=True):
             st.metric(label, value)
+    render_fatal_metrics()
     st.caption("Accuracy tidak sebaiknya dibaca sendirian karena performa model antar kelas berbeda. Classification dan clustering memiliki tujuan berbeda.")
     st.info("Report dan confusion matrix CSV yang tersimpan tidak ditampilkan karena nilainya tidak cocok dengan metadata artefak classification final 18 fitur. Dashboard hanya menampilkan metrik final yang tercatat pada metadata artefak.", icon=":material/info:")
     render_evaluation_explanations()
@@ -821,7 +868,7 @@ def render_classification(artifacts: dict) -> None:
     with st.expander("🌳 Apa itu Random Forest?", icon=":material/forest:"):
         st.write("Random Forest menggabungkan banyak decision tree. Setiap tree memberikan keputusan, kemudian hasil dari banyak tree digabungkan menjadi prediksi akhir.")
         st.markdown("- Model: **Random Forest**\n- Trees: **100**\n- max_depth: **12**\n- min_samples_leaf: **20**\n- class_weight: **balanced**\n- random_state: **42**\n- Fitur awal: **18**\n- Setelah preprocessing dan One-Hot Encoding: **149**")
-        st.caption("Model sudah dilatih menggunakan data penelitian. Saat data baru dimasukkan, aplikasi hanya menjalankan inference dan tidak melakukan training ulang.")
+        st.caption("Artifact `models/final_research_model.joblib` adalah final research model yang sudah dilatih. Evaluasinya menggunakan final holdout 2025 sebanyak 101.525 record; saat data baru dimasukkan, aplikasi hanya menjalankan inference dan tidak melakukan training ulang.")
 
     st.selectbox(
         "Gunakan contoh skenario",
@@ -880,7 +927,7 @@ def render_clustering(artifacts: dict) -> None:
     with st.expander("📍 Apa itu K-Means?", icon=":material/hub:"):
         st.write("K-Means membagi data menjadi sejumlah kelompok berdasarkan kedekatan karakteristik terhadap pusat kelompok yang disebut centroid.")
         st.markdown("- k = **2** berarti model membentuk dua kelompok\n- Setiap input ditempatkan pada cluster yang paling dekat\n- Distance to centroid mengukur kedekatan input dengan pusat cluster\n- Jarak yang lebih kecil berarti karakteristik input lebih dekat dengan centroid")
-        st.caption("Konfigurasi aktual: K-Means, k=2, n_init=10, random_state=42, 10.000 record, 18 fitur awal, 108 fitur encoded.")
+        st.caption("Konfigurasi aktual: K-Means, k=2, n_init=10, random_state=42, 10.000 record legacy C3–C4, 18 fitur awal, 108 fitur encoded.")
 
     values, submitted = input_form(artifacts, "clustering", "clustering_category_options", "Temukan Cluster")
     if not submitted:
@@ -920,7 +967,7 @@ def render_guide() -> None:
     with st.expander("Cara menggunakan Tentang Data", icon=":material/database:"):
         st.markdown("1. Buka halaman **Tentang Data**.\n2. Baca sumber STATS19, periode, sampling, target, dan 18 fitur.\n3. Gunakan bagian pemisahan analisis untuk membedakan classification dan clustering.")
     with st.expander("Cara menggunakan Dashboard Dataset", icon=":material/dashboard:"):
-        st.markdown("1. Buka halaman **Dashboard Dataset**.\n2. Baca ringkasan sample dan distribusi cluster.\n3. Bandingkan profil Cluster 0 dan Cluster 1.\n4. Gunakan tabel dan grafik evaluasi K-Means untuk memahami alasan pemilihan k=2.\n5. Baca visualisasi PCA sebagai bantuan visual saja; PCA tidak digunakan untuk membentuk cluster.")
+        st.markdown("1. Buka halaman **Dashboard Dataset**.\n2. Baca ringkasan dataset penelitian dan pembagian data.\n3. Perhatikan bahwa analisis cluster adalah legacy C3–C4 dengan 10.000 record.\n4. Bandingkan profil Cluster 0 dan Cluster 1.\n5. Gunakan tabel dan grafik evaluasi K-Means untuk memahami alasan pemilihan k=2.\n6. Baca visualisasi PCA sebagai bantuan visual saja; PCA tidak digunakan untuk membentuk cluster.")
     with st.expander("Cara menggunakan Prediksi Severity", icon=":material/analytics:"):
         st.markdown("1. Buka halaman **Prediksi Severity**.\n2. Isi informasi kendaraan, jalan, kondisi lingkungan, dan waktu kejadian.\n3. Baca hasil kelas Fatal, Serious, atau Slight.\n4. Gunakan probabilitas sebagai keluaran model, bukan kepastian.\n5. Perhatikan disclaimer sebelum menarik kesimpulan.")
     with st.expander("Cara menggunakan Clustering", icon=":material/hub:"):
@@ -930,7 +977,7 @@ def render_guide() -> None:
         st.markdown("- **Prediction**: kelas yang dipilih Random Forest.\n- **Probability**: keluaran model untuk masing-masing kelas; bukan jaminan kebenaran.\n- **Cluster**: kelompok karakteristik yang paling dekat dengan input.\n- **Jarak centroid**: kedekatan input dengan pusat cluster; bukan probabilitas.")
     with st.container(border=True):
         st.subheader("Hal yang perlu diperhatikan")
-        st.markdown("- Model bukan pengganti penilaian resmi.\n- Hasil bergantung pada karakteristik input.\n- Model dipelajari dari sample data.\n- Classification dan clustering memiliki tujuan berbeda.\n- Clustering tidak menggunakan collision_severity sebagai input.")
+        st.markdown("- Model bukan pengganti penilaian resmi.\n- Hasil bergantung pada karakteristik input.\n- Model final dipelajari dari data penelitian; clustering yang ditampilkan pada dashboard berasal dari legacy C3–C4.\n- Classification dan clustering memiliki tujuan berbeda.\n- Clustering tidak menggunakan collision_severity sebagai input.")
     st.subheader("Glosarium machine learning")
     for term, definition in GLOSSARY.items():
         with st.expander(term):
@@ -1004,7 +1051,7 @@ def render_about(artifacts: dict) -> None:
     with st.container(border=True):
         st.write("Sumber: **STATS19** · Dataset: data kecelakaan lalu lintas jalan · Periode: **2021–2025**")
         st.write("Dataset final research: **513.801 record** pada periode 2021–2025.")
-        st.caption("Baseline clustering legacy menggunakan 10.000 record. URL resmi STATS19 belum tersedia di project dan tidak digantikan dengan URL buatan.")
+        st.caption("Clustering legacy C3–C4 menggunakan 10.000 record. URL resmi STATS19 belum tersedia di project dan tidak digantikan dengan URL buatan.")
 
     st.subheader("3. Dataset dan 18 fitur")
     data_metrics = st.columns(4)
@@ -1036,7 +1083,7 @@ def render_about(artifacts: dict) -> None:
         st.subheader("Clustering")
         st.write("Numerik: imputation bila diperlukan → StandardScaler")
         st.write("Kategorikal: Most Frequent Imputation → One-Hot Encoding")
-        st.caption("18 → 108 encoded features. Preprocessor fit pada baseline legacy 10.000 record clustering.")
+        st.caption("18 → 108 encoded features. Preprocessor fit pada clustering legacy C3–C4 menggunakan 10.000 record.")
     st.success("Data leakage check: test set tidak dipakai untuk fitting preprocessor classification.", icon=":material/check_circle:")
 
     st.subheader("5. Classification — Random Forest")
@@ -1046,16 +1093,18 @@ def render_about(artifacts: dict) -> None:
         st.markdown("- Model: **Random Forest**\n- 100 trees\n- max_depth = 12\n- min_samples_leaf = 20\n- class_weight = balanced\n- random_state = 42\n- Output: Fatal / Serious / Slight\n- Fatal threshold = 0,50")
         st.caption("Model final sudah dilatih sebelumnya. Aplikasi hanya menjalankan inference, tanpa retraining atau tuning.")
     st.subheader("Evaluasi classification")
+    st.caption("Metrik berikut berasal dari evaluasi final research model pada final holdout 2025 (101.525 record).")
     metric_columns = st.columns(5)
     for column, (label, value) in zip(metric_columns, CLASSIFICATION_METRICS.items()):
         with column.container(border=True):
             st.metric(label, value)
+    render_fatal_metrics()
     render_evaluation_explanations()
 
     st.subheader("6. Clustering — K-Means")
     with st.container(border=True):
         st.write("K-Means adalah unsupervised learning yang membagi data menjadi kelompok berdasarkan kedekatan karakteristik terhadap centroid.")
-        st.markdown("- k = 2\n- n_init = 10\n- random_state = 42\n- Record legacy: 10.000\n- Output: Cluster 0 / Cluster 1")
+        st.markdown("- k = 2\n- n_init = 10\n- random_state = 42\n- Record clustering legacy C3–C4: 10.000\n- Output: Cluster 0 / Cluster 1")
         st.warning("Cluster bukan severity. Cluster tidak memakai collision_severity, number_of_casualties, identifier, atau kode administratif.", icon=":material/warning:")
 
     st.subheader("7. Evaluasi jumlah cluster")
@@ -1104,13 +1153,6 @@ def main() -> None:
         initial_sidebar_state="expanded",
     )
     inject_styles()
-    try:
-        artifacts = load_artifacts()
-    except Exception as error:
-        st.error("Artefak final tidak dapat dimuat.", icon=":material/error:")
-        st.exception(error)
-        st.stop()
-
     st.sidebar.title("Traffic Accident Analysis")
     st.sidebar.caption("Classification & Clustering")
     st.sidebar.caption("Model Data Mining")
@@ -1119,6 +1161,21 @@ def main() -> None:
     page = st.sidebar.radio("Navigasi", NAV_ITEMS, key="page_nav")
     st.sidebar.markdown("---")
     st.sidebar.caption("Inference-only app · tidak ada retraining")
+
+    artifact_pages = {
+        "🔮 Prediksi Severity",
+        "🧩 Analisis Cluster",
+        "📚 Kamus Fitur",
+        "📊 Tentang Model",
+    }
+    artifacts = {}
+    if page in artifact_pages:
+        try:
+            artifacts = load_artifacts()
+        except Exception as error:
+            st.error("Artefak final tidak dapat dimuat.", icon=":material/error:")
+            st.exception(error)
+            st.stop()
 
     if page == "🏠 Beranda":
         render_home()
