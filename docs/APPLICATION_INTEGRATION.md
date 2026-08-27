@@ -4,6 +4,10 @@
 
 Halaman classification pada `app.py` memuat `models/final_research_model.joblib`. Artifact berisi pipeline preprocessing dan Random Forest final candidate Phase 6. Aplikasi tidak melakukan fit, retraining, tuning, atau feature selection saat startup maupun inference.
 
+Ringkasan UI membedakan dataset final research (513.801 baris, 2021–2025,
+development 2021–2024, holdout 2025) dari dashboard clustering legacy 10.000
+record. Dashboard legacy tidak menjadi sumber metrik classification final.
+
 - Input: 18 fitur
 - Encoded output: 149 fitur
 - Class order internal: `[1, 2, 3]`

@@ -577,8 +577,8 @@ def render_home() -> None:
     cards = st.columns(2)
     with cards[0].container(border=True, height="stretch"):
         st.subheader("📊 Data penelitian")
-        st.write("10.000 record sampel STATS19 periode 2021–2025 untuk analisis dan evaluasi model.")
-        st.caption("2.000 record per tahun · 18 fitur input")
+        st.write("Dataset final research STATS19 berisi 513.801 record periode 2021–2025.")
+        st.caption("Development 412.276 · final holdout 2025: 101.525 · 18 fitur input")
         st.button("Dashboard Dataset", key="home_dataset", on_click=navigate_to, args=("📊 Dashboard Dataset",), width="stretch")
     with cards[1].container(border=True, height="stretch"):
         st.subheader("🔮 Data baru / inference")
@@ -627,15 +627,15 @@ def render_about_data(artifacts: dict) -> None:
         "data",
         "Sumber dan cakupan penelitian",
         "Data apa yang digunakan project ini?",
-        "Project ini menggunakan data kecelakaan lalu lintas dari STATS19 untuk periode 2021–2025. "
-        "Penelitian memakai sampel 10.000 record, dengan 2.000 record dari masing-masing tahun.",
+        "Project ini menggunakan seluruh dataset final research STATS19 periode 2021–2025. "
+        "Dashboard clustering yang tersedia tetap merupakan hasil historis dari baseline legacy 10.000 record.",
     )
 
     metric_columns = st.columns(4)
     for column, label, value in zip(
         metric_columns,
-        ["Record penelitian", "Periode", "Fitur input", "Pendekatan ML"],
-        ["10.000", "2021–2025", "18", "2"],
+        ["Raw dataset", "Development / holdout", "Fitur input", "Pendekatan ML"],
+        ["513.801", "412.276 / 101.525", "18", "2"],
     ):
         with column.container(border=True):
             st.metric(label, value)
@@ -643,29 +643,29 @@ def render_about_data(artifacts: dict) -> None:
     with st.container(border=True):
         st.subheader("Sumber data")
         st.write("Sumber data: **STATS19** — dataset data kecelakaan lalu lintas jalan.")
-        st.write("Sampling: **2.000 record per tahun × 5 tahun = 10.000 record penelitian**.")
-        st.caption("10.000 record merupakan sampel penelitian dalam project ini, bukan keseluruhan populasi data STATS19.")
+        st.write("Dataset final research: **513.801 record**. Baseline legacy menggunakan **10.000 record**, yaitu 2.000 record per tahun.")
+        st.caption("Classification final memakai development 2021–2024 dan final holdout 2025. Dashboard clustering tetap menampilkan hasil legacy 10K.")
         st.caption("URL resmi STATS19 belum disimpan sebagai referensi project. Tambahkan URL resmi jika diperlukan untuk laporan akademik.")
 
     st.subheader("18 fitur yang digunakan")
     numeric, categorical = st.columns(2)
     with numeric.container(border=True):
-        st.markdown("**Fitur numerik (4)**")
+        st.markdown(f"**Fitur numerik ({len(NUMERIC_FEATURES)})**")
         st.markdown("\n".join(f"- {feature}" for feature in NUMERIC_FEATURES))
     with categorical.container(border=True):
-        st.markdown("**Fitur kategorikal (14)**")
+        st.markdown(f"**Fitur kategorikal ({len(CATEGORICAL_FEATURES)})**")
         st.markdown("\n".join(f"- {feature}" for feature in CATEGORICAL_FEATURES))
-    st.caption("4 fitur numerik + 14 fitur kategorikal = 18 fitur input.")
+    st.caption(f"{len(NUMERIC_FEATURES)} fitur numerik + {len(CATEGORICAL_FEATURES)} fitur kategorikal = 18 fitur input sesuai pipeline final.")
 
     st.subheader("Pemisahan classification dan clustering")
     classification, clustering = st.columns(2)
     with classification.container(border=True):
         st.subheader("🔵 Classification")
         st.write("Target: collision_severity dengan kelas Fatal, Serious, dan Slight.")
-        st.markdown("- Training: **8.000 record**\n- Test: **2.000 record**\n- Tujuan: memprediksi kelas pada data baru")
+        st.markdown("- Training/eksperimen: **311.349 record (2021–2023)**\n- Validation: **100.927 record (2024)**\n- Refit development: **412.276 record (2021–2024)**\n- Final holdout: **101.525 record (2025)**\n- Tujuan: memprediksi kelas pada data baru")
     with clustering.container(border=True):
         st.subheader("🟠 Clustering")
-        st.write("Menggunakan seluruh **10.000 record** untuk menemukan kelompok karakteristik.")
+        st.write("Menggunakan baseline historis **10.000 record** untuk menemukan kelompok karakteristik.")
         st.markdown("- Tidak memakai collision_severity\n- Tidak memakai number_of_casualties\n- Tidak memakai identifier atau kode administratif")
 
     st.subheader("Data yang sengaja tidak digunakan")
@@ -685,7 +685,7 @@ def render_about_data(artifacts: dict) -> None:
     with prep_right.container(border=True):
         st.subheader("Clustering")
         st.markdown("- Numerik: imputation bila diperlukan → StandardScaler\n- Kategorikal: Most Frequent Imputation → One-Hot Encoding")
-        st.caption("18 fitur → 108 encoded features. Preprocessor dipelajari dari 10.000 record clustering.")
+        st.caption("18 fitur → 108 encoded features. Preprocessor dipelajari dari baseline legacy 10.000 record clustering.")
     st.write("Imputation menangani nilai kosong. One-Hot Encoding mengubah kategori menjadi representasi numerik.")
 
     st.subheader("Mengapa data ini digunakan?")
@@ -1003,15 +1003,15 @@ def render_about(artifacts: dict) -> None:
     st.subheader("2. Sumber data dan sampling")
     with st.container(border=True):
         st.write("Sumber: **STATS19** · Dataset: data kecelakaan lalu lintas jalan · Periode: **2021–2025**")
-        st.write("Sampel penelitian: **10.000 record**, yaitu 2.000 record per tahun selama 5 tahun.")
-        st.caption("Sampel ini bukan klaim mengenai keseluruhan populasi STATS19. URL resmi STATS19 belum tersedia di project dan tidak digantikan dengan URL buatan.")
+        st.write("Dataset final research: **513.801 record** pada periode 2021–2025.")
+        st.caption("Baseline clustering legacy menggunakan 10.000 record. URL resmi STATS19 belum tersedia di project dan tidak digantikan dengan URL buatan.")
 
     st.subheader("3. Dataset dan 18 fitur")
     data_metrics = st.columns(4)
     for column, label, value in zip(
         data_metrics,
-        ["Record", "Train / test", "Fitur awal", "Metode ML"],
-        ["10.000", "8.000 / 2.000", "18", "2"],
+        ["Raw dataset", "Development / holdout", "Fitur awal", "Metode ML"],
+        ["513.801", "412.276 / 101.525", "18", "2"],
     ):
         with column.container(border=True):
             st.metric(label, value)
@@ -1036,7 +1036,7 @@ def render_about(artifacts: dict) -> None:
         st.subheader("Clustering")
         st.write("Numerik: imputation bila diperlukan → StandardScaler")
         st.write("Kategorikal: Most Frequent Imputation → One-Hot Encoding")
-        st.caption("18 → 108 encoded features. Preprocessor fit pada 10.000 record clustering.")
+        st.caption("18 → 108 encoded features. Preprocessor fit pada baseline legacy 10.000 record clustering.")
     st.success("Data leakage check: test set tidak dipakai untuk fitting preprocessor classification.", icon=":material/check_circle:")
 
     st.subheader("5. Classification — Random Forest")
@@ -1055,7 +1055,7 @@ def render_about(artifacts: dict) -> None:
     st.subheader("6. Clustering — K-Means")
     with st.container(border=True):
         st.write("K-Means adalah unsupervised learning yang membagi data menjadi kelompok berdasarkan kedekatan karakteristik terhadap centroid.")
-        st.markdown("- k = 2\n- n_init = 10\n- random_state = 42\n- Record: 10.000\n- Output: Cluster 0 / Cluster 1")
+        st.markdown("- k = 2\n- n_init = 10\n- random_state = 42\n- Record legacy: 10.000\n- Output: Cluster 0 / Cluster 1")
         st.warning("Cluster bukan severity. Cluster tidak memakai collision_severity, number_of_casualties, identifier, atau kode administratif.", icon=":material/warning:")
 
     st.subheader("7. Evaluasi jumlah cluster")

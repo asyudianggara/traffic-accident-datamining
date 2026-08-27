@@ -31,6 +31,7 @@ Status: COMPLETED
 - Phase 9.2 selesai: interpretasi hasil, batasan metodologis, klaim yang tidak didukung, dan rekomendasi validasi lanjutan didokumentasikan.
 - Phase 9.3 selesai: hasil classification, clustering, validasi aplikasi, pemisahan legacy, dan batasan dikonsolidasikan untuk pelaporan final.
 - Phase 10.1 selesai: blueprint laporan final dan matriks sumber/traceability disusun tanpa eksperimen baru.
+- Phase 8.1 audit alignment selesai: ringkasan UI membedakan final research full dataset dari dashboard legacy 10K; prediction contract tetap lulus.
 
 ## Current
 
