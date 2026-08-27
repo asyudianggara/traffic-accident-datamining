@@ -1,0 +1,20 @@
+{
+  "phase": "4",
+  "rows_used": 412276,
+  "years_used": [
+    2021,
+    2022,
+    2023,
+    2024
+  ],
+  "test_year_used": false,
+  "target_used_as_input": false,
+  "random_state": 42,
+  "instrument": "DecisionTreeClassifier(max_depth=8, min_samples_leaf=100, class_weight=balanced)",
+  "encoded_feature_count": 149,
+  "outputs": [
+    "results/feature_selection_summary.csv",
+    "results/feature_selection_redundancy.csv",
+    "results/feature_selection_metadata.json"
+  ]
+}

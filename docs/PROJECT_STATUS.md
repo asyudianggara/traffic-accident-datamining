@@ -2,8 +2,8 @@
 
 Project: Tugas 2 – Penambangan Data
 Case: Analisis Kecelakaan Lalu Lintas STATS19
-Current Phase: PHASE 3 – DATA PREPARATION
-Overall Progress: PHASE 3 / 10
+Current Phase: PHASE 4 – FEATURE SELECTION & ALGORITHM STRATEGY
+Overall Progress: PHASE 4 / 10
 Status: COMPLETED
 
 ## Completed
@@ -20,22 +20,23 @@ Status: COMPLETED
 - Baseline classification full dataset selesai: Logistic Regression dan Decision Tree pada development 2021–2024 dengan holdout temporal 2025; lihat `docs/MODELING_PHASE5A.md`.
 - Phase 5B-1 partial: Logistic Regression dan Decision Tree selesai; Random Forest dihentikan karena bottleneck resource; HistGradientBoosting menolak sparse input; lihat `docs/MODELING_PHASE5B1.md`.
 - Implementasi Phase 3 selesai melalui `prepare_phase3.py`; validation manifest kecil dibuat tanpa processed dataset/model baru.
+- Implementasi Phase 4 selesai melalui `feature_selection_phase4.py`; ranking training-only, redundancy report, dan metadata reproducibility dibuat.
 
 ## Current
 
-- Phase 3 completed; menunggu review/otorisasi eksplisit untuk Phase 4.
+- Phase 4 completed; menunggu review/otorisasi eksplisit untuk Phase 5.
 
 ## Current Subphase
 
-- PHASE 3 – DATA PREPARATION (COMPLETED).
+- PHASE 4 – FEATURE SELECTION & ALGORITHM STRATEGY (COMPLETED).
 
 ## Current Task
 
-- Menunggu instruksi eksplisit untuk memulai PHASE 4 – FEATURE SELECTION.
+- Menunggu instruksi eksplisit untuk memulai PHASE 5 – MODELING.
 
 ## In Progress
 
-- Phase 3 implementation and validation are complete; no model training is in progress.
+- Phase 4 feature review and training-only analytical evidence are complete; no final model selection or tuning is in progress.
 
 ## Not Started
 
@@ -48,7 +49,7 @@ Status: COMPLETED
 
 ## Next Action
 
-- Menunggu review/otorisasi eksplisit untuk Phase 4.
+- Menunggu review/otorisasi eksplisit untuk Phase 5.
 
 ## Do Not Do
 
@@ -98,7 +99,7 @@ Status: COMPLETED
 
 ## Next Phase
 
-PHASE 4 – FEATURE SELECTION
+PHASE 5 – MODELING
 
 ## Important Rules
 

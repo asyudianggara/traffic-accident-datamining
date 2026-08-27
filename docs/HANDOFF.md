@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-PHASE 3 – DATA PREPARATION (COMPLETED)
+PHASE 4 – FEATURE SELECTION & ALGORITHM STRATEGY (COMPLETED)
 
 ## Last Completed
 
@@ -14,6 +14,7 @@ PHASE 3 – DATA PREPARATION (COMPLETED)
 - `docs/MODELING_PHASE5A.md` dibuat dan dua baseline full-dataset pipeline selesai: Logistic Regression dan Decision Tree dengan 2025 temporal holdout.
 - `docs/MODELING_PHASE5B1.md` dibuat; Logistic Regression dan Decision Tree comparison selesai, RF dihentikan karena resource bottleneck, dan HGB ditolak sparse input.
 - `prepare_phase3.py` dibuat; full raw dataset diprepare in-memory dengan train-only preprocessing dan validasi kecil.
+- `feature_selection_phase4.py` dibuat; evidence MI/tree importance, redundancy, dan stability training-only dihasilkan.
 
 ## Current State
 
@@ -39,6 +40,7 @@ PHASE 3 – DATA PREPARATION (COMPLETED)
 - `docs/DATA_UNDERSTANDING.md` dan `docs/figures/data-understanding/*.png`
 - `docs/DATA_PREPARATION.md`
 - `prepare_phase3.py` dan `results/phase3_preparation_validation.json`
+- `feature_selection_phase4.py`, `results/feature_selection_summary.csv`, `results/feature_selection_redundancy.csv`, dan `results/feature_selection_metadata.json`
 - `docs/FEATURE_SELECTION.md`
 - `docs/MODELING_PHASE5B1.md`, `models/classification_phase5b_logistic_regression.joblib`, `models/classification_phase5b_decision_tree.joblib`, `models/classification_phase5b_metadata.json`, dan `results/classification_phase5b_comparison.csv`
 - `docs/MODELING_PHASE5A.md`, `models/classification_baseline_logistic_regression.joblib`, `models/classification_baseline_decision_tree.joblib`, `models/classification_baseline_metadata.json`, dan `results/classification_baseline.csv`
@@ -85,8 +87,8 @@ PHASE 3 – DATA PREPARATION (COMPLETED)
 
 ## Next Required Action
 
-Review manifest Phase 3, lalu lanjutkan Phase 4 feature selection hanya setelah kontrak fitur dan kebijakan leakage disetujui.
+Review Phase 4 feature contract dan evidence training-only, lalu lanjutkan Phase 5 modeling hanya setelah feature set dan kebijakan leakage disetujui.
 
 ## STOP CONDITION
 
-Jangan masuk Phase 4 sebelum kontrak fitur dan validation manifest direview.
+Jangan masuk Phase 5 sebelum kontrak fitur, evidence training-only, dan open methodological decisions direview.

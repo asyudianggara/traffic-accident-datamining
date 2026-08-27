@@ -1,0 +1,6 @@
+feature_a,feature_b,issue,action
+date,month,derived representation overlap,use month; exclude raw date
+time,hour,derived representation overlap,use hour; exclude raw time
+location_easting_osgr,longitude,alternative geographic representations,review at most one representation
+location_northing_osgr,latitude,alternative geographic representations,review at most one representation
+local_authority_highway,local_authority_highway_current,possible versioned administrative overlap,confirm definitions before selection

@@ -236,6 +236,36 @@ Clustering must report silhouette, inertia where applicable, cluster sizes, stab
 5. Is the 2025 temporal holdout required, or does the rubric require stratified random splitting?
 6. Which association-mining role and support threshold are required by the assignment?
 
-## 17. Next Phase
+## 17. Training-only Evidence Artifact
 
-**PHASE 5 – MODELING:** implement the approved preparation contract, compare candidate algorithms, and evaluate provisional feature sets without using the final holdout for feature selection. Do not perform Phase 5 modeling in this checkpoint.
+`feature_selection_phase4.py` menjalankan dua sinyal komplementer pada 412.276 baris development 2021–2024: mutual information per fitur asli dan aggregated importance dari `DecisionTreeClassifier(max_depth=8, min_samples_leaf=100, class_weight="balanced")`. Preprocessing di-fit pada development saja; 2025 tidak dibaca untuk ranking. Hasil lengkap berada di `results/feature_selection_summary.csv`.
+
+Top evidence agregat dari instrumen tree:
+
+| Rank | Feature | Aggregated importance | Yearly MI range |
+|---:|---|---:|---:|
+| 1 | `urban_or_rural_area` | 0.340778 | 0.001013 |
+| 2 | `number_of_vehicles` | 0.215218 | 0.001712 |
+| 3 | `speed_limit` | 0.113082 | 0.001145 |
+| 4 | `light_conditions` | 0.065804 | 0.000786 |
+| 5 | `junction_control` | 0.058974 | 0.001446 |
+
+Importance ini bergantung pada instrumen, encoding, class weighting, dan periode development. Nilai tersebut bukan performa model, bukan bukti kausal, dan tidak dipakai untuk menghapus fitur core. `results/feature_selection_redundancy.csv` mencatat lima pasangan representasi yang perlu ditangani sebelum modeling; metadata reproducibility berada di `results/feature_selection_metadata.json`.
+
+## 18. Final Recommended Feature Set for Phase 5
+
+Recommended provisional classification and clustering core remains the same 18 context features: `number_of_vehicles`, `speed_limit`, `first_road_class`, `road_type`, `junction_detail`, `junction_control`, `second_road_class`, `pedestrian_crossing`, `light_conditions`, `weather_conditions`, `road_surface_conditions`, `special_conditions_at_site`, `carriageway_hazards`, `urban_or_rural_area`, `trunk_road_flag`, `day_of_week`, `month`, and `hour`.
+
+This is a documented recommendation for controlled Phase 5 comparison, not final selection. It excludes identifiers, target/outcome-derived fields, post-event fields, raw date/time, and unresolved geographic/administrative proxies. The target remains `collision_severity` and is never an input.
+
+## 19. Features Requiring Sensitivity Analysis
+
+Evaluate separately, without using the final holdout for selection: `police_force`, `collision_year`, one approved coordinate representation, `local_authority_district`, `local_authority_ons_district`, `local_authority_highway`, `local_authority_highway_current`, `first_road_number`, `second_road_number`, and `lsoa_of_accident_location`. The experiment must state prediction timing, privacy/generalization policy, category handling, and whether the feature is available before or after the collision.
+
+## 20. Open Methodological Decisions
+
+The official codebook version, prediction timing, geographic/admin policy, and final split rule remain unresolved. Phase 5 must also decide whether class weighting or resampling is appropriate, while preserving macro metrics and Fatal recall as primary safeguards. No decision should be based on accuracy or tree importance alone.
+
+## 21. Next Phase
+
+**PHASE 5 – MODELING:** implement the approved preparation contract, compare candidate algorithms, and evaluate the recommended provisional feature set without using the final holdout for feature selection. Do not start Phase 5 until this Phase 4 checkpoint is accepted.
