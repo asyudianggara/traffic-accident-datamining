@@ -2,8 +2,8 @@
 
 Project: Tugas 2 – Penambangan Data
 Case: Analisis Kecelakaan Lalu Lintas STATS19
-Current Phase: PHASE 5.2 – PROBABILITY / THRESHOLD ANALYSIS
-Overall Progress: PHASE 5.2 / 10
+Current Phase: PHASE 6 – FINAL MODEL SELECTION & EVALUATION
+Overall Progress: PHASE 6 / 10
 Status: COMPLETED
 
 ## Completed
@@ -24,27 +24,27 @@ Status: COMPLETED
 - Phase 5 baseline modeling selesai melalui `modeling_phase5.py`; Logistic Regression, Decision Tree, dan bounded Random Forest dievaluasi pada holdout 2025.
 - Phase 5.1 selesai: empat strategi imbalance dibandingkan pada validation 2024; balanced Random Forest dipilih provisional dan dievaluasi sekali pada holdout 2025.
 - Phase 5.2 selesai: threshold Fatal dipilih menggunakan validation 2024 dan dievaluasi sekali pada holdout 2025.
+- Phase 6 selesai: final candidate model dipilih dan artifact/metadata dibuat tanpa memakai ulang 2025 untuk seleksi.
 
 ## Current
 
-- Phase 5.2 completed; final model selection dan deployment belum dilakukan.
+- Phase 6 completed; final candidate terdokumentasi, tetapi belum production-ready dan belum diintegrasikan ke aplikasi.
 
 ## Current Subphase
 
-- PHASE 5.2 – PROBABILITY / THRESHOLD ANALYSIS (COMPLETED).
+- PHASE 6 – FINAL MODEL SELECTION & EVALUATION (COMPLETED).
 
 ## Current Task
 
-- Menunggu review hasil dan keputusan final evaluation/model selection.
+- Meninjau final candidate dan open methodological decisions sebelum deployment/integrasi.
 
 ## In Progress
 
-- Threshold analysis complete; no final model selection, extensive tuning, or deployment is in progress.
+- Final candidate: Random Forest balanced + Fatal threshold 0,50; tidak ada tuning ekstensif atau deployment yang dilakukan.
 
 ## Not Started
 
-- Controlled imbalance experiment and final model evaluation.
-- Final model selection, sensitivity analysis, and deployment untuk Tugas 2 berbasis full dataset.
+- Deployment/integrasi aplikasi dan validasi operasional final.
 
 ## Blocked
 
@@ -52,7 +52,7 @@ Status: COMPLETED
 
 ## Next Action
 
-- Menunggu review hasil Phase 5.2 dan keputusan final evaluation/model selection.
+- Review `docs/FINAL_MODEL.md`; konfirmasi use case, timing prediksi, codebook, dan kebijakan geografis.
 
 ## Do Not Do
 
@@ -102,7 +102,7 @@ Status: COMPLETED
 
 ## Next Phase
 
-PHASE 6 – FINAL EVALUATION / MODEL SELECTION (SCOPE TO BE CONFIRMED)
+PHASE 7 – DEPLOYMENT / OPERATIONAL VALIDATION (SCOPE TO BE CONFIRMED)
 
 ## Important Rules
 

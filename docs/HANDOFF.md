@@ -2,7 +2,7 @@
 
 ## Current Phase
 
-PHASE 5.2 – PROBABILITY / THRESHOLD ANALYSIS (COMPLETED)
+PHASE 6 – FINAL MODEL SELECTION & EVALUATION (COMPLETED)
 
 ## Last Completed
 
@@ -18,6 +18,8 @@ PHASE 5.2 – PROBABILITY / THRESHOLD ANALYSIS (COMPLETED)
 - `modeling_phase5.py` dibuat; tiga baseline classification dievaluasi pada temporal holdout 2025.
 - `phase5_1_imbalance_experiment.py` dibuat; empat strategi diuji pada validation 2024 dan balanced Random Forest dievaluasi sekali pada 2025.
 - `phase5_2_threshold_analysis.py` dibuat; threshold Fatal 0.50 dipilih pada validation 2024 dan diuji sekali pada 2025.
+- `finalize_research_model.py` dibuat; final candidate Random Forest balanced + threshold Fatal 0,50 difit pada development 2021–2024.
+- `docs/FINAL_MODEL.md`, `results/final_model_metadata.json`, `results/final_model_comparison.csv`, dan `models/final_research_model.joblib` dibuat.
 
 ## Current State
 
@@ -32,6 +34,7 @@ PHASE 5.2 – PROBABILITY / THRESHOLD ANALYSIS (COMPLETED)
 - Phase 4 menetapkan provisional classification/clustering sets (18 masing-masing), association basket (15), temporal set (4), dan leakage-safe selection rules.
 - Phase 5A menggunakan 412.276 development rows dan 101.525 holdout rows; preprocessing fitted pada development saja; kedua model mencatat Fatal recall 0.
 - Phase 5B-1 memakai split/features/preprocessing yang sama; hanya dua model completed dengan metrik valid, keduanya Fatal recall 0.
+- Phase 6 memilih final candidate; metrik 2025 diambil dari hasil Phase 5.2 yang telah dibekukan dan tidak dievaluasi ulang untuk seleksi.
 
 ## Files Changed
 
@@ -49,6 +52,7 @@ PHASE 5.2 – PROBABILITY / THRESHOLD ANALYSIS (COMPLETED)
 - `phase5_2_threshold_analysis.py`, `results/phase5_2_*.csv`, `results/phase5_2_*.png`, dan `results/phase5_2_metadata.json`
 - `docs/FEATURE_SELECTION.md`
 - `docs/MODELING_PHASE5B1.md`, `models/classification_phase5b_logistic_regression.joblib`, `models/classification_phase5b_decision_tree.joblib`, `models/classification_phase5b_metadata.json`, dan `results/classification_phase5b_comparison.csv`
+- `finalize_research_model.py`, `docs/FINAL_MODEL.md`, `models/final_research_model.joblib`, `results/final_model_metadata.json`, dan `results/final_model_comparison.csv`
 - `docs/MODELING_PHASE5A.md`, `models/classification_baseline_logistic_regression.joblib`, `models/classification_baseline_decision_tree.joblib`, `models/classification_baseline_metadata.json`, dan `results/classification_baseline.csv`
 
 ## Files Not Changed
@@ -73,7 +77,7 @@ PHASE 5.2 – PROBABILITY / THRESHOLD ANALYSIS (COMPLETED)
 - Keberadaan file dataset sample 10K terpisah dan waktu persis sampling pertama kali dilakukan.
 - Definisi use case/timing prediksi, split yang diminta dosen, penggunaan fitur geografis/admin, dan data dictionary STATS19 lengkap.
 - Arti seluruh kode unresolved dan daftar fitur data-mining yang wajib dinilai masih belum terverifikasi.
-- Prediction timing, geographic/privacy policy, and final train/test rule remain unconfirmed.
+- Prediction timing, geographic/privacy policy, official codebook version, and operational acceptance criteria remain unconfirmed.
 
 ## Known Issues
 
@@ -81,20 +85,20 @@ PHASE 5.2 – PROBABILITY / THRESHOLD ANALYSIS (COMPLETED)
 - Leakage risk: outcome/adjusted severity fields, number of casualties, dan police-attendance harus dikeluarkan/ditinjau sebelum model.
 - Pola target-versus-fitur bersifat deskriptif; kategori langka memerlukan kehati-hatian dan tidak boleh dibaca sebagai hubungan kausal.
 - Range checks found no structural invalids in the audited full dataset; IQR flags are retained, not deleted.
-- Candidate sets are provisional and must be tested in Phase 5 without using the final holdout for selection.
+- Final candidate is research-ready but not production-ready; use case and operational acceptance criteria remain open.
 - Phase 5B-1 RF tidak menghasilkan result setelah ~27 menit/~1.08 GB RAM; HGB tidak dijalankan karena established sparse preprocessing incompatible.
 - Baselines preserve natural imbalance; no SMOTE, over/undersampling, or class weighting was applied.
 
 ## Do Not
 
 - Jangan mengubah project lama.
-- Jangan melakukan Phase 5B comparison, tuning, clustering, association mining, forecasting, deployment, atau mengubah artefak legacy sebelum instruksi berikutnya.
+- Jangan melakukan deployment, app integration, clustering, association mining, forecasting, atau mengubah artefak legacy sebelum scope berikutnya dikonfirmasi.
 - Jangan force-push atau mengganti remote tanpa instruksi eksplisit.
 
 ## Next Required Action
 
-Review bagian Phase 5.2 di `docs/MODELING_PHASE5.md`; final model selection dan deployment belum boleh diklaim.
+Review `docs/FINAL_MODEL.md`; jangan klaim production readiness sebelum open methodological decisions dan validasi operasional selesai.
 
 ## STOP CONDITION
 
-Jangan klaim final model atau lanjut deployment sebelum final evaluation dan open methodological decisions diselesaikan.
+Jangan lanjut deployment sebelum final candidate dan open methodological decisions direview.
